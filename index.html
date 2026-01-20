@@ -139,7 +139,7 @@
         <div class="w-10 h-10 border-4 border-slate-700 border-t-cyan-400 rounded-full animate-spin"></div>
     </div>
 
-    <div id="custom-modal" class="fixed inset-0 bg-slate-900/60 backdrop-blur-sm hidden items-center justify-center z-[11000] p-4 text-slate-800">
+    <div id="custom-modal" class="fixed inset-0 bg-slate-900/60 backdrop-blur-sm hidden items-center justify-center z-[11000] p-4">
         <div class="bg-white w-full max-w-sm p-8 rounded-[2.5rem] shadow-2xl">
             <h3 id="modal-title" class="text-xl font-black mb-4 uppercase tracking-tighter text-center">Adicionar Item</h3>
             <input type="text" id="modal-input" class="w-full input-premium mb-6" placeholder="Digite o nome...">
@@ -162,18 +162,19 @@
             <nav class="flex gap-8 h-full items-center text-[11px] font-black uppercase tracking-widest text-slate-400">
                 <button onclick="switchTab('dashboard')" id="tab-dashboard" class="h-full px-2 active-tab transition-colors">Dashboard</button>
                 <button onclick="switchTab('form')" id="tab-form" class="h-full px-2 hover:text-slate-900 transition-colors">Novo Projeto</button>
-                <button onclick="switchTab('list')" id="tab-list" class="h-full px-2 hover:text-slate-900 transition-colors">Lista Geral</button>
+                <button onclick="switchTab('list')" id="tab-list" class="h-full px-2 hover:text-slate-900 transition-colors">Projetos</button>
             </nav>
         </div>
     </header>
 
-    <main class="max-w-7xl mx-auto p-6 mt-4 main-content">
+    <main class="max-w-7xl mx-auto p-6 mt-4 main-content text-slate-800">
         
-        <div id="view-dashboard" class="block no-print text-slate-800">
-            <div class="mb-10 flex flex-col md:flex-row md:items-end justify-between gap-4">
+        <!-- DASHBOARD -->
+        <div id="view-dashboard" class="block no-print">
+            <div class="mb-10 flex flex-col md:flex-row md:items-end justify-between gap-4 text-slate-800">
                 <div>
-                    <h1 class="text-4xl font-black tracking-tighter uppercase">Estratégia & Operação</h1>
-                    <p class="text-slate-400 text-xs font-bold uppercase mt-1">Visão macro de eficiência corporativa</p>
+                    <h1 class="text-4xl font-black tracking-tighter uppercase leading-none">Estratégia & Operação</h1>
+                    <p class="text-slate-400 text-xs font-bold uppercase mt-2 tracking-widest">Visão macro de eficiência corporativa</p>
                 </div>
                 <div class="flex flex-wrap gap-2">
                     <select id="dash-filter-area" class="input-premium !py-2 !text-xs shadow-sm" onchange="refreshUI()">
@@ -251,7 +252,8 @@
             <div id="projects-grid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8"></div>
         </div>
 
-        <div id="view-form" class="hidden max-w-5xl mx-auto text-slate-800">
+        <!-- FORMULÁRIO -->
+        <div id="view-form" class="hidden max-w-5xl mx-auto">
             <div class="bg-white p-10 rounded-[2.5rem] shadow-2xl border-t-[12px] border-cyan-400 print-card mb-12">
                 <div class="flex justify-between items-start mb-10">
                     <div>
@@ -260,7 +262,7 @@
                     </div>
                     <button id="btn-print-project" onclick="window.print()" class="no-print hidden bg-slate-900 text-white px-6 py-3 rounded-2xl font-bold flex items-center gap-3 hover:bg-slate-800 transition shadow-lg">
                         <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M17 17h2a2 2 0 002-2v-4a2 2 0 00-2-2H5a2 2 0 00-2 2v4a2 2 0 002 2h2m2 4h6a2 2 0 002-2v-4a2 2 0 00-2-2H9a2 2 0 00-2 2v4a2 2 0 002 2zm8-12V5a2 2 0 00-2-2H9a2 2 0 00-2 2v4h10z" /></svg>
-                        <span class="text-xs uppercase tracking-widest font-black">Exportar PDF</span>
+                        <span class="text-xs uppercase tracking-widest font-black text-white">Exportar PDF</span>
                     </button>
                 </div>
                 
@@ -322,11 +324,11 @@
                              <div class="grid grid-cols-2 gap-6">
                                 <div>
                                     <label class="label-forte !text-slate-600 !mb-2">Data Início</label>
-                                    <input type="date" id="data_criacao" required class="w-full input-premium text-sm font-bold border-slate-300">
+                                    <input type="date" id="data_criacao" required class="w-full input-premium text-sm font-bold border-slate-300 shadow-sm">
                                 </div>
                                 <div>
                                     <label class="label-forte !text-slate-600 !mb-2">Prazo Estimado</label>
-                                    <input type="date" id="prazo" required class="w-full input-premium text-sm font-bold border-slate-300">
+                                    <input type="date" id="prazo" required class="w-full input-premium text-sm font-bold border-slate-300 shadow-sm">
                                 </div>
                              </div>
                              
@@ -354,15 +356,15 @@
                              </div>
                         </div>
 
-                        <div class="md:col-span-2">
+                        <div class="md:col-span-2 text-slate-800">
                              <label class="label-forte text-cyan-600">Expectativas de Ganho (KPIs)</label>
                              <div class="bg-white p-6 rounded-3xl border-2 border-slate-200 shadow-sm">
-                                <div id="metricas-container" class="space-y-3 mb-4 text-slate-800"></div>
+                                <div id="metricas-container" class="space-y-3 mb-4"></div>
                                 <button type="button" onclick="addMetricaInput()" class="text-[10px] font-black text-cyan-500 hover:text-cyan-700 uppercase tracking-widest">+ Adicionar Métrica</button>
                              </div>
                         </div>
                         
-                        <div class="md:col-span-4 bg-white p-6 rounded-3xl border-2 border-slate-900 shadow-sm">
+                        <div class="md:col-span-4 bg-white p-6 rounded-3xl border-2 border-slate-900 shadow-sm text-slate-800">
                             <div class="flex justify-between items-center mb-4">
                                 <label class="label-forte !mb-0">Responsáveis Líderes (Seleção Múltipla)</label>
                                 <button type="button" onclick="openAdderModal('team')" class="btn-icon-add">+</button>
@@ -371,7 +373,7 @@
                         </div>
                     </div>
 
-                    <div class="grid grid-cols-1 md:grid-cols-2 gap-10">
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-10 text-slate-800">
                         <div class="space-y-8">
                             <div>
                                 <label class="label-forte">Descrição e Objetivo Estratégico</label>
@@ -393,7 +395,7 @@
                             </div>
                             <div id="notes-section" class="hidden">
                                 <label class="label-forte">Histórico de Evolução</label>
-                                <div id="notes-history-list" class="space-y-3 mb-4 max-h-56 overflow-y-auto pr-2"></div>
+                                <div id="notes-history-list" class="space-y-3 mb-4 max-h-56 overflow-y-auto pr-2 text-slate-800"></div>
                                 <div class="bg-cyan-50/40 p-5 rounded-2xl border border-cyan-100 no-print">
                                     <label class="label-forte !text-cyan-600">Nova Nota de Atualização</label>
                                     <textarea id="new-milestone-note" rows="2" class="w-full input-premium !border-cyan-200 !text-sm" placeholder="Relate o avanço de hoje..."></textarea>
@@ -412,13 +414,14 @@
             </div>
         </div>
 
-        <div id="view-list" class="hidden no-print text-slate-800">
-            <div class="mb-8 flex flex-col md:flex-row justify-between items-start md:items-end gap-6">
+        <!-- LISTA GERAL -->
+        <div id="view-list" class="hidden no-print">
+            <div class="mb-8 text-slate-800 flex flex-col md:flex-row justify-between items-start md:items-end gap-6">
                 <div>
-                    <h1 class="text-4xl font-black uppercase tracking-tighter">Inventário Geral</h1>
-                    <p class="text-slate-400 text-xs font-black uppercase tracking-widest mt-2">Ordenação Crescente por Data de Criaão</p>
+                    <h1 class="text-4xl font-black uppercase tracking-tighter leading-none">Controle de Projetos</h1>
+                    <p class="text-slate-400 text-xs font-black uppercase tracking-widest mt-2">Visão detalhada do cronograma e equipe</p>
                 </div>
-                <div class="flex flex-wrap gap-2">
+                <div class="flex flex-wrap gap-2 text-slate-800">
                     <select id="list-filter-area" class="input-premium !py-2 !text-[10px]" onchange="refreshUI()"><option value="">Área Impactada</option></select>
                     <select id="list-filter-frente" class="input-premium !py-2 !text-[10px]" onchange="refreshUI()"><option value="">Frente Trabalho</option></select>
                     <select id="list-filter-status" class="input-premium !py-2 !text-[10px]" onchange="refreshUI()"><option value="">Status</option></select>
@@ -429,11 +432,18 @@
             <div class="bg-white rounded-[2rem] shadow-sm border border-slate-100 overflow-hidden">
                 <table class="w-full text-left">
                     <thead class="bg-slate-50 border-b border-slate-100 text-slate-400">
-                        <tr class="text-[10px] uppercase font-black tracking-wider">
-                            <th class="p-6">Prioridade</th><th class="p-6">Iniciativa</th><th class="p-6">Área Impactada</th><th class="p-6">Responsáveis</th><th class="p-6 text-center">Status</th><th class="p-6 text-right">Ações</th>
+                        <tr class="text-[9px] uppercase font-black tracking-wider">
+                            <th class="p-6">Prioridade</th>
+                            <th class="p-6">Iniciativa</th>
+                            <th class="p-6">Início</th>
+                            <th class="p-6">Prazo Target</th>
+                            <th class="p-6">Dias p/ Finalizar</th>
+                            <th class="p-6">Responsáveis</th>
+                            <th class="p-6 text-center">Status</th>
+                            <th class="p-6 text-right">Ações</th>
                         </tr>
                     </thead>
-                    <tbody id="detailed-table-body" class="divide-y divide-slate-50"></tbody>
+                    <tbody id="detailed-table-body" class="divide-y divide-slate-50 text-slate-800"></tbody>
                 </table>
             </div>
         </div>
@@ -703,9 +713,51 @@
         window.renderDetailedList = (data) => {
             const tbody = document.getElementById('detailed-table-body');
             if(!tbody) return; tbody.innerHTML = '';
+            
+            const today = new Date();
+            today.setHours(0,0,0,0);
+
             data.forEach((proj) => {
                 const resp = Array.isArray(proj.responsavel) ? proj.responsavel.slice(0,2).join(', ') : proj.responsavel;
-                tbody.innerHTML += `<tr class="hover:bg-slate-50 transition"><td class="p-6 font-black text-[10px] uppercase text-slate-400">${proj.prioridade}</td><td class="p-6 font-black uppercase text-sm">${proj.iniciativa}</td><td class="p-6 text-[10px] font-bold text-slate-500 uppercase">${proj.time}</td><td class="p-6 text-xs font-bold text-slate-700">${resp}</td><td class="p-6 text-center"><span class="status-pill bg-slate-100 text-slate-600 font-black">${proj.status}</span></td><td class="p-6 text-right space-x-4"><button onclick="editProjectByID('${proj.id}')" class="text-cyan-500 font-black text-[10px] uppercase hover:underline">Ficha Técnica</button><button onclick="deleteProject('${proj.id}')" class="text-red-300 font-black text-[10px] uppercase hover:text-red-500">Excluir</button></td></tr>`;
+                
+                // Cálculo de dias restantes
+                let daysText = "-";
+                let daysColor = "text-slate-400";
+                
+                if (proj.status === 'Finalizado') {
+                    daysText = "Concluído";
+                    daysColor = "text-green-500 font-black";
+                } else if (proj.prazo) {
+                    const deadline = new Date(proj.prazo);
+                    const diffTime = deadline - today;
+                    const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
+                    
+                    if (diffDays > 0) {
+                        daysText = `${diffDays} dias`;
+                        daysColor = diffDays <= 5 ? "text-amber-500 font-black" : "text-slate-600 font-bold";
+                    } else if (diffDays === 0) {
+                        daysText = "Entrega Hoje";
+                        daysColor = "text-orange-500 font-black";
+                    } else {
+                        daysText = `Atrasado (${Math.abs(diffDays)} d)`;
+                        daysColor = "text-red-500 font-black";
+                    }
+                }
+
+                tbody.innerHTML += `
+                    <tr class="hover:bg-slate-50 transition">
+                        <td class="p-6 font-black text-[10px] uppercase text-slate-400">${proj.prioridade}</td>
+                        <td class="p-6 font-black uppercase text-sm">${proj.iniciativa}</td>
+                        <td class="p-6 text-[11px] font-bold text-slate-500">${formatDate(proj.data_criacao)}</td>
+                        <td class="p-6 text-[11px] font-black text-slate-900">${formatDate(proj.prazo)}</td>
+                        <td class="p-6 text-[11px] ${daysColor}">${daysText}</td>
+                        <td class="p-6 text-xs font-bold text-slate-700">${resp}</td>
+                        <td class="p-6 text-center"><span class="status-pill bg-slate-100 text-slate-600 font-black">${proj.status}</span></td>
+                        <td class="p-6 text-right space-x-4">
+                            <button onclick="editProjectByID('${proj.id}')" class="text-cyan-500 font-black text-[10px] uppercase tracking-widest hover:underline">Ficha Técnica</button>
+                            <button onclick="deleteProject('${proj.id}')" class="text-red-300 font-black text-[10px] uppercase hover:text-red-500 transition">Excluir</button>
+                        </td>
+                    </tr>`;
             });
         };
 

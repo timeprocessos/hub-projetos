@@ -36,7 +36,7 @@
             font-weight: 900;
             text-transform: uppercase;
             letter-spacing: 0.05em;
-            color: #1e293b; /* Cor mais escura para máxima visibilidade */
+            color: #1e293b;
             margin-bottom: 0.5rem;
             display: block;
         }
@@ -141,33 +141,32 @@
         <p class="text-[10px] uppercase font-bold tracking-widest mt-4 opacity-50">Iniciando sistema...</p>
     </div>
 
-    <!-- Modal Adicionar Item -->
+    <!-- Modais -->
     <div id="custom-modal" class="fixed inset-0 bg-slate-900/60 backdrop-blur-sm hidden items-center justify-center z-[11000] p-4">
         <div class="bg-white w-full max-w-sm p-8 rounded-[2.5rem] shadow-2xl">
             <h3 id="modal-title" class="text-xl font-black mb-4 uppercase tracking-tighter text-center">Adicionar Item</h3>
             <input type="text" id="modal-input" class="w-full input-premium mb-6" placeholder="Digite o nome...">
             <div class="flex gap-3">
-                <button id="modal-confirm" class="bg-slate-900 text-white font-bold py-3 px-6 rounded-2xl flex-1 transition hover:bg-slate-800 uppercase text-[10px] tracking-widest">Adicionar</button>
+                <button id="modal-confirm" class="bg-slate-900 text-white font-bold py-3 px-6 rounded-2xl flex-1 transition hover:bg-slate-800 uppercase text-[10px] tracking-widest text-white">Adicionar</button>
                 <button onclick="closeCustomModal()" class="bg-slate-100 text-slate-400 font-bold py-3 px-6 rounded-2xl flex-1 transition hover:bg-slate-200 uppercase text-[10px] tracking-widest">Sair</button>
             </div>
         </div>
     </div>
 
-    <!-- Modal de Relatório -->
-    <div id="report-modal" class="fixed inset-0 bg-slate-900/60 backdrop-blur-sm hidden items-center justify-center z-[11000] p-4 text-slate-800">
+    <div id="report-modal" class="fixed inset-0 bg-slate-900/60 backdrop-blur-sm hidden items-center justify-center z-[11000] p-4 text-slate-800 text-slate-800">
         <div class="bg-white w-full max-w-2xl p-10 rounded-[2.5rem] shadow-2xl relative">
             <button onclick="closeReportModal()" class="absolute top-8 right-8 text-slate-300 hover:text-slate-900 transition text-2xl font-bold">×</button>
             <div>
                 <span class="label-forte">Resumo de Status</span>
                 <h3 class="text-2xl font-black uppercase tracking-tighter mb-6">Relatório da Iniciativa</h3>
-                <div id="report-content" class="bg-slate-50 p-6 rounded-3xl border border-slate-100 mb-8 max-h-[40vh] overflow-y-auto">
+                <div id="report-content" class="bg-slate-50 p-6 rounded-3xl border border-slate-100 mb-8 max-h-[40vh] overflow-y-auto text-slate-800">
                     <pre id="report-text" class="text-sm font-medium whitespace-pre-wrap leading-relaxed text-slate-700"></pre>
                 </div>
                 <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-                    <button onclick="sendReportByEmail()" class="bg-slate-900 text-white font-black py-4 px-6 rounded-2xl flex items-center justify-center gap-3 transition hover:bg-slate-800 uppercase text-[10px] tracking-widest shadow-xl text-white">
+                    <button onclick="sendReportByEmail()" class="bg-slate-900 text-white font-black py-4 px-6 rounded-2xl flex items-center justify-center gap-3 transition hover:bg-slate-800 uppercase text-[10px] tracking-widest text-white">
                         Enviar por E-mail
                     </button>
-                    <button onclick="copyReportForSlack()" class="bg-[#4A154B] text-white font-black py-4 px-6 rounded-2xl flex items-center justify-center gap-3 transition hover:opacity-90 uppercase text-[10px] tracking-widest shadow-xl text-white">
+                    <button onclick="copyReportForSlack()" class="bg-[#4A154B] text-white font-black py-4 px-6 rounded-2xl flex items-center justify-center gap-3 transition hover:opacity-90 uppercase text-[10px] tracking-widest text-white">
                         Copiar para Slack
                     </button>
                 </div>
@@ -177,7 +176,7 @@
     </div>
 
     <header class="bg-white border-b border-slate-100 sticky top-0 z-50 no-print">
-        <div class="max-w-7xl mx-auto px-6 h-20 flex justify-between items-center">
+        <div class="max-w-7xl mx-auto px-6 h-20 flex justify-between items-center text-slate-800">
             <div class="flex items-center gap-6">
                 <img src="https://cloudfilesdm.com/postcards/unico-color__1-878cebbc.png" class="h-8" alt="Unico Logo">
                 <div id="sync-indicator" class="hidden md:flex items-center gap-2 px-3 py-1 bg-green-50 rounded-full border border-green-100">
@@ -196,8 +195,8 @@
     <main class="max-w-7xl mx-auto p-6 mt-4 main-content">
         
         <!-- DASHBOARD VIEW -->
-        <div id="view-dashboard" class="block no-print text-slate-800">
-            <div class="mb-10 flex flex-col md:flex-row md:items-end justify-between gap-4 text-slate-800">
+        <div id="view-dashboard" class="block no-print">
+            <div class="mb-10 flex flex-col md:flex-row md:items-end justify-between gap-4">
                 <div>
                     <h1 class="text-4xl font-black tracking-tighter uppercase leading-none">Estratégia & Operação</h1>
                     <p class="text-slate-400 text-xs font-bold uppercase mt-2 tracking-widest">Visão macro de eficiência corporativa</p>
@@ -216,8 +215,7 @@
                 </div>
             </div>
 
-            <!-- KPIs -->
-            <div class="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-7 gap-3 mb-12 text-center md:text-left text-slate-800">
+            <div class="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-7 gap-3 mb-12 text-center md:text-left">
                 <div class="kpi-card border-l-4 border-slate-900"><p class="label-forte !text-[9px]">Total Projetos</p><h2 id="kpi-total" class="text-2xl font-black">0</h2></div>
                 <div class="kpi-card border-l-4 border-cyan-400"><p class="label-forte !text-[9px] text-cyan-600">SLA Geral</p><h2 id="kpi-sla" class="text-2xl font-black text-cyan-600">0%</h2></div>
                 <div class="kpi-card border-l-4 border-green-500"><p class="label-forte !text-[9px] text-green-600">No Prazo</p><h2 id="kpi-concluidos-prazo" class="text-2xl font-black text-green-600">0</h2></div>
@@ -227,32 +225,25 @@
                 <div class="kpi-card border-l-4 border-indigo-500"><p class="label-forte !text-[9px] text-indigo-600">Saúde</p><h2 id="kpi-saude" class="text-2xl font-black text-indigo-600">0%</h2></div>
             </div>
 
-            <!-- Gráficos -->
-            <div class="grid grid-cols-1 md:grid-cols-3 gap-8 mb-12 text-slate-800">
-                <div class="bg-white p-8 rounded-[2rem] border border-slate-100 shadow-sm flex flex-col items-center">
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-8 mb-12">
+                <div class="bg-white p-8 rounded-[2rem] border border-slate-100 shadow-sm flex flex-col items-center text-slate-800">
                     <span class="label-forte mb-6 text-center">Status das Iniciativas</span>
                     <div class="w-full h-56 mt-4 text-slate-800"><canvas id="chartStatus"></canvas></div>
                 </div>
-                <div class="bg-white p-8 rounded-[2rem] border border-slate-100 shadow-sm flex flex-col items-center">
-                    <span class="label-forte mb-6 text-center">Área Impactada</span>
+                <div class="bg-white p-8 rounded-[2rem] border border-slate-100 shadow-sm flex flex-col items-center text-slate-800">
+                    <span class="label-forte mb-6 text-center text-slate-800 text-slate-800">Área Impactada</span>
                     <div class="w-full h-56 mt-4 text-slate-800"><canvas id="chartTime"></canvas></div>
                 </div>
-                <div class="bg-white p-8 rounded-[2rem] border border-slate-100 shadow-sm flex flex-col items-center">
+                <div class="bg-white p-8 rounded-[2rem] border border-slate-100 shadow-sm flex flex-col items-center text-slate-800">
                     <span class="label-forte mb-6 text-center">Pilar Estratégico</span>
                     <div class="w-full h-56 mt-4 text-slate-800"><canvas id="chartFrente"></canvas></div>
                 </div>
             </div>
 
-            <!-- Capacidade por Líder -->
             <div class="mb-12">
-                <div class="bg-white p-10 rounded-[2.5rem] border border-slate-100 shadow-sm text-slate-800">
+                <div class="bg-white p-10 rounded-[2.5rem] border border-slate-100 shadow-sm text-slate-800 text-slate-800">
                     <div class="flex justify-between items-center mb-8">
                         <div><span class="label-forte">Gestão de Recursos</span><h3 class="text-2xl font-black uppercase tracking-tighter text-slate-800">Capacidade por Líder</h3></div>
-                        <div class="flex gap-4">
-                            <div class="flex items-center gap-2"><span class="w-3 h-3 bg-cyan-400 rounded"></span><span class="text-[9px] font-black uppercase text-slate-400">Rápido</span></div>
-                            <div class="flex items-center gap-2"><span class="w-3 h-3 bg-amber-400 rounded"></span><span class="text-[9px] font-black uppercase text-slate-400">Intermediário</span></div>
-                            <div class="flex items-center gap-2"><span class="w-3 h-3 bg-slate-900 rounded"></span><span class="text-[9px] font-black uppercase text-slate-400">Estruturante</span></div>
-                        </div>
                     </div>
                     <div class="w-full h-80"><canvas id="chartCapacidade"></canvas></div>
                 </div>
@@ -262,11 +253,11 @@
         </div>
 
         <!-- FORMULÁRIO (FICHA TÉCNICA) -->
-        <div id="view-form" class="hidden max-w-5xl mx-auto text-slate-800">
-            <div class="bg-white p-10 rounded-[2.5rem] shadow-2xl border-t-[12px] border-cyan-400 print-card mb-12">
+        <div id="view-form" class="hidden max-w-5xl mx-auto">
+            <div class="bg-white p-10 rounded-[2.5rem] shadow-2xl border-t-[12px] border-cyan-400 print-card mb-12 text-slate-800">
                 <div class="flex justify-between items-start mb-10">
                     <div>
-                        <h2 id="form-title" class="text-3xl font-black uppercase tracking-tighter text-slate-800">Ficha Técnica</h2>
+                        <h2 id="form-title" class="text-3xl font-black uppercase tracking-tighter text-slate-800 text-slate-800">Ficha Técnica</h2>
                         <p class="text-slate-400 text-sm font-medium">Acompanhamento tático e detalhamento da iniciativa</p>
                     </div>
                     <button id="btn-print-project" onclick="window.print()" class="no-print hidden bg-slate-900 text-white px-6 py-3 rounded-2xl font-bold flex items-center gap-3 hover:bg-slate-800 transition shadow-lg text-white">
@@ -276,7 +267,6 @@
                 
                 <form id="project-form" class="space-y-10 text-slate-800">
                     <input type="hidden" id="edit-id" value="">
-                    <input type="hidden" id="project-status-internal" value="Backlog">
                     
                     <div class="grid grid-cols-1 md:grid-cols-4 gap-6">
                         <div class="md:col-span-2">
@@ -285,7 +275,7 @@
                         </div>
                         <div>
                             <label class="label-forte" for="prioridade">Prioridade</label>
-                            <select id="prioridade" class="w-full input-premium font-bold">
+                            <select id="prioridade" class="w-full input-premium font-bold text-slate-800">
                                 <option value="Baixa">Baixa</option>
                                 <option value="Média">Média</option>
                                 <option value="Alta">Alta</option>
@@ -293,32 +283,32 @@
                         </div>
                         <div>
                             <div class="flex items-center gap-2 mb-1">
-                                <label class="label-forte !mb-0" for="esforco">Tamanho do Esforço</label>
+                                <label class="label-forte !mb-0">Tamanho do Esforço</label>
                                 <div class="cursor-help text-slate-400 hover:text-cyan-400 transition" title="Rápido: Execução imediata. &#10;Intermediário: Exige apoio de outras áreas. &#10;Estruturante: Mudanças complexas ou longo prazo.">
                                     <svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" /></svg>
                                 </div>
                             </div>
-                            <select id="esforco" required class="w-full input-premium font-bold">
+                            <select id="esforco" required class="w-full input-premium font-bold text-slate-800">
                                 <option value="Rápido">Rápido</option>
                                 <option value="Intermediário">Intermediário</option>
                                 <option value="Estruturante">Estruturante</option>
                             </select>
                         </div>
                         <div>
-                            <div class="flex justify-between items-center mb-1">
-                                <label class="label-forte !mb-0" for="time">Área Impactada</label>
+                            <div class="flex justify-between items-center mb-1 text-slate-800">
+                                <label class="label-forte !mb-0">Área Impactada</label>
                                 <button type="button" onclick="openAdderModal('area')" class="btn-icon-add">+</button>
                             </div>
-                            <select id="time" required class="w-full input-premium">
+                            <select id="time" required class="w-full input-premium text-slate-800">
                                 <option value="" disabled selected>Selecionar...</option>
                             </select>
                         </div>
                         <div>
-                            <div class="flex justify-between items-center mb-1">
-                                <label class="label-forte !mb-0" for="frente">Frente de Trabalho</label>
+                            <div class="flex justify-between items-center mb-1 text-slate-800">
+                                <label class="label-forte !mb-0">Frente de Trabalho</label>
                                 <button type="button" onclick="openAdderModal('frente')" class="btn-icon-add">+</button>
                             </div>
-                            <select id="frente" class="w-full input-premium">
+                            <select id="frente" class="w-full input-premium text-slate-800">
                                 <option value="" disabled selected>Selecionar...</option>
                             </select>
                         </div>
@@ -332,38 +322,31 @@
                             </select>
                         </div>
                         
-                        <div class="md:col-span-2 bg-slate-50 p-6 rounded-3xl border border-slate-200 shadow-sm text-slate-800">
-                             <label class="label-forte mb-6 text-slate-500">Cronograma da Iniciativa</label>
+                        <div class="md:col-span-2 bg-slate-50 p-6 rounded-3xl border border-slate-200 shadow-sm text-slate-800 text-slate-800">
+                             <label class="label-forte mb-6 text-slate-500">Cronograma</label>
                              <div class="grid grid-cols-2 gap-6">
-                                <div>
-                                    <label class="label-forte !text-slate-800 !mb-2">Data Início</label>
-                                    <input type="date" id="data_criacao" required class="w-full input-premium text-sm font-bold border-slate-300">
-                                </div>
-                                <div>
-                                    <label class="label-forte !text-slate-800 !mb-2">Prazo Target</label>
-                                    <input type="date" id="prazo" required class="w-full input-premium text-sm font-bold border-slate-300">
-                                </div>
+                                <div><label class="label-forte !text-slate-600">Início</label><input type="date" id="data_criacao" required class="w-full input-premium text-sm font-bold border-slate-300"></div>
+                                <div><label class="label-forte !text-slate-600">Prazo Target</label><input type="date" id="prazo" required class="w-full input-premium text-sm font-bold border-slate-300"></div>
                              </div>
                              
-                             <!-- Datas de Fechamento -->
                              <div id="closure-dates" class="mt-8 pt-6 border-t border-slate-200 hidden">
                                 <div id="container-conclusao" class="grid grid-cols-1 md:grid-cols-2 gap-6 hidden">
                                     <div>
-                                        <label class="label-forte !text-green-600 !mb-2">Data Conclusão Real <span class="text-red-500">*</span></label>
+                                        <label class="label-forte !text-green-600">Data Conclusão Real <span class="text-red-500">*</span></label>
                                         <input type="date" id="data_conclusao" class="w-full input-premium text-sm font-bold border-green-300 shadow-sm">
                                     </div>
                                     <div>
-                                        <label class="label-forte !text-green-600 !mb-2">Observações de Finalização</label>
+                                        <label class="label-forte !text-green-600">Comentário Final</label>
                                         <textarea id="comentario_conclusao" class="w-full input-premium text-xs h-11 border-green-200 shadow-sm" placeholder="Opcional..."></textarea>
                                     </div>
                                 </div>
                                 <div id="container-cancelamento" class="grid grid-cols-1 md:grid-cols-2 gap-6 hidden">
                                     <div>
-                                        <label class="label-forte !text-red-600 !mb-2">Data Despriorização <span class="text-red-500">*</span></label>
+                                        <label class="label-forte !text-red-600">Data Despriorização <span class="text-red-500">*</span></label>
                                         <input type="date" id="data_cancelamento" class="w-full input-premium text-sm font-bold border-red-300 shadow-sm">
                                     </div>
                                     <div>
-                                        <label class="label-forte !text-red-600 !mb-2">Motivo <span class="text-red-500">*</span></label>
+                                        <label class="label-forte !text-red-600">Motivo <span class="text-red-500">*</span></label>
                                         <textarea id="comentario_cancelamento" class="w-full input-premium text-xs h-11 border-red-200 shadow-sm" placeholder="Obrigatório..."></textarea>
                                     </div>
                                 </div>
@@ -372,26 +355,26 @@
 
                         <div class="md:col-span-2 text-slate-800">
                              <label class="label-forte text-cyan-600">Expectativas de Ganho (KPIs)</label>
-                             <div class="bg-white p-6 rounded-3xl border-2 border-slate-200 shadow-sm text-slate-800">
+                             <div class="bg-white p-6 rounded-3xl border-2 border-slate-200 shadow-sm text-slate-800 text-slate-800">
                                 <div id="metricas-container" class="space-y-3 mb-4 text-slate-800"></div>
                                 <button type="button" onclick="addMetricaInput()" class="text-[10px] font-black text-cyan-500 hover:text-cyan-700 uppercase tracking-widest">+ Adicionar Métrica</button>
                              </div>
                         </div>
                         
-                        <div class="md:col-span-4 bg-white p-6 rounded-3xl border-2 border-slate-900 shadow-sm text-slate-800">
-                            <div class="flex justify-between items-center mb-4">
+                        <div class="md:col-span-4 bg-white p-6 rounded-3xl border-2 border-slate-900 shadow-sm text-slate-800 text-slate-800 text-slate-800">
+                            <div class="flex justify-between items-center mb-4 text-slate-800">
                                 <label class="label-forte !mb-0">Responsáveis Líderes (Seleção Múltipla)</label>
                                 <button type="button" onclick="openAdderModal('team')" class="btn-icon-add">+</button>
                             </div>
-                            <div id="responsaveis-grid" class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-2 max-h-48 overflow-y-auto pr-2 text-slate-800"></div>
+                            <div id="responsaveis-grid" class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-2 max-h-48 overflow-y-auto pr-2 text-slate-800 text-slate-800 text-slate-800"></div>
                         </div>
                     </div>
 
-                    <div class="grid grid-cols-1 md:grid-cols-2 gap-10 text-slate-800">
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-10">
                         <div class="space-y-8">
                             <div>
                                 <label class="label-forte text-slate-800" for="nota_inicial">Descrição e Objetivo Estratégico</label>
-                                <textarea id="nota_inicial" rows="5" class="w-full input-premium text-sm leading-relaxed" placeholder="Qual o propósito estratégico desta iniciativa?"></textarea>
+                                <textarea id="nota_inicial" rows="5" class="w-full input-premium text-sm leading-relaxed" placeholder="Propósito central da iniciativa..."></textarea>
                             </div>
                             <div class="bg-slate-50 p-6 rounded-3xl border border-slate-200 shadow-sm text-slate-800">
                                 <div class="flex justify-between items-center mb-4 text-slate-800">
@@ -425,18 +408,19 @@
                         <button type="submit" id="btn-submit" class="bg-slate-900 text-white px-10 py-5 rounded-2xl font-black hover:bg-slate-800 shadow-xl transition flex-1 uppercase tracking-widest text-xs text-white">Salvar Alterações</button>
                         <button type="button" id="btn-report" onclick="generateProjectReport()" class="hidden bg-cyan-500 text-white px-10 py-5 rounded-2xl font-black hover:bg-cyan-600 transition uppercase tracking-widest text-xs shadow-lg text-white">Gerar Report</button>
                         <button type="button" id="btn-finish" onclick="prepareStatusChange('Finalizado')" class="hidden bg-green-500 text-white px-10 py-5 rounded-2xl font-black hover:bg-green-600 transition uppercase tracking-widest text-xs shadow-lg text-white">Finalizar Projeto</button>
-                        <button type="button" id="btn-cancel" onclick="prepareStatusChange('Despriorizado')" class="hidden bg-red-500 text-white px-10 py-5 rounded-2xl font-black hover:bg-red-600 transition uppercase tracking-widest text-xs shadow-lg text-white">Despriorizar</button>
-                        <button type="button" onclick="resetForm(); switchTab('dashboard');" class="bg-white text-slate-400 border border-slate-200 px-8 py-5 rounded-2xl font-bold transition text-xs uppercase tracking-widest text-slate-800">Voltar</button>
+                        <button type="button" id="btn-cancel" onclick="prepareStatusChange('Despriorizado')" class="hidden bg-red-500 text-white px-10 py-5 rounded-2xl font-black hover:bg-red-600 transition uppercase tracking-widest text-xs shadow-lg text-white text-white">Despriorizar</button>
+                        <button type="button" id="btn-delete-form" onclick="deleteCurrentProject()" class="hidden bg-red-100 text-red-600 px-10 py-5 rounded-2xl font-black hover:bg-red-200 transition uppercase tracking-widest text-xs">Excluir Projeto</button>
+                        <button type="button" onclick="resetForm(); switchTab('dashboard');" class="bg-white text-slate-400 border border-slate-200 px-8 py-5 rounded-2xl font-bold transition text-xs uppercase tracking-widest text-slate-800 shadow-sm">Voltar</button>
                     </div>
                 </form>
             </div>
         </div>
 
-        <!-- LISTA GERAL -->
+        <!-- LISTA VIEW -->
         <div id="view-list" class="hidden no-print text-slate-800">
             <div class="mb-8 flex flex-col md:flex-row justify-between items-start md:items-end gap-6 text-slate-800 text-slate-800">
                 <div>
-                    <h1 class="text-4xl font-black uppercase tracking-tighter leading-none">Controle de Projetos</h1>
+                    <h1 class="text-4xl font-black uppercase tracking-tighter leading-none text-slate-800">Controle de Projetos</h1>
                     <p class="text-slate-400 text-xs font-black uppercase tracking-widest mt-2">Visão detalhada do cronograma e equipe</p>
                 </div>
                 <div class="flex flex-wrap gap-2 text-slate-800">
@@ -448,11 +432,9 @@
                 </div>
             </div>
             <div class="bg-white rounded-[2rem] shadow-sm border border-slate-100 overflow-hidden text-slate-800">
-                <table class="w-full text-left text-slate-800">
-                    <thead class="bg-slate-50 border-b border-slate-100 text-slate-400 uppercase text-[9px] font-black tracking-widest text-slate-400">
-                        <tr>
-                            <th class="p-6">Prioridade</th><th class="p-6">Iniciativa</th><th class="p-6">Início</th><th class="p-6">Prazo Target</th><th class="p-6">Dias p/ Finalizar</th><th class="p-6">Responsáveis</th><th class="p-6 text-center">Status</th><th class="p-6 text-right">Ações</th>
-                        </tr>
+                <table class="w-full text-left text-slate-800 text-slate-800">
+                    <thead class="bg-slate-50 border-b border-slate-100 text-slate-400 uppercase text-[9px] font-black tracking-widest">
+                        <tr><th class="p-6">Prioridade</th><th class="p-6">Iniciativa</th><th class="p-6">Início</th><th class="p-6">Prazo Target</th><th class="p-6">Dias p/ Finalizar</th><th class="p-6">Responsáveis</th><th class="p-6 text-center">Status</th><th class="p-6 text-right">Ações</th></tr>
                     </thead>
                     <tbody id="detailed-table-body" class="divide-y divide-slate-50 text-slate-800"></tbody>
                 </table>
@@ -465,7 +447,7 @@
         import { getAuth, signInAnonymously, signInWithCustomToken, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";
         import { getFirestore, collection, doc, addDoc, updateDoc, deleteDoc, onSnapshot } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
 
-        // Firebase Configuration - USANDO DADOS REAIS DO USUÁRIO
+        // CONFIGURAÇÃO REAL DO FIREBASE
         const firebaseConfig = {
             apiKey: "AIzaSyAU8nHiRzTwOkrfd8LY7N-YkJG_S7CE0Xs",
             authDomain: "painel-de-projeto.firebaseapp.com",
@@ -490,10 +472,8 @@
         const defaultTeam = ["Cauan Pereira Da Silva", "Diego Francisco Rocha", "Hudson Nestor Pereira Cortes", "Lucas Henrique Jantsch", "Luiz Gustavo Ribeiro", "Michael Gabriel Moraes Faria", "Otávio Augusto Oliveira", "Rodrigo Prinz De Paiva", "Simone Thomé de Andrade"];
         const defaultAreas = ["Análise", "CX", "Mesa", "Onboarding", "Comunicação"];
 
-        // Autenticação Segura
         async function initAuth() {
             try {
-                // No GitHub Pages, não existe __initial_auth_token.
                 await signInAnonymously(auth);
             } catch (error) { 
                 console.error("Auth Error:", error);
@@ -517,21 +497,21 @@
                 renderTeamCheckboxes();
                 updateLeaderFilters();
                 refreshUI();
-            }, err => console.error("Team Sync Error:", err));
+            }, err => console.error(err));
 
             onSnapshot(collection(db, 'artifacts', appId, 'public', 'data', 'areas'), (snap) => {
                 dynamicAreas = snap.docs.map(doc => doc.data().name);
                 updateDropdown('time', dynamicAreas, defaultAreas);
                 updateDropdown('dash-filter-area', dynamicAreas, defaultAreas, "Todas as Áreas Impactadas");
                 updateDropdown('list-filter-area', dynamicAreas, defaultAreas, "Área Impactada");
-            }, err => console.error("Areas Sync Error:", err));
+            }, err => console.error(err));
 
             onSnapshot(collection(db, 'artifacts', appId, 'public', 'data', 'frentes'), (snap) => {
                 dynamicFrentes = snap.docs.map(doc => doc.data().name);
                 const defFrentes = ["Performance", "Reestruturação", "Automação", "Simplificação"];
                 updateDropdown('frente', dynamicFrentes, defFrentes);
                 updateDropdown('list-filter-frente', dynamicFrentes, defFrentes, "Frente Trabalho");
-            }, err => console.error("Frentes Sync Error:", err));
+            }, err => console.error(err));
         };
 
         const updateDropdown = (elementId, dynamicList, defaults, firstOptionText) => {
@@ -560,39 +540,29 @@
                 projects = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
                 projects.sort((a, b) => (a.data_criacao || "") > (b.data_criacao || "") ? 1 : -1);
                 const overlay = document.getElementById('loading-overlay');
-                if(overlay) { 
-                    overlay.style.opacity = '0'; 
-                    setTimeout(() => overlay.style.display = 'none', 500); 
-                }
+                if(overlay) { overlay.style.opacity = '0'; setTimeout(() => overlay.style.display = 'none', 500); }
                 refreshUI();
-            }, err => console.error("Projects Sync Error:", err));
+            }, err => console.error(err));
         };
 
-        // PROTEÇÃO TOTAL CONTRA NULL
         const safeSetText = (id, text) => { const el = document.getElementById(id); if(el) el.innerText = text; };
         const safeSetValue = (id, val) => { const el = document.getElementById(id); if(el) el.value = val; };
-        const safeSetHTML = (id, html) => { const el = document.getElementById(id); if(el) el.innerHTML = html; };
 
         window.openAdderModal = (target) => {
             window.currentModalTarget = target;
             const titleMap = { area: 'Nova Área Impactada', frente: 'Nova Frente de Trabalho', team: 'Novo Líder' };
-            const titleEl = document.getElementById('modal-title');
-            const inputEl = document.getElementById('modal-input');
-            if(titleEl) titleEl.innerText = titleMap[target];
-            if(inputEl) inputEl.value = '';
+            safeSetText('modal-title', titleMap[target]);
+            safeSetValue('modal-input', '');
             const modal = document.getElementById('custom-modal');
             if(modal) { modal.classList.remove('hidden'); modal.classList.add('flex'); }
         };
         window.closeCustomModal = () => document.getElementById('custom-modal')?.classList.add('hidden');
         document.getElementById('modal-confirm').onclick = async () => {
-            const input = document.getElementById('modal-input');
-            const val = input ? input.value.trim() : "";
+            const val = document.getElementById('modal-input')?.value.trim();
             if(!val || !currentUser) return;
             const collectionName = window.currentModalTarget === 'team' ? 'team' : window.currentModalTarget === 'area' ? 'areas' : 'frentes';
-            try {
-                await addDoc(collection(db, 'artifacts', appId, 'public', 'data', collectionName), { name: val });
-                closeCustomModal();
-            } catch(e) { console.error("Adder Error:", e); }
+            await addDoc(collection(db, 'artifacts', appId, 'public', 'data', collectionName), { name: val });
+            closeCustomModal();
         };
 
         window.addMetricaInput = (label = '', meta = '', real = '') => {
@@ -601,19 +571,18 @@
             const div = document.createElement('div');
             div.className = 'metrica-row mb-4 animate-in fade-in slide-in-from-left-2 duration-300';
             div.innerHTML = `
-                <div><label class="label-forte !text-[9px]">KPI</label><input type="text" class="metrica-label input-premium !py-1.5 !text-[10px] w-full uppercase" value="${label}"></div>
-                <div><label class="label-forte !text-[9px]">Meta</label><input type="text" class="metrica-meta input-premium !py-1.5 !text-[10px] w-full" value="${meta}"></div>
-                <div><label class="label-forte !text-[9px]">Real</label><input type="text" class="metrica-real input-premium !py-1.5 !text-[10px] w-full" value="${real}"></div>
-                <button type="button" onclick="this.parentElement.remove()" class="text-red-300 hover:text-red-500 transition pb-2 font-black text-xl">×</button>`;
+                <div><label class="label-forte !text-[9px]">KPI</label><input type="text" class="metrica-label input-premium !py-1.5 !text-[10px] w-full uppercase text-slate-800" value="${label}"></div>
+                <div><label class="label-forte !text-[9px]">Meta</label><input type="text" class="metrica-meta input-premium !py-1.5 !text-[10px] w-full text-slate-800" value="${meta}"></div>
+                <div><label class="label-forte !text-[9px]">Real</label><input type="text" class="metrica-real input-premium !py-1.5 !text-[10px] w-full text-slate-800" value="${real}"></div>
+                <button type="button" onclick="this.parentElement.remove()" class="text-red-300 hover:text-red-500 pb-2 font-black text-xl">×</button>`;
             container.appendChild(div);
         };
 
         window.addTaskToList = () => {
-            const input = document.getElementById('task-input');
-            const val = input ? input.value.trim() : "";
+            const val = document.getElementById('task-input')?.value.trim();
             if (!val) return;
             currentTasks.push({ id: Date.now(), text: val, completed: false });
-            if(input) input.value = "";
+            safeSetValue('task-input', '');
             renderTasksList();
         };
         window.toggleTask = (id) => { currentTasks = currentTasks.map(t => t.id === id ? { ...t, completed: !t.completed } : t); renderTasksList(); };
@@ -688,8 +657,8 @@
                 const slug = p.status?.toLowerCase().replace(/\s/g, '') || 'backlog';
                 let sla = (p.status === 'Finalizado' && p.data_conclusao && p.prazo) ? `<span class="ml-2 px-2 py-0.5 rounded text-[8px] font-black uppercase ${new Date(p.data_conclusao) <= new Date(p.prazo) ? 'bg-green-100 text-green-700 border border-green-200' : 'bg-red-100 text-red-700 border border-red-200'}">${new Date(p.data_conclusao) <= new Date(p.prazo) ? 'No Prazo' : 'Atrasado'}</span>` : "";
                 let closure = p.status === 'Finalizado' && p.comentario_conclusao ? `<div class="mt-2 p-2 bg-green-50 border border-green-100 rounded-lg text-[9px] italic text-green-700 truncate text-slate-800">Descrição: ${p.comentario_conclusao}</div>` : (p.status === 'Despriorizado' && p.comentario_cancelamento ? `<div class="mt-2 p-2 bg-red-50 border border-red-100 rounded-lg text-[9px] italic text-red-700 truncate text-slate-800">Motivo: ${p.comentario_cancelamento}</div>` : '');
-                let metrics = p.metricas?.length ? `<div class="bg-slate-50 p-3 rounded-xl mt-3 border border-slate-100 text-slate-800"><p class="text-[8px] font-black uppercase text-slate-400 mb-2">KPIs</p>${p.metricas.map(m => `<div class="flex justify-between items-center text-[10px] mb-1"><span>${m.label}</span><span class='text-slate-800'>🎯${m.meta} | ✅${m.real||'-'}</span></div>`).join('')}</div>` : "";
-                grid.innerHTML += `<div class="card-project p-8 flex flex-col h-full border-t-[12px] text-slate-800 shadow-sm" style="border-top-color: ${p.time === 'Análise' ? '#00e5ff' : '#000a28'}"><div class="flex justify-between items-start mb-6"><span class="text-[9px] font-black text-slate-300 uppercase">${p.time} | ${p.frente}</span><div class="flex items-center"><span class="status-pill status-${slug}">${p.status}</span>${sla}</div></div><h3 class="text-xl font-black mb-4 uppercase line-clamp-2 leading-tight">${p.iniciativa}</h3><div class="text-[11px] font-bold space-y-2 mb-6 border-l-2 border-slate-50 pl-4 text-slate-500"><p class="flex justify-between"><span>TARGET:</span> <span class="text-slate-900">${formatDate(p.prazo)}</span></p>${metrics}${closure}</div><div class="bg-slate-50 p-4 rounded-2xl flex-grow mb-6 shadow-inner text-[11px] text-slate-600 italic">"${p.notes?.length ? p.notes[p.notes.length-1].text : 'Iniciada.'}"</div><button onclick="editProjectByID('${p.id}')" class="bg-slate-900 text-white py-4 rounded-2xl font-black uppercase text-[10px] tracking-widest shadow-lg hover:bg-slate-800 transition">Ver Ficha Técnica</button></div>`;
+                let metrics = p.metricas?.length ? `<div class="bg-slate-50 p-3 rounded-xl mt-3 border border-slate-100"><p class="text-[8px] font-black uppercase text-slate-400 mb-2">KPIs</p>${p.metricas.map(m => `<div class="flex justify-between items-center text-[10px] mb-1"><span>${m.label}</span><span class='text-slate-800 font-bold'>🎯${m.meta} | ✅${m.real||'-'}</span></div>`).join('')}</div>` : "";
+                grid.innerHTML += `<div class="card-project p-8 flex flex-col h-full border-t-[12px] text-slate-800 shadow-sm" style="border-top-color: ${p.time === 'Análise' ? '#00e5ff' : '#000a28'}"><div class="flex justify-between items-start mb-6"><span class="text-[9px] font-black text-slate-300 uppercase">${p.time} | ${p.frente}</span><div class="flex items-center"><span class="status-pill status-${slug}">${p.status}</span>${sla}</div></div><h3 class="text-xl font-black mb-4 uppercase line-clamp-2 leading-tight">${p.iniciativa}</h3><div class="text-[11px] font-bold space-y-2 mb-6 border-l-2 border-slate-50 pl-4 text-slate-500"><p class="flex justify-between"><span>TARGET:</span> <span class="text-slate-900 font-black">${formatDate(p.prazo)}</span></p>${metrics}${closure}</div><div class="bg-slate-50 p-4 rounded-2xl flex-grow mb-6 shadow-inner text-[11px] text-slate-600 italic">"${p.notes?.length ? p.notes[p.notes.length-1].text : 'Iniciada.'}"</div><button onclick="editProjectByID('${p.id}')" class="bg-slate-900 text-white py-4 rounded-2xl font-black uppercase text-[10px] tracking-widest shadow-lg hover:bg-slate-800 transition text-white">Ver Detalhes</button></div>`;
             });
         };
 
@@ -716,10 +685,10 @@
                 else if(p.prazo) {
                     const diff = Math.ceil((new Date(p.prazo) - today)/(1000*60*60*24));
                     diffText = diff > 0 ? diff+" dias" : (diff === 0 ? "Entrega Hoje" : "Atrasado ("+Math.abs(diff)+" d)");
-                    diffColor = diff < 0 ? "text-red-500 font-black" : (diff <= 5 ? "text-amber-500 font-black" : "text-slate-600 font-bold text-slate-800");
+                    diffColor = diff < 0 ? "text-red-500 font-black" : (diff <= 5 ? "text-amber-500 font-black" : "text-slate-600 font-bold");
                 }
                 const resps = Array.isArray(p.responsavel) ? p.responsavel.slice(0,2).join(', ') : "";
-                tbody.innerHTML += `<tr class="hover:bg-slate-50 transition text-slate-800"><td class="p-6 font-black text-[10px] uppercase text-slate-400">${p.prioridade}</td><td class="p-6 font-black uppercase text-sm">${p.iniciativa}</td><td class="p-6 text-[11px] font-bold text-slate-500">${formatDate(p.data_criacao)}</td><td class="p-6 text-[11px] font-black">${formatDate(p.prazo)}</td><td class="p-6 text-[11px] ${diffColor}">${diffText}</td><td class="p-6 text-xs text-slate-700">${resps}</td><td class="p-6 text-center"><span class="status-pill bg-slate-100 font-black">${p.status}</span></td><td class="p-6 text-right space-x-4"><button onclick="editProjectByID('${p.id}')" class="text-cyan-500 font-black text-[10px] uppercase hover:underline">Ficha Técnica</button></td></tr>`;
+                tbody.innerHTML += `<tr class="hover:bg-slate-50 transition text-slate-800"><td class="p-6 font-black text-[10px] uppercase text-slate-400">${p.prioridade}</td><td class="p-6 font-black uppercase text-sm">${p.iniciativa}</td><td class="p-6 text-[11px] font-bold text-slate-500">${formatDate(p.data_criacao)}</td><td class="p-6 text-[11px] font-black">${formatDate(p.prazo)}</td><td class="p-6 text-[11px] ${diffColor}">${diffText}</td><td class="p-6 text-xs text-slate-700 font-bold">${resps}</td><td class="p-6 text-center"><span class="status-pill bg-slate-100 text-slate-600 font-black">${p.status}</span></td><td class="p-6 text-right space-x-4"><button onclick="editProjectByID('${p.id}')" class="text-cyan-500 font-black text-[10px] uppercase hover:underline">Ficha Técnica</button></td></tr>`;
             });
         };
 
@@ -876,6 +845,7 @@
                 document.getElementById('btn-cancel')?.classList.remove('hidden');
                 document.getElementById('btn-report')?.classList.remove('hidden');
                 document.getElementById('btn-print-project')?.classList.remove('hidden');
+                document.getElementById('btn-delete-form')?.classList.remove('hidden');
                 
                 currentTasks = Array.isArray(p.atividades) ? [...p.atividades] : []; 
                 renderTasksList();
@@ -892,7 +862,7 @@
                 if(history) {
                     history.innerHTML = '';
                     [...(p.notes || [])].reverse().forEach(n => {
-                        history.innerHTML += `<div class="p-4 bg-slate-50 rounded-2xl mb-2 border border-slate-100 shadow-sm text-slate-800 text-slate-800"><span class="text-[8px] font-black text-cyan-500 uppercase">${n.date}</span><p class="text-xs font-bold mt-1">${n.text}</p></div>`;
+                        history.innerHTML += `<div class="p-4 bg-slate-50 rounded-2xl mb-2 border border-slate-100 shadow-sm text-slate-800"><span class="text-[8px] font-black text-cyan-500 uppercase">${n.date}</span><p class="text-xs font-bold mt-1 text-slate-700">${n.text}</p></div>`;
                     });
                 }
                 document.getElementById('notes-section')?.classList.remove('hidden');
@@ -900,7 +870,19 @@
             }
         };
 
-        window.deleteProject = async (id) => { if(confirm('Eliminar permanentemente?')) await deleteDoc(doc(db, 'artifacts', appId, 'public', 'data', 'projects', id)); };
+        window.deleteProject = async (id) => { 
+            if(confirm('Tem certeza que deseja excluir esta iniciativa permanentemente? Esta ação não pode ser desfeita.')) {
+                try {
+                    await deleteDoc(doc(db, 'artifacts', appId, 'public', 'data', 'projects', id));
+                    switchTab('dashboard');
+                } catch(e) { console.error("Delete Error:", e); }
+            }
+        };
+
+        window.deleteCurrentProject = async () => {
+            const id = document.getElementById('edit-id')?.value;
+            if(id) await deleteProject(id);
+        };
         
         window.switchTab = (t) => { 
             ['view-dashboard', 'view-form', 'view-list'].forEach(v => document.getElementById(v)?.classList.add('hidden')); 
@@ -917,11 +899,14 @@
             const form = document.getElementById('project-form'); if(form) form.reset();
             safeSetValue('edit-id', "");
             safeSetValue('status', "Backlog");
+            safeSetValue('project-status-internal', "Backlog");
+            safeSetValue('status-display', "Backlog");
             document.getElementById('notes-section')?.classList.add('hidden');
             document.getElementById('closure-dates')?.classList.add('hidden');
             document.getElementById('btn-finish')?.classList.add('hidden');
             document.getElementById('btn-cancel')?.classList.add('hidden');
             document.getElementById('btn-report')?.classList.add('hidden');
+            document.getElementById('btn-delete-form')?.classList.add('hidden');
             const mContainer = document.getElementById('metricas-container');
             if(mContainer) mContainer.innerHTML = '';
             addMetricaInput();

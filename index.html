@@ -388,6 +388,18 @@
         const defaultAreas = ["Análise", "CX", "Mesa", "Onboarding", "Comunicação"];
         const defaultFrentes = ["Performance", "Reestruturação", "Automação", "Simplificação"];
 
+        // --- FUNÇÃO PARA OCULTAR O LOADER ---
+        const hideOverlay = () => {
+            const overlay = document.getElementById('loading-overlay');
+            if (overlay) {
+                overlay.style.opacity = '0';
+                setTimeout(() => overlay.style.display = 'none', 500);
+            }
+        };
+
+        // Fail-safe: Oculta o carregamento após 5 segundos independente do banco
+        setTimeout(hideOverlay, 5000);
+
         // --- AUTH & SYNC ---
         const init = async () => {
             try {
@@ -398,7 +410,7 @@
                 }
             } catch (error) {
                 console.error("Auth initialization failed:", error);
-                document.getElementById('loading-overlay').style.display = 'none';
+                hideOverlay();
             }
         };
 
@@ -415,14 +427,13 @@
             const path = collection(db, 'artifacts', appId, 'public', 'data', 'projects');
             onSnapshot(path, snap => {
                     projects = snap.docs.map(doc => ({ id: doc.id, ...doc.data() }));
-                    const overlay = document.getElementById('loading-overlay');
-                    if (overlay) {
-                        overlay.style.opacity = '0';
-                        setTimeout(() => overlay.style.display = 'none', 500);
-                    }
+                    hideOverlay();
                     window.refreshUI();
                 },
-                error => console.error("Snapshot error:", error)
+                error => {
+                    console.error("Firestore Snapshot error:", error);
+                    hideOverlay(); // Garante que a tela suma mesmo se der erro
+                }
             );
         };
 

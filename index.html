@@ -3,8 +3,8 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Gestão de Projetos - Unico</title>
-    <link href="https://fonts.googleapis.com/css?family=Nunito+Sans:wght@300;400;700;900&display=swap" rel="stylesheet">
+    <title>Gestão de Eficiência Pro - Unico</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700;800&family=Nunito+Sans:wght@300;400;700;900&display=swap" rel="stylesheet">
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <style>
@@ -17,61 +17,55 @@
             font-family: 'Nunito Sans', sans-serif;
             background-color: var(--bg-body);
             color: var(--primary-color);
-            scroll-behavior: smooth;
+        }
+        .input-premium {
+            background-color: #ffffff;
+            border: 2px solid #e2e8f0;
+            border-radius: 12px;
+            padding: 0.75rem 1rem;
+            transition: all 0.2s;
+            outline: none;
+            font-weight: 700;
+        }
+        .input-premium:focus {
+            border-color: var(--accent-color);
+            box-shadow: 0 0 0 4px rgba(0, 229, 255, 0.1);
+        }
+        .label-forte {
+            font-size: 0.65rem;
+            font-weight: 900;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            color: #475569;
+            margin-bottom: 0.4rem;
+            display: block;
         }
         .active-tab {
-            border-bottom: 4px solid var(--accent-color);
             color: var(--accent-color);
+            border-bottom: 4px solid var(--accent-color);
             font-weight: 900;
+        }
+        .card-project {
+            background: white;
+            border-radius: 32px;
+            border: 1px solid #e2e8f0;
+            transition: all 0.3s ease;
+        }
+        .card-project:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 20px 25px -5px rgba(0,0,0,0.05);
+        }
+        .status-pill {
+            font-size: 0.65rem;
+            font-weight: 900;
+            padding: 4px 12px;
+            border-radius: 100px;
+            text-transform: uppercase;
         }
         .status-backlog { background-color: #e2e8f0; color: #475569; }
         .status-andamento { background-color: #fef3c7; color: #92400e; }
         .status-finalizado { background-color: #dcfce7; color: #166534; }
         .status-despriorizado { background-color: #fee2e2; color: #991b1b; }
-
-        .priority-high { color: #dc2626; font-weight: 900; }
-        .priority-medium { color: #d97706; font-weight: 700; }
-        .priority-low { color: #059669; font-weight: 700; }
-
-        #loading-screen {
-            position: fixed;
-            inset: 0;
-            background: var(--primary-color);
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            z-index: 10000;
-            color: white;
-            transition: opacity 0.5s ease;
-        }
-
-        .input-mega-visivel {
-            background-color: #ffffff !important;
-            border: 3px solid #1e293b !important;
-            color: #000000 !important;
-            padding: 1rem !important;
-            border-radius: 0.75rem !important;
-            width: 100%;
-            font-weight: 700;
-            font-size: 0.95rem;
-            box-shadow: inset 0 2px 4px rgba(0,0,0,0.05);
-            transition: all 0.2s ease;
-        }
-        .input-mega-visivel:focus {
-            border-color: var(--accent-color) !important;
-            outline: none;
-            box-shadow: 0 0 0 4px rgba(0, 229, 255, 0.2);
-        }
-        .label-forte {
-            display: block;
-            font-size: 11px;
-            font-weight: 900;
-            text-transform: uppercase;
-            color: #475569;
-            margin-bottom: 0.4rem;
-            letter-spacing: 0.05em;
-        }
 
         .checkbox-item {
             display: flex;
@@ -84,19 +78,6 @@
         }
         .checkbox-item:hover { background: #f1f5f9; }
 
-        .filter-select {
-            background-color: #fff;
-            border: 2px solid #e2e8f0;
-            padding: 0.5rem 1rem;
-            border-radius: 0.75rem;
-            font-size: 0.75rem;
-            font-weight: 700;
-            outline: none;
-            color: #475569;
-            cursor: pointer;
-        }
-        .filter-select:focus { border-color: var(--accent-color); }
-
         .kpi-card {
             background: white;
             padding: 1.5rem;
@@ -105,292 +86,327 @@
             border: 1px solid #f1f5f9;
         }
 
-        @media print {
-            .no-print { display: none !important; }
-            body { background-color: white !important; }
-            .print-card { box-shadow: none !important; border: 1px solid #eee !important; width: 100% !important; margin: 0 !important; }
-            .print-title { font-size: 20pt !important; }
+        #loading-overlay {
+            position: fixed;
+            inset: 0;
+            background: var(--primary-color);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            z-index: 10000;
+            color: white;
+            transition: opacity 0.5s;
         }
 
-        .line-clamp-3 {
-            display: -webkit-box;
-            -webkit-line-clamp: 3;
-            -webkit-box-orient: vertical;  
-            overflow: hidden;
+        .btn-icon-add {
+            background: #f1f5f9;
+            color: #475569;
+            width: 24px;
+            height: 24px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.2s;
+        }
+        .btn-icon-add:hover {
+            background: var(--accent-color);
+            color: var(--primary-color);
+        }
+
+        .metrica-row {
+            display: grid;
+            grid-template-columns: 2fr 1fr 1fr 40px;
+            gap: 12px;
+            align-items: end;
+        }
+
+        @media print {
+            .no-print { display: none !important; }
+            body { background: white; }
+            .main-content { margin: 0; padding: 0; }
         }
     </style>
 </head>
-<body class="min-h-screen pb-10">
+<body class="min-h-screen">
 
-    <div id="loading-screen">
+    <div id="loading-overlay">
         <img src="https://cloudfilesdm.com/postcards/unico-color__1-878cebbc.png" class="w-32 mb-8 invert" alt="Unico">
-        <div class="animate-spin rounded-full h-10 w-10 border-b-2 border-cyan-400 mb-4"></div>
-        <p id="loading-text" class="text-[10px] uppercase tracking-widest font-bold opacity-60">Sincronizando dados...</p>
+        <div class="w-10 h-10 border-4 border-slate-700 border-t-cyan-400 rounded-full animate-spin"></div>
     </div>
 
-    <!-- Header -->
-    <header class="bg-white shadow-md sticky top-0 z-50 no-print">
+    <div id="custom-modal" class="fixed inset-0 bg-slate-900/60 backdrop-blur-sm hidden items-center justify-center z-[11000] p-4">
+        <div class="bg-white w-full max-w-sm p-8 rounded-[2.5rem] shadow-2xl">
+            <h3 id="modal-title" class="text-xl font-black mb-4 uppercase tracking-tighter text-slate-800 text-center">Adicionar Item</h3>
+            <input type="text" id="modal-input" class="w-full input-premium mb-6" placeholder="Digite o nome...">
+            <div class="flex gap-3">
+                <button id="modal-confirm" class="bg-slate-900 text-white font-bold py-3 px-6 rounded-2xl flex-1 transition hover:bg-slate-800 uppercase text-[10px] tracking-widest">Adicionar</button>
+                <button onclick="closeCustomModal()" class="bg-slate-100 text-slate-400 font-bold py-3 px-6 rounded-2xl flex-1 transition hover:bg-slate-200 uppercase text-[10px] tracking-widest">Sair</button>
+            </div>
+        </div>
+    </div>
+
+    <header class="bg-white border-b border-slate-100 sticky top-0 z-50 no-print">
         <div class="max-w-7xl mx-auto px-6 h-20 flex justify-between items-center text-slate-800">
             <div class="flex items-center gap-6">
-                <img src="https://cloudfilesdm.com/postcards/unico-color__1-878cebbc.png" class="w-24 md:w-28" alt="Unico">
+                <img src="https://cloudfilesdm.com/postcards/unico-color__1-878cebbc.png" class="h-8" alt="Unico Logo">
                 <div id="sync-indicator" class="hidden md:flex items-center gap-2 px-3 py-1 bg-green-50 rounded-full border border-green-100">
                     <span class="w-2 h-2 rounded-full bg-green-500 animate-pulse"></span>
                     <span class="text-[10px] font-black text-green-600 uppercase">Tempo Real</span>
                 </div>
             </div>
             
-            <nav class="flex gap-4 md:gap-10 h-full items-center text-[11px] md:text-xs uppercase tracking-tighter md:tracking-widest font-black">
-                <button onclick="switchTab('dashboard')" id="tab-dashboard" class="h-full px-1 transition-all active-tab hover:text-cyan-400">Dashboard</button>
-                <button onclick="switchTab('form')" id="tab-form" class="h-full px-1 transition-all hover:text-cyan-400">Novo Projeto</button>
-                <button onclick="switchTab('list')" id="tab-list" class="h-full px-1 transition-all hover:text-cyan-400">Projetos</button>
+            <nav class="flex gap-8 h-full items-center text-[11px] font-black uppercase tracking-widest text-slate-400">
+                <button onclick="switchTab('dashboard')" id="tab-dashboard" class="h-full px-2 active-tab transition-colors">Dashboard</button>
+                <button onclick="switchTab('form')" id="tab-form" class="h-full px-2 hover:text-slate-900 transition-colors">Novo Projeto</button>
+                <button onclick="switchTab('list')" id="tab-list" class="h-full px-2 hover:text-slate-900 transition-colors">Lista Geral</button>
             </nav>
         </div>
     </header>
 
-    <main class="max-w-7xl mx-auto px-6 mt-10 main-content">
+    <main class="max-w-7xl mx-auto p-6 mt-4 main-content">
         
-        <!-- DASHBOARD -->
         <div id="view-dashboard" class="block no-print">
-            <div class="flex flex-col md:flex-row justify-between items-start md:items-end mb-10 gap-6">
+            <div class="mb-10 flex flex-col md:flex-row md:items-end justify-between gap-4">
                 <div>
-                    <h1 class="text-4xl font-black text-slate-900 tracking-tight">Estratégia & Operação</h1>
-                    <p class="text-slate-400 font-bold uppercase text-xs mt-1">Visão Macro de Eficiência</p>
+                    <h1 class="text-4xl font-black text-slate-900 tracking-tighter uppercase">Estratégia & Operação</h1>
+                    <p class="text-slate-400 text-xs font-bold uppercase mt-1">Visão macro de eficiência corporativa</p>
                 </div>
-
                 <div class="flex flex-wrap gap-2">
-                    <select id="dash-filter-periodo" class="filter-select" onchange="refreshUI()">
-                        <option value="all">Todo o Período</option>
-                        <option value="mes">Este Mês</option>
-                        <option value="trimestre">Este Trimestre</option>
-                        <option value="semestre">Este Semestre</option>
-                        <option value="ano">Este Ano</option>
+                    <select id="dash-filter-area" class="input-premium !py-2 !text-xs" onchange="refreshUI()">
+                        <option value="">Todas as Áreas</option>
                     </select>
-                    <select id="dash-filter-analista" class="filter-select" onchange="refreshUI()">
-                        <option value="">Líder do Projeto</option>
-                    </select>
-                    <select id="dash-filter-area" class="filter-select" onchange="refreshUI()">
-                        <option value="">Área Beneficiada</option>
-                        <option value="Análise">Análise</option>
-                        <option value="CX">CX</option>
-                        <option value="Mesa">Mesa</option>
-                        <option value="Tecnologia">Tecnologia</option>
-                    </select>
-                    <button onclick="clearDashFilters()" class="text-[10px] font-black text-slate-300 hover:text-red-500 uppercase px-2">Limpar</button>
                 </div>
             </div>
 
-            <!-- KPIs -->
-            <div class="grid grid-cols-2 md:grid-cols-4 gap-4 mb-10 text-center">
-                <div class="kpi-card border-l-4 border-slate-900">
-                    <p class="text-[9px] font-black text-slate-300 uppercase tracking-widest mb-1">Total de Projetos</p>
-                    <h2 id="kpi-total" class="text-3xl font-black text-slate-900">0</h2>
+            <div class="grid grid-cols-2 md:grid-cols-4 gap-6 mb-12">
+                <div class="kpi-card border-l-8 border-slate-900">
+                    <p class="label-forte">Total Projetos</p>
+                    <h2 id="kpi-total" class="text-4xl font-black text-slate-900">0</h2>
                 </div>
-                <div class="kpi-card border-l-4 border-green-400">
-                    <p class="text-[9px] font-black text-slate-300 uppercase tracking-widest mb-1">Saudáveis (Sem Bloqueio)</p>
-                    <h2 id="kpi-saude" class="text-3xl font-black text-green-500">0%</h2>
+                <div class="kpi-card border-l-8 border-green-400">
+                    <p class="label-forte">Saúde (Sem Risco)</p>
+                    <h2 id="kpi-saude" class="text-4xl font-black text-green-500">0%</h2>
                 </div>
-                <div class="kpi-card border-l-4 border-red-500">
-                    <p class="text-[9px] font-black text-slate-300 uppercase tracking-widest mb-1">Impedimentos Ativos</p>
-                    <h2 id="kpi-blockers" class="text-3xl font-black text-red-600">0</h2>
+                <div class="kpi-card border-l-8 border-red-500">
+                    <p class="label-forte">Bloqueios Ativos</p>
+                    <h2 id="kpi-blockers" class="text-4xl font-black text-red-600">0</h2>
                 </div>
-                <div class="kpi-card border-l-4 border-cyan-400">
-                    <p class="text-[9px] font-black text-slate-300 uppercase tracking-widest mb-1">Foco Alta Prioridade</p>
-                    <h2 id="kpi-prioridade" class="text-3xl font-black text-cyan-500">0</h2>
+                <div class="kpi-card border-l-8 border-cyan-400">
+                    <p class="label-forte">Alta Prioridade</p>
+                    <h2 id="kpi-prioridade" class="text-4xl font-black text-cyan-500">0</h2>
                 </div>
             </div>
 
             <div class="grid grid-cols-1 md:grid-cols-3 gap-8 mb-12">
-                <div class="bg-white p-8 rounded-3xl shadow-sm border border-slate-100 flex flex-col items-center">
-                    <h3 class="text-[10px] font-black text-slate-300 uppercase mb-6 tracking-widest">Status da Carteira</h3>
-                    <div class="w-full h-56"><canvas id="chartStatus"></canvas></div>
+                <div class="bg-white p-8 rounded-[2rem] border border-slate-100 shadow-sm flex flex-col items-center">
+                    <span class="label-forte mb-6 text-center">Status da Carteira</span>
+                    <div class="w-full h-56 mt-4"><canvas id="chartStatus"></canvas></div>
                 </div>
-                <div class="bg-white p-8 rounded-3xl shadow-sm border border-slate-100 flex flex-col items-center">
-                    <h3 class="text-[10px] font-black text-slate-300 uppercase mb-6 tracking-widest">Esforço por Área</h3>
-                    <div class="w-full h-56"><canvas id="chartTime"></canvas></div>
+                <div class="bg-white p-8 rounded-[2rem] border border-slate-100 shadow-sm flex flex-col items-center">
+                    <span class="label-forte mb-6 text-center">Área Impactada</span>
+                    <div class="w-full h-56 mt-4"><canvas id="chartTime"></canvas></div>
                 </div>
-                <div class="bg-white p-8 rounded-3xl shadow-sm border border-slate-100 flex flex-col items-center">
-                    <h3 class="text-[10px] font-black text-slate-300 uppercase mb-6 tracking-widest">Pilar Estratégico</h3>
-                    <div class="w-full h-56"><canvas id="chartFrente"></canvas></div>
+                <div class="bg-white p-8 rounded-[2rem] border border-slate-100 shadow-sm flex flex-col items-center">
+                    <span class="label-forte mb-6 text-center">Pilar Estratégico</span>
+                    <div class="w-full h-56 mt-4"><canvas id="chartFrente"></canvas></div>
+                </div>
+            </div>
+
+            <div class="mb-12">
+                <div class="bg-white p-10 rounded-[2.5rem] border border-slate-100 shadow-sm">
+                    <div class="flex justify-between items-center mb-8">
+                        <div>
+                            <span class="label-forte">Gestão de Recursos</span>
+                            <h3 class="text-2xl font-black uppercase tracking-tighter">Capacidade por Líder</h3>
+                        </div>
+                        <div class="flex gap-4">
+                            <div class="flex items-center gap-2"><span class="w-3 h-3 bg-cyan-400 rounded"></span><span class="text-[9px] font-black uppercase text-slate-400">Rápido</span></div>
+                            <div class="flex items-center gap-2"><span class="w-3 h-3 bg-amber-400 rounded"></span><span class="text-[9px] font-black uppercase text-slate-400">Intermediário</span></div>
+                            <div class="flex items-center gap-2"><span class="w-3 h-3 bg-slate-900 rounded"></span><span class="text-[9px] font-black uppercase text-slate-400">Estruturante</span></div>
+                        </div>
+                    </div>
+                    <div class="w-full h-80">
+                        <canvas id="chartCapacidade"></canvas>
+                    </div>
                 </div>
             </div>
 
             <div id="projects-grid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8"></div>
         </div>
 
-        <!-- FORMULÁRIO -->
-        <div id="view-form" class="hidden max-w-4xl mx-auto">
-            <div class="bg-white p-10 rounded-[2.5rem] shadow-2xl border-t-[12px] border-cyan-400 print-card">
-                <div class="flex justify-between items-center mb-10">
-                    <h2 id="form-title" class="text-3xl font-black text-slate-800 print-title uppercase tracking-tight">Dados do Projeto</h2>
-                    <button id="btn-print-project" onclick="window.print()" class="no-print hidden bg-slate-900 text-white px-6 py-3 rounded-2xl font-bold flex items-center gap-2 hover:bg-slate-800 transition shadow-lg">
-                        <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M5 4v3H4a2 2 0 00-2 2v3a2 2 0 002 2h1v2a2 2 0 002 2h6a2 2 0 002-2v-2h1a2 2 0 002-2V9a2 2 0 00-2-2h-1V4a2 2 0 00-2-2H7a2 2 0 00-2 2zm8 0H7v3h6V4zm0 8H7v4h6v-4z" clip-rule="evenodd" /></svg>
-                        Exportar PDF
+        <div id="view-form" class="hidden max-w-5xl mx-auto">
+            <div class="bg-white p-10 rounded-[2.5rem] shadow-2xl border-t-[12px] border-cyan-400 print-card mb-12">
+                <div class="flex justify-between items-start mb-10">
+                    <div>
+                        <h2 id="form-title" class="text-3xl font-black text-slate-900 uppercase tracking-tighter">Ficha Técnica</h2>
+                        <p class="text-slate-400 text-sm font-medium">Acompanhamento tático e detalhamento da iniciativa</p>
+                    </div>
+                    <button id="btn-print-project" onclick="window.print()" class="no-print hidden bg-slate-900 text-white px-6 py-3 rounded-2xl font-bold flex items-center gap-3 hover:bg-slate-800 transition shadow-lg">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M17 17h2a2 2 0 002-2v-4a2 2 0 00-2-2H5a2 2 0 00-2 2v4a2 2 0 002 2h2m2 4h6a2 2 0 002-2v-4a2 2 0 00-2-2H9a2 2 0 00-2 2v4a2 2 0 002 2zm8-12V5a2 2 0 00-2-2H9a2 2 0 00-2 2v4h10z" /></svg>
+                        <span class="text-xs uppercase tracking-widest">Exportar PDF</span>
                     </button>
                 </div>
                 
-                <form id="project-form" class="space-y-8">
+                <form id="project-form" class="space-y-10">
                     <input type="hidden" id="edit-id" value="">
                     
-                    <div class="grid grid-cols-1 md:grid-cols-3 gap-x-8 gap-y-6">
+                    <div class="grid grid-cols-1 md:grid-cols-4 gap-6">
                         <div class="md:col-span-2">
-                            <label class="label-forte">Nome do Projeto / Iniciativa</label>
-                            <input type="text" id="iniciativa" required class="input-mega-visivel" placeholder="EX: AUTOMAÇÃO LIVENESS">
+                            <label class="label-forte">Iniciativa / Projeto</label>
+                            <input type="text" id="iniciativa" required class="w-full input-premium text-lg uppercase" placeholder="EX: PROJETO DE EFICIÊNCIA">
                         </div>
-
                         <div>
                             <label class="label-forte">Prioridade</label>
-                            <select id="prioridade" class="input-mega-visivel">
+                            <select id="prioridade" class="w-full input-premium font-bold">
                                 <option value="Baixa">🟢 Baixa</option>
                                 <option value="Média">🟡 Média</option>
                                 <option value="Alta">🔴 Alta</option>
                             </select>
                         </div>
-
                         <div>
-                            <label class="label-forte">Área Beneficiada</label>
-                            <select id="time" required class="input-mega-visivel">
-                                <option value="Análise">Análise</option>
-                                <option value="CX">CX</option>
-                                <option value="Mesa">Mesa</option>
-                                <option value="Tecnologia">Tecnologia</option>
+                            <div class="flex items-center gap-2 mb-1">
+                                <label class="label-forte !mb-0">Tamanho do Esforço</label>
+                                <div class="cursor-help text-slate-300 hover:text-cyan-400 transition" title="Rápido: Execução imediata e individual. &#10;Intermediário: Exige análise e apoio de outras áreas. &#10;Estruturante: Mudanças complexas ou longo prazo.">
+                                    <svg xmlns="http://www.w3.org/2000/svg" class="h-3 w-3" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" /></svg>
+                                </div>
+                            </div>
+                            <select id="esforco" required class="w-full input-premium font-bold">
+                                <option value="Rápido">Rápido</option>
+                                <option value="Intermediário">Intermediário</option>
+                                <option value="Estruturante">Estruturante</option>
                             </select>
                         </div>
-
                         <div>
-                            <label class="label-forte">Frente de Trabalho</label>
-                            <select id="frente" class="input-mega-visivel">
-                                <option value="Performance">Performance</option>
-                                <option value="Reestruturação">Reestruturação</option>
-                                <option value="Automação">Automação</option>
-                                <option value="Simplificação">Simplificação</option>
+                            <div class="flex justify-between items-center mb-1">
+                                <label class="label-forte !mb-0">Área Impactada</label>
+                                <button type="button" onclick="openAdderModal('area')" class="btn-icon-add" title="Nova Área">+</button>
+                            </div>
+                            <select id="time" required class="w-full input-premium">
+                                <option value="" disabled selected>Selecionar...</option>
                             </select>
                         </div>
-
+                        <div>
+                            <div class="flex justify-between items-center mb-1">
+                                <label class="label-forte !mb-0">Frente de Trabalho</label>
+                                <button type="button" onclick="openAdderModal('frente')" class="btn-icon-add" title="Nova Frente">+</button>
+                            </div>
+                            <select id="frente" class="w-full input-premium">
+                                <option value="" disabled selected>Selecionar...</option>
+                            </select>
+                        </div>
                         <div>
                             <label class="label-forte">Status Atual</label>
-                            <select id="status" class="input-mega-visivel">
+                            <select id="status" class="w-full input-premium font-black" onchange="toggleConclusionField(this.value)">
                                 <option value="Backlog">Backlog</option>
                                 <option value="Em Andamento">Em Andamento</option>
                                 <option value="Finalizado">Finalizado</option>
                                 <option value="Despriorizado">Despriorizado</option>
                             </select>
                         </div>
-
-                        <div class="md:col-span-3 bg-white p-6 rounded-3xl border-2 border-slate-900 shadow-sm">
+                        <div id="conclusao-container" class="hidden">
+                            <label class="label-forte text-green-600">Data Conclusão Real</label>
+                            <input type="date" id="data_conclusao" class="w-full input-premium border-green-200">
+                        </div>
+                        
+                        <div class="md:col-span-4 bg-white p-6 rounded-3xl border-2 border-slate-900 shadow-sm">
                             <div class="flex justify-between items-center mb-4">
-                                <label class="label-forte">Responsáveis Líderes</label>
-                                <button type="button" onclick="addNewTeamMember()" class="text-[10px] font-black bg-cyan-100 text-cyan-600 px-3 py-1 rounded-full hover:bg-cyan-200 transition">+ ADICIONAR LÍDER</button>
+                                <label class="label-forte !mb-0">Responsáveis Líderes (Seleção Múltipla)</label>
+                                <button type="button" onclick="openAdderModal('team')" class="btn-icon-add" title="Novo Líder">+</button>
                             </div>
                             <div id="responsaveis-grid" class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-2 max-h-48 overflow-y-auto pr-2"></div>
                         </div>
 
+                        <div class="md:col-span-1">
+                             <label class="label-forte">Cronograma</label>
+                             <div class="grid grid-cols-1 gap-4">
+                                <input type="date" id="data_criacao" required class="input-premium text-sm font-bold" title="Início">
+                                <input type="date" id="prazo" required class="input-premium text-sm font-bold" title="Target">
+                             </div>
+                        </div>
+
+                        <!-- SEÇÃO DE MÉTRICAS DINÂMICAS -->
                         <div class="md:col-span-3 bg-slate-50 p-6 rounded-3xl border-2 border-slate-200">
-                            <div class="flex justify-between items-center mb-4">
-                                <label class="label-forte text-slate-400">Outras Pessoas Envolvidas (Time de Apoio)</label>
-                                <button type="button" onclick="addEnvolvidoInput()" class="bg-slate-900 text-white p-2 rounded-full hover:bg-black transition">
-                                    <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M12 6v6m0 0v6m0-6h6m-6 0H6" /></svg>
-                                </button>
-                            </div>
-                            <div id="envolvidos-container" class="grid grid-cols-1 md:grid-cols-2 gap-3"></div>
-                        </div>
-
-                        <div>
-                            <label class="label-forte">Data de Início</label>
-                            <input type="date" id="data_criacao" required class="input-mega-visivel">
-                        </div>
-
-                        <div>
-                            <label class="label-forte">Prazo Final (Target)</label>
-                            <input type="date" id="prazo" required class="input-mega-visivel">
-                        </div>
-
-                        <div id="campo-conclusao" class="hidden">
-                            <label class="label-forte text-green-600 font-black">Data de Conclusão Real</label>
-                            <input type="date" id="data_conclusao" class="input-mega-visivel border-green-400">
-                        </div>
-
-                        <div class="md:col-span-3">
-                            <div class="flex justify-between items-center mb-1">
-                                <label class="label-forte text-red-500">🚫 Impedimentos, Gargalos ou Bloqueios</label>
-                                <label class="flex items-center gap-2 text-[10px] font-black text-slate-400 cursor-pointer">
-                                    <input type="checkbox" id="no-blockers" class="w-4 h-4 rounded accent-green-500" onchange="toggleImpedimentos(this)"> SEM BLOQUEIOS
-                                </label>
-                            </div>
-                            <textarea id="impedimentos" rows="2" class="input-mega-visivel border-red-300 bg-red-50" placeholder="O que está travando?"></textarea>
-                        </div>
-
-                        <div class="md:col-span-3 bg-slate-100 p-6 rounded-3xl border-2 border-slate-200">
-                            <div class="flex justify-between items-center mb-4">
-                                <label class="label-forte text-slate-500">Links Úteis (Documentação, Dashboards)</label>
-                                <button type="button" onclick="addLinkInput()" class="bg-slate-900 text-white p-2 rounded-full hover:bg-black transition">
-                                    <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M12 6v6m0 0v6m0-6h6m-6 0H6" /></svg>
-                                </button>
-                            </div>
-                            <div id="links-container" class="space-y-3"></div>
-                        </div>
-
-                        <div class="md:col-span-3">
-                            <label class="label-forte">Histórico de Evolução / Notas</label>
-                            <textarea id="nota_inicial" rows="5" class="input-mega-visivel" placeholder="Principais avanços e milestones"></textarea>
+                             <div class="flex justify-between items-center mb-4">
+                                <label class="label-forte !mb-0 text-cyan-600">Expectativas de Ganho (KPIs)</label>
+                                <button type="button" onclick="addMetricaInput()" class="btn-icon-add" title="Adicionar Métrica">+</button>
+                             </div>
+                             <div id="metricas-container" class="space-y-4">
+                                <!-- Linhas de métricas entram aqui -->
+                             </div>
                         </div>
                     </div>
-                    
-                    <div class="pt-8 flex flex-col md:flex-row gap-4 no-print">
-                        <button type="submit" class="bg-slate-900 text-white px-10 py-5 rounded-2xl font-black hover:bg-slate-800 transition-all flex-1 uppercase tracking-widest text-xs shadow-xl">Salvar Informações</button>
-                        <button type="button" onclick="resetForm(); switchTab('dashboard');" class="bg-slate-100 text-slate-400 px-10 py-5 rounded-2xl font-black hover:bg-slate-200 transition-all uppercase tracking-widest text-xs">Cancelar</button>
+
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-10">
+                        <div class="space-y-8">
+                            <div>
+                                <label class="label-forte">Descrição e Objetivo Estratégico</label>
+                                <textarea id="nota_inicial" rows="5" class="w-full input-premium text-sm leading-relaxed" placeholder="Qual o propósito desta iniciativa?"></textarea>
+                            </div>
+                            <div class="bg-slate-50 p-6 rounded-3xl border border-slate-200 shadow-inner">
+                                <div class="flex justify-between items-center mb-4">
+                                    <label class="label-forte !mb-0 !text-slate-600">Plano de Atividades (Tasks)</label>
+                                    <span id="task-counter" class="text-[9px] font-black bg-white px-2 py-1 rounded-md border border-slate-200">0 TASKS</span>
+                                </div>
+                                <div class="flex gap-2 no-print mb-4">
+                                    <input type="text" id="task-input" placeholder="O que precisa ser feito?" class="flex-1 input-premium !py-2 !text-sm">
+                                    <button type="button" onclick="addTaskToList()" class="bg-slate-900 text-white px-4 rounded-xl font-bold hover:bg-slate-800 transition">+</button>
+                                </div>
+                                <div id="tasks-container" class="space-y-2 max-h-60 overflow-y-auto"></div>
+                            </div>
+                        </div>
+
+                        <div class="space-y-8">
+                            <div>
+                                <label class="label-forte text-red-500">🚫 Impedimentos, Gargalos e Riscos</label>
+                                <textarea id="impedimentos" rows="3" class="w-full input-premium !bg-red-50/30 !border-red-100 text-sm" placeholder="Algo travando o progresso?"></textarea>
+                            </div>
+                            <div id="notes-section" class="hidden">
+                                <label class="label-forte">Histórico de Evolução / Milestones</label>
+                                <div id="notes-history-list" class="space-y-3 mb-4 max-h-56 overflow-y-auto pr-2"></div>
+                                <div class="bg-cyan-50/40 p-5 rounded-2xl border border-cyan-100 no-print">
+                                    <label class="label-forte !text-cyan-600">Nova Nota de Atualização</label>
+                                    <textarea id="new-milestone-note" rows="2" class="w-full input-premium !border-cyan-200 !text-sm" placeholder="Relate o avanço de hoje..."></textarea>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="pt-8 flex gap-4 no-print border-t border-slate-100">
+                        <button type="submit" id="btn-submit" class="bg-slate-900 text-white px-10 py-5 rounded-2xl font-black hover:bg-slate-800 shadow-xl shadow-slate-200 transition flex-1 uppercase tracking-widest text-xs">Salvar Alterações</button>
+                        <button type="button" onclick="resetForm(); switchTab('dashboard');" class="bg-white text-slate-400 border border-slate-200 px-8 py-5 rounded-2xl font-bold hover:bg-slate-50 transition text-xs uppercase tracking-widest">Cancelar</button>
                     </div>
                 </form>
             </div>
         </div>
 
-        <!-- LISTA GERAL -->
         <div id="view-list" class="hidden no-print">
-            <div class="flex flex-col md:flex-row justify-between items-center gap-4 mb-10">
-                <h1 class="text-4xl font-black text-slate-900 tracking-tight">Projetos</h1>
-                
-                <div class="flex flex-wrap gap-2">
-                    <select id="filter-analista" class="filter-select" onchange="refreshUI()">
-                        <option value="">Líder do Projeto</option>
-                    </select>
-                    <select id="filter-status" class="filter-select" onchange="refreshUI()">
-                        <option value="">Status</option>
-                        <option value="Backlog">Backlog</option>
-                        <option value="Em Andamento">Em Andamento</option>
-                        <option value="Finalizado">Finalizado</option>
-                        <option value="Despriorizado">Despriorizado</option>
-                    </select>
-                    <select id="filter-area" class="filter-select" onchange="refreshUI()">
-                        <option value="">Área</option>
-                        <option value="Análise">Análise</option>
-                        <option value="CX">CX</option>
-                        <option value="Mesa">Mesa</option>
-                        <option value="Tecnologia">Tecnologia</option>
-                    </select>
-                    <button onclick="clearListFilters()" class="text-[10px] font-black text-slate-400 hover:text-red-500 uppercase px-2">Limpar</button>
-                </div>
+            <div class="mb-8 text-slate-800">
+                <h1 class="text-4xl font-black uppercase tracking-tighter">Inventário Geral</h1>
+                <p class="text-slate-400 text-sm font-medium">Controle de todas as iniciativas registradas</p>
             </div>
-
-            <div class="bg-white rounded-[2rem] shadow-xl border border-slate-200 overflow-hidden">
+            <div class="bg-white rounded-[2rem] shadow-sm border border-slate-100 overflow-hidden">
                 <table class="w-full text-left">
-                    <thead class="bg-slate-50 border-b border-slate-200 text-slate-500">
-                        <tr class="text-[10px] uppercase font-black tracking-widest">
-                            <th class="p-8">Saúde</th>
-                            <th class="p-8">Iniciativa</th>
-                            <th class="p-8">Área</th>
-                            <th class="p-8">Responsáveis</th>
-                            <th class="p-8 text-center">Ações</th>
+                    <thead class="bg-slate-50 border-b border-slate-100 text-slate-400">
+                        <tr class="text-[10px] uppercase font-black tracking-wider">
+                            <th class="p-6">Prioridade</th>
+                            <th class="p-6">Iniciativa</th>
+                            <th class="p-6">Área Impactada</th>
+                            <th class="p-6">Responsáveis</th>
+                            <th class="p-6 text-center">Status</th>
+                            <th class="p-6 text-right">Ações</th>
                         </tr>
                     </thead>
-                    <tbody id="detailed-table-body" class="divide-y divide-slate-100"></tbody>
+                    <tbody id="detailed-table-body" class="divide-y divide-slate-50"></tbody>
                 </table>
             </div>
         </div>
     </main>
 
-    <!-- FIREBASE INTEGRATION -->
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-app.js";
-        import { getAuth, signInAnonymously, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";
+        import { getAuth, signInAnonymously } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";
         import { getFirestore, collection, doc, addDoc, updateDoc, deleteDoc, onSnapshot } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
 
         const firebaseConfig = {
@@ -399,8 +415,7 @@
             projectId: "painel-de-projeto",
             storageBucket: "painel-de-projeto.firebasestorage.app",
             messagingSenderId: "768185401154",
-            appId: "1:768185401154:web:d89782c16620a1bf2852db",
-            measurementId: "G-CKMHJJ5C37"
+            appId: "1:768185401154:web:d89782c16620a1bf2852db"
         };
 
         const app = initializeApp(firebaseConfig);
@@ -410,186 +425,246 @@
         
         let projects = [];
         let dynamicTeam = [];
+        let dynamicAreas = [];
+        let dynamicFrentes = [];
         let charts = {};
         let currentUser = null;
+        let currentTasks = [];
 
-        const defaultTeam = ["Cauan Pereira Da Silva", "Diego Francisco Rocha", "Hudson Nestor Pereira Cortes Da S...", "Lucas Henrique Jantsch", "Luiz Gustavo Ribeiro", "Michael Gabriel Moraes Faria", "Otávio Augusto Oliveira", "Rodrigo Prinz De Paiva", "Simone Thomé de Andrade"];
+        const defaultTeam = ["Cauan Pereira Da Silva", "Diego Francisco Rocha", "Hudson Nestor Pereira Cortes", "Lucas Henrique Jantsch", "Luiz Gustavo Ribeiro", "Michael Gabriel Moraes Faria", "Otávio Augusto Oliveira", "Rodrigo Prinz De Paiva", "Simone Thomé de Andrade"];
 
-        const startApp = async () => {
+        async function initAuth() {
             try {
                 const cred = await signInAnonymously(auth);
                 currentUser = cred.user;
                 document.getElementById('sync-indicator').classList.remove('hidden');
-                setupTeamListener();
-                setupRealtime();
-            } catch (err) { console.error(err); }
-        };
+                setupDynamicListeners();
+                setupRealtimeProjects();
+            } catch (error) { console.error("Auth Error:", error); }
+        }
 
-        const setupTeamListener = () => {
-            const teamCol = collection(db, 'artifacts', appId, 'public', 'data', 'team');
-            onSnapshot(teamCol, (snapshot) => {
-                dynamicTeam = snapshot.docs.map(doc => doc.data().name);
+        const setupDynamicListeners = () => {
+            onSnapshot(collection(db, 'artifacts', appId, 'public', 'data', 'team'), (snap) => {
+                dynamicTeam = snap.docs.map(doc => doc.data().name);
                 renderTeamCheckboxes();
-                updateAllAnalistaFilters();
+                refreshUI();
+            });
+            onSnapshot(collection(db, 'artifacts', appId, 'public', 'data', 'areas'), (snap) => {
+                dynamicAreas = snap.docs.map(doc => doc.data().name);
+                updateDropdown('time', dynamicAreas, ["Análise", "CX", "Mesa", "Tecnologia"]);
+                updateDropdown('dash-filter-area', dynamicAreas, ["Análise", "CX", "Mesa", "Tecnologia"], "Todas as Áreas");
+            });
+            onSnapshot(collection(db, 'artifacts', appId, 'public', 'data', 'frentes'), (snap) => {
+                dynamicFrentes = snap.docs.map(doc => doc.data().name);
+                updateDropdown('frente', dynamicFrentes, ["Performance", "Reestruturação", "Automação", "Simplificação"]);
             });
         };
 
-        const updateAllAnalistaFilters = () => {
-            const fullTeam = Array.from(new Set([...defaultTeam, ...dynamicTeam])).sort((a,b) => a.localeCompare(b));
-            ['dash-filter-analista', 'filter-analista'].forEach(id => {
-                const select = document.getElementById(id);
-                if (!select) return;
-                const currentVal = select.value;
-                select.innerHTML = '<option value="">Líder do Projeto</option>';
-                fullTeam.forEach(name => select.innerHTML += `<option value="${name}">${name}</option>`);
-                select.value = currentVal;
+        const updateDropdown = (elementId, dynamicList, defaults, firstOptionText) => {
+            const select = document.getElementById(elementId);
+            if(!select) return;
+            const currentVal = select.value;
+            const fullList = Array.from(new Set([...defaults, ...dynamicList])).sort();
+            select.innerHTML = firstOptionText ? `<option value="">${firstOptionText}</option>` : '<option value="" disabled selected>Selecionar...</option>';
+            fullList.forEach(item => {
+                select.innerHTML += `<option value="${item}">${item}</option>`;
             });
+            select.value = currentVal;
         };
 
-        const setupRealtime = () => {
-            const colRef = collection(db, 'artifacts', appId, 'public', 'data', 'projects');
-            onSnapshot(colRef, (snapshot) => {
+        const setupRealtimeProjects = () => {
+            onSnapshot(collection(db, 'artifacts', appId, 'public', 'data', 'projects'), (snapshot) => {
                 projects = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
-                projects.sort((a, b) => b.data_criacao > a.data_criacao ? 1 : -1);
-                document.getElementById('loading-screen').style.opacity = '0';
-                setTimeout(() => document.getElementById('loading-screen').style.display = 'none', 500);
+                projects.sort((a, b) => (b.data_criacao || "") > (a.data_criacao || "") ? 1 : -1);
+                document.getElementById('loading-overlay').style.opacity = '0';
+                setTimeout(() => document.getElementById('loading-overlay').style.display = 'none', 500);
                 refreshUI();
             });
         };
 
-        const isProjectInPeriod = (projDate, period) => {
-            if (!projDate || period === 'all') return true;
-            const date = new Date(projDate);
-            const now = new Date();
-            const year = now.getFullYear();
-            if (period === 'ano') return date.getFullYear() === year;
-            if (period === 'mes') return date.getFullYear() === year && date.getMonth() === now.getMonth();
-            if (period === 'trimestre') {
-                const currentQuarter = Math.floor(now.getMonth() / 3);
-                const projQuarter = Math.floor(date.getMonth() / 3);
-                return date.getFullYear() === year && currentQuarter === projQuarter;
-            }
-            if (period === 'semestre') {
-                const currentSemester = now.getMonth() < 6 ? 0 : 1;
-                const projSemester = date.getMonth() < 6 ? 0 : 1;
-                return date.getFullYear() === year && currentSemester === projSemester;
-            }
-            return true;
+        // --- CUSTOM MODAL LOGIC ---
+        let currentModalTarget = '';
+        window.openAdderModal = (target) => {
+            currentModalTarget = target;
+            const titleMap = { area: 'Nova Área Impactada', frente: 'Nova Frente de Trabalho', team: 'Novo Líder' };
+            document.getElementById('modal-title').innerText = titleMap[target];
+            document.getElementById('modal-input').value = '';
+            document.getElementById('custom-modal').classList.remove('hidden');
+            document.getElementById('custom-modal').classList.add('flex');
+        };
+        window.closeCustomModal = () => {
+            document.getElementById('custom-modal').classList.add('hidden');
+            document.getElementById('custom-modal').classList.remove('flex');
+        };
+        document.getElementById('modal-confirm').onclick = async () => {
+            const val = document.getElementById('modal-input').value.trim();
+            if(!val) return;
+            const collectionName = currentModalTarget === 'team' ? 'team' : currentModalTarget === 'area' ? 'areas' : 'frentes';
+            await addDoc(collection(db, 'artifacts', appId, 'public', 'data', collectionName), { name: val });
+            closeCustomModal();
         };
 
-        const getFilteredData = (source) => {
-            const pre = source === 'dash' ? 'dash-' : '';
-            const analista = document.getElementById(`${pre}filter-analista`).value;
-            const status = document.getElementById(`${pre}filter-status`)?.value || '';
-            const area = document.getElementById(`${pre}filter-area`).value;
-            const period = document.getElementById('dash-filter-periodo')?.value || 'all';
+        // --- MÉTRICAS ---
+        window.addMetricaInput = (label = '', meta = '', real = '') => {
+            const container = document.getElementById('metricas-container');
+            const div = document.createElement('div');
+            div.className = 'metrica-row animate-in fade-in slide-in-from-left-2 duration-300';
+            div.innerHTML = `
+                <div>
+                    <label class="label-forte !text-[9px]">Métrica (Ex: TMA)</label>
+                    <input type="text" class="metrica-label input-premium !py-2 !text-xs w-full" value="${label}" placeholder="Nome">
+                </div>
+                <div>
+                    <label class="label-forte !text-[9px]">Meta</label>
+                    <input type="text" class="metrica-meta input-premium !py-2 !text-xs w-full" value="${meta}" placeholder="15%">
+                </div>
+                <div>
+                    <label class="label-forte !text-[9px]">Real</label>
+                    <input type="text" class="metrica-real input-premium !py-2 !text-xs w-full" value="${real}" placeholder="10%">
+                </div>
+                <button type="button" onclick="this.parentElement.remove()" class="text-red-300 hover:text-red-500 transition pb-2">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z" clip-rule="evenodd" /></svg>
+                </button>
+            `;
+            container.appendChild(div);
+        };
 
-            return projects.filter(p => {
-                const mAnalista = !analista || (Array.isArray(p.responsavel) ? p.responsavel.includes(analista) : p.responsavel === analista);
-                const mStatus = !status || p.status === status;
-                const mArea = !area || p.time === area;
-                const mPeriod = source === 'dash' ? isProjectInPeriod(p.data_criacao, period) : true;
-                return mAnalista && mStatus && mArea && mPeriod;
+        // --- TASKS ---
+        window.addTaskToList = () => {
+            const input = document.getElementById('task-input');
+            if (!input.value.trim()) return;
+            currentTasks.push({ id: Date.now(), text: input.value.trim(), completed: false });
+            input.value = "";
+            renderTasksList();
+        };
+        window.toggleTask = (id) => { currentTasks = currentTasks.map(t => t.id === id ? { ...t, completed: !t.completed } : t); renderTasksList(); };
+        window.removeTask = (id) => { currentTasks = currentTasks.filter(t => t.id !== id); renderTasksList(); };
+
+        function renderTasksList() {
+            const container = document.getElementById('tasks-container');
+            if(!container) return;
+            container.innerHTML = '';
+            document.getElementById('task-counter').innerText = `${currentTasks.length} TASKS`;
+            if(currentTasks.length === 0) {
+                container.innerHTML = '<p class="text-[11px] text-slate-400 italic text-center py-4">Nenhuma tarefa definida.</p>';
+                return;
+            }
+            currentTasks.forEach(task => {
+                const div = document.createElement('div');
+                div.className = "flex items-center gap-3 p-3 bg-white border border-slate-100 rounded-xl group hover:border-cyan-100 transition";
+                div.innerHTML = `
+                    <input type="checkbox" ${task.completed ? 'checked' : ''} onchange="toggleTask(${task.id})" class="w-4 h-4 rounded border-slate-300 text-cyan-500">
+                    <span class="flex-1 text-[13px] font-bold ${task.completed ? 'line-through text-slate-300' : 'text-slate-700'}">${task.text}</span>
+                    <button type="button" onclick="removeTask(${task.id})" class="opacity-0 group-hover:opacity-100 text-red-300 hover:text-red-500 transition px-2 font-black">×</button>`;
+                container.appendChild(div);
             });
-        };
+        }
 
+        // --- UI CORE ---
         window.refreshUI = () => {
-            const activeTabBtn = document.querySelector('.active-tab');
-            const currentTab = activeTabBtn ? activeTabBtn.id.split('-')[1] : 'dashboard';
-            
-            if (currentTab === 'dashboard') {
-                const filtered = getFilteredData('dash');
-                renderDashboard(filtered);
-                updateCharts(filtered);
-                updateKPIs(filtered);
-            } else if (currentTab === 'list') {
-                renderDetailedList(getFilteredData('list'));
+            const area = document.getElementById('dash-filter-area').value;
+            const filtered = area ? projects.filter(p => p.time === area) : projects;
+            updateKPIs(filtered);
+            const tab = document.querySelector('.active-tab')?.id.split('-')[1] || 'dashboard';
+            if (tab === 'dashboard') { 
+                renderDashboard(filtered); 
+                updateCharts(filtered); 
+                renderCapacidadeChart(filtered);
             }
+            else if (tab === 'list') renderDetailedList(filtered);
         };
 
         const updateKPIs = (data) => {
             document.getElementById('kpi-total').innerText = data.length;
-            const blockers = data.filter(p => p.impedimentos && p.impedimentos.trim() !== "").length;
+            const blockers = data.filter(p => p.impedimentos?.trim()).length;
             document.getElementById('kpi-blockers').innerText = blockers;
             document.getElementById('kpi-prioridade').innerText = data.filter(p => p.prioridade === 'Alta').length;
-            const saude = data.length > 0 ? Math.round(((data.length - blockers) / data.length) * 100) : 0;
+            const saude = data.length > 0 ? Math.round(((data.length - blockers) / data.length) * 100) : 100;
             document.getElementById('kpi-saude').innerText = saude + '%';
-        };
-
-        window.clearDashFilters = () => {
-            document.getElementById('dash-filter-periodo').value = 'all';
-            document.getElementById('dash-filter-analista').value = '';
-            document.getElementById('dash-filter-area').value = '';
-            refreshUI();
-        };
-
-        window.clearListFilters = () => {
-            document.getElementById('filter-analista').value = '';
-            document.getElementById('filter-status').value = '';
-            document.getElementById('filter-area').value = '';
-            refreshUI();
-        };
-
-        window.switchTab = (tab) => {
-            document.querySelectorAll('nav button').forEach(b => b.classList.remove('active-tab'));
-            const btn = document.getElementById(`tab-${tab}`);
-            if(btn) btn.classList.add('active-tab');
-            document.getElementById('view-dashboard').classList.toggle('hidden', tab !== 'dashboard');
-            document.getElementById('view-form').classList.toggle('hidden', tab !== 'form');
-            document.getElementById('view-list').classList.toggle('hidden', tab !== 'list');
-            refreshUI();
-            if(tab === 'form') initFormDates();
         };
 
         window.renderDashboard = (data) => {
             const grid = document.getElementById('projects-grid');
             if(!grid) return;
             grid.innerHTML = '';
-            
-            const today = new Date();
-            today.setHours(0,0,0,0);
-
             data.forEach((proj) => {
                 const statusSlug = proj.status?.toLowerCase().replace(/\s/g, '') || 'backlog';
                 const statusClass = `status-${statusSlug === 'emandamento' ? 'andamento' : statusSlug}`;
-                const hasBlockers = proj.impedimentos && proj.impedimentos.trim() !== "";
-                const priorityClass = `priority-${proj.prioridade?.toLowerCase() || 'baixa'}`;
-                const lastNote = proj.notes && proj.notes.length > 0 ? proj.notes[proj.notes.length - 1] : { text: 'Iniciado.' };
+                const lastNote = proj.notes?.length ? proj.notes[proj.notes.length - 1].text : 'Iniciativa registrada.';
+                const isDone = proj.status === 'Finalizado';
+                const color = proj.time === 'Análise' ? '#00e5ff' : '#000a28';
                 
-                // Lógica do Farol de Alerta (Gentil)
-                let cronogramaAlert = "";
-                if (proj.status !== 'Finalizado' && proj.prazo) {
-                    const deadline = new Date(proj.prazo);
-                    if (today > deadline) {
-                        cronogramaAlert = `
-                            <div class="flex items-center gap-2 mt-2 bg-red-50 p-2 rounded-xl border border-red-100 animate-pulse">
-                                <span class="w-3 h-3 bg-red-500 rounded-full shadow-[0_0_8px_rgba(239,68,68,0.5)]"></span>
-                                <span class="text-[9px] font-black text-red-600 uppercase tracking-tighter">Atenção ao cronograma</span>
-                            </div>
-                        `;
-                    }
+                // Renderização das métricas no card
+                let metricsHTML = '';
+                if(proj.metricas && proj.metricas.length > 0) {
+                    metricsHTML = `
+                        <div class="bg-slate-50 p-3 rounded-xl mt-3 space-y-2 border border-slate-100">
+                            <p class="text-[8px] font-black uppercase text-slate-400">Impacto (Meta vs Real)</p>
+                            ${proj.metricas.map(m => `
+                                <div class="flex justify-between items-center text-[10px]">
+                                    <span class="font-bold text-slate-600 truncate mr-2" title="${m.label}">${m.label}</span>
+                                    <div class="flex gap-2">
+                                        <span class="text-cyan-600 font-black">🎯 ${m.meta || '-'}</span>
+                                        <span class="${isDone ? 'text-green-600 font-black' : 'text-slate-400 font-black'}">✅ ${m.real || '-'}</span>
+                                    </div>
+                                </div>
+                            `).join('')}
+                        </div>
+                    `;
                 }
 
                 grid.innerHTML += `
-                    <div class="bg-white rounded-[2.5rem] p-10 shadow-sm border border-slate-100 flex flex-col h-full hover:shadow-2xl transition-all relative group">
-                        ${hasBlockers ? '<div class="absolute -top-3 -right-3 bg-red-600 text-white rounded-full p-2 shadow-xl animate-bounce z-10"><svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" /></svg></div>' : ''}
+                    <div class="card-project p-8 flex flex-col h-full border-t-[12px]" style="border-top-color: ${color}">
                         <div class="flex justify-between items-start mb-6">
                             <span class="text-[9px] font-black uppercase tracking-widest text-slate-300">${proj.time} | ${proj.frente}</span>
-                            <span class="px-3 py-1 rounded-full text-[9px] font-black tracking-widest ${statusClass} uppercase">${proj.status}</span>
+                            <span class="status-pill ${statusClass}">${proj.status}</span>
                         </div>
-                        <h3 class="text-xl font-black mb-2 text-slate-900 leading-tight">${proj.iniciativa}</h3>
-                        ${cronogramaAlert}
-                        <div class="text-[11px] my-8 space-y-4 border-l-2 border-slate-50 pl-4 font-bold text-slate-600">
-                            <p class="flex justify-between"><span>Líderes</span> <span class="text-slate-900 text-right">${Array.isArray(proj.responsavel) ? proj.responsavel.join(', ') : proj.responsavel}</span></p>
-                            <p class="flex justify-between"><span>Target</span> <span class="text-slate-900">${formatDate(proj.prazo)}</span></p>
+                        <h3 class="text-xl font-black text-slate-900 leading-tight mb-4 uppercase tracking-tighter line-clamp-2">${proj.iniciativa}</h3>
+                        
+                        <div class="text-[11px] font-bold space-y-2 mb-6 border-l-2 border-slate-50 pl-4 text-slate-500">
+                             <p class="flex justify-between"><span>PRAZO:</span> <span class="text-slate-900 font-black uppercase tracking-tighter">${formatDate(proj.prazo)}</span></p>
+                             ${metricsHTML}
                         </div>
-                        <div class="bg-slate-50 p-5 rounded-2xl flex-grow mb-8 border border-slate-100 overflow-hidden group-hover:bg-slate-100 transition-colors">
-                            <p class="text-[9px] font-black text-slate-300 uppercase mb-2">Evolução</p>
-                            <p class="text-[11px] text-slate-500 italic line-clamp-3 leading-relaxed">"${lastNote.text}"</p>
+
+                        <div class="bg-slate-50 p-4 rounded-2xl flex-grow mb-6 border border-slate-100">
+                            <span class="text-[8px] font-black uppercase text-slate-300 mb-2 block">Status Recente</span>
+                            <p class="text-[11px] text-slate-600 italic line-clamp-3 leading-relaxed">"${lastNote}"</p>
                         </div>
-                        <button onclick="editProjectByID('${proj.id}')" class="bg-slate-900 text-white py-4 px-6 rounded-2xl font-black transition hover:bg-slate-800 uppercase text-[10px] tracking-widest">Ver Detalhes</button>
-                    </div>
-                `;
+
+                        <button onclick="editProjectByID('${proj.id}')" class="bg-slate-900 text-white py-4 rounded-2xl font-black transition hover:bg-slate-800 uppercase tracking-widest text-[10px]">Ver Ficha Técnica</button>
+                    </div>`;
+            });
+        };
+
+        window.renderCapacidadeChart = (data) => {
+            const canvas = document.getElementById('chartCapacidade');
+            if (!canvas) return;
+            const id = 'chartCapacidade';
+            if (charts[id]) charts[id].destroy();
+
+            const fullTeam = Array.from(new Set([...defaultTeam, ...dynamicTeam])).sort();
+            
+            const datasets = {
+                'Rápido': { label: 'Rápido', data: [], backgroundColor: '#00e5ff', borderRadius: 0 },
+                'Intermediário': { label: 'Intermediário', data: [], backgroundColor: '#fbbf24', borderRadius: 0 },
+                'Estruturante': { label: 'Estruturante', data: [], backgroundColor: '#000a28', borderRadius: 0 }
+            };
+
+            fullTeam.forEach(leader => {
+                const leaderProjs = data.filter(p => Array.isArray(p.responsavel) ? p.responsavel.includes(leader) : p.responsavel === leader);
+                datasets['Rápido'].data.push(leaderProjs.filter(p => p.esforco === 'Rápido').length);
+                datasets['Intermediário'].data.push(leaderProjs.filter(p => p.esforco === 'Intermediário').length);
+                datasets['Estruturante'].data.push(leaderProjs.filter(p => p.esforco === 'Estruturante').length);
+            });
+
+            charts[id] = new Chart(canvas.getContext('2d'), {
+                type: 'bar',
+                data: { labels: fullTeam.map(name => name.split(' ')[0]), datasets: Object.values(datasets) },
+                options: {
+                    responsive: true, maintainAspectRatio: false,
+                    scales: { x: { stacked: true, grid: { display: false }, ticks: { font: { size: 9, weight: 'bold' } } }, y: { stacked: true, beginAtZero: true, grid: { display: false }, ticks: { stepSize: 1, font: { size: 9 } } } },
+                    plugins: { legend: { display: false } }
+                }
             });
         };
 
@@ -597,187 +672,189 @@
             const tbody = document.getElementById('detailed-table-body');
             if(!tbody) return;
             tbody.innerHTML = '';
-            const today = new Date();
-            today.setHours(0,0,0,0);
-
             data.forEach((proj) => {
-                const hasBlockers = proj.impedimentos && proj.impedimentos.trim() !== "";
-                const deadline = proj.prazo ? new Date(proj.prazo) : null;
-                const isLate = proj.status !== 'Finalizado' && deadline && today > deadline;
-
+                const resp = Array.isArray(proj.responsavel) ? proj.responsavel.slice(0,2).join(', ') : proj.responsavel;
                 tbody.innerHTML += `
-                    <tr class="hover:bg-slate-50 transition-colors">
-                        <td class="p-8 text-center">
-                            <div class="flex flex-col items-center gap-1">
-                                <span class="w-4 h-4 rounded-full inline-block ${hasBlockers ? 'bg-red-500 shadow-red-200 shadow-xl' : 'bg-green-500 shadow-green-100 shadow-xl'}"></span>
-                                ${isLate ? '<span class="text-[7px] font-black text-red-500 uppercase">Atenção</span>' : ''}
-                            </div>
+                    <tr class="hover:bg-slate-50 transition">
+                        <td class="p-6 font-black text-[10px] uppercase text-slate-400">${proj.prioridade}</td>
+                        <td class="p-6 font-black text-slate-900 uppercase">${proj.iniciativa}</td>
+                        <td class="p-6 text-[10px] font-bold text-slate-500 uppercase">${proj.time}</td>
+                        <td class="p-6 text-xs font-bold text-slate-700">${resp}</td>
+                        <td class="p-6 text-center"><span class="status-pill bg-slate-100 text-slate-600 font-black">${proj.status}</span></td>
+                        <td class="p-6 text-right space-x-4">
+                            <button onclick="editProjectByID('${proj.id}')" class="text-cyan-500 font-black text-[10px] uppercase tracking-widest hover:underline">Ficha Técnica</button>
+                            <button onclick="deleteProject('${proj.id}')" class="text-red-300 font-black text-[10px] uppercase tracking-widest hover:text-red-500 transition">Remover</button>
                         </td>
-                        <td class="p-8 font-black text-slate-900 text-sm">${proj.iniciativa}</td>
-                        <td class="p-8 text-slate-400 font-bold text-xs uppercase">${proj.time}</td>
-                        <td class="p-8 text-slate-700 font-black text-xs">${Array.isArray(proj.responsavel) ? proj.responsavel.slice(0,2).join(', ') : proj.responsavel}</td>
-                        <td class="p-8"><span class="px-3 py-1 rounded-full text-[9px] font-black bg-slate-100 uppercase">${proj.status}</span></td>
-                        <td class="p-8 flex gap-6"><button onclick="editProjectByID('${proj.id}')" class="text-cyan-500 font-black text-[10px] uppercase hover:underline">Editar</button></td>
-                    </tr>
-                `;
+                    </tr>`;
             });
         };
 
         window.updateCharts = (data) => {
-            if (data.length === 0) return;
-            renderChart('chartStatus', 'pie', countBy(data, 'status'), ['#e2e8f0', '#fef3c7', '#dcfce7', '#fee2e2']);
-            renderChart('chartTime', 'bar', countBy(data, 'time'), '#00e5ff');
-            renderChart('chartFrente', 'bar', countBy(data, 'frente'), '#000a28');
+            if (!data.length) return;
+            const count = (k) => data.reduce((a,c) => { a[c[k] || 'N/A'] = (a[c[k] || 'N/A'] || 0) + 1; return a; }, {});
+            renderChart('chartStatus', 'pie', count('status'), ['#e2e8f0', '#fef3c7', '#dcfce7', '#fee2e2']);
+            renderChart('chartTime', 'bar', count('time'), '#00e5ff');
+            renderChart('chartFrente', 'bar', count('frente'), '#000a28');
         };
 
-        function countBy(arr, key) { return arr.reduce((acc, obj) => { const val = obj[key] || 'Outros'; acc[val] = (acc[val] || 0) + 1; return acc; }, {}); }
-
-        function renderChart(canvasId, type, dataMap, colors) {
-            if (charts[canvasId]) charts[canvasId].destroy();
-            const canvas = document.getElementById(canvasId);
+        function renderChart(id, type, data, colors) {
+            if (charts[id]) charts[id].destroy();
+            const canvas = document.getElementById(id);
             if (!canvas) return;
-            charts[canvasId] = new Chart(canvas.getContext('2d'), {
+            charts[id] = new Chart(canvas.getContext('2d'), {
                 type: type,
-                data: {
-                    labels: Object.keys(dataMap),
-                    datasets: [{ data: Object.values(dataMap), backgroundColor: colors, borderWidth: 0, borderRadius: type === 'bar' ? 12 : 0 }]
-                },
-                options: {
-                    responsive: true, maintainAspectRatio: false,
-                    plugins: { legend: { display: type === 'pie', position: 'bottom', labels: { boxWidth: 10, font: { size: 9 } } } },
-                    scales: type === 'bar' ? { y: { beginAtZero: true, grid: { display: false }, ticks: { font: { size: 9 } } }, x: { grid: { display: false }, ticks: { font: { size: 9 } } } } : {}
-                }
+                data: { labels: Object.keys(data), datasets: [{ data: Object.values(data), backgroundColor: colors, borderWidth: 0, borderRadius: 12 }] },
+                options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { display: type === 'pie', position: 'bottom', labels: { boxWidth: 10, font: { size: 9, weight: 'bold' } } } }, scales: type === 'bar' ? { y: { beginAtZero: true, grid: { display: false } }, x: { grid: { display: false } } } : {} }
             });
         }
 
-        window.editProjectByID = (id) => {
-            const index = projects.findIndex(p => p.id === id);
-            if(index !== -1) editProject(index);
-        };
-
-        window.editProject = (index) => {
-            const proj = projects[index];
-            document.getElementById('edit-id').value = proj.id;
-            document.getElementById('form-title').innerText = "Ficha Técnica";
-            document.getElementById('iniciativa').value = proj.iniciativa;
-            document.getElementById('prioridade').value = proj.prioridade || 'Baixa';
-            document.getElementById('time').value = proj.time;
-            document.getElementById('frente').value = proj.frente;
-            document.getElementById('status').value = proj.status;
-            document.getElementById('data_criacao').value = proj.data_criacao;
-            document.getElementById('prazo').value = proj.prazo;
-            document.getElementById('data_conclusao').value = proj.data_conclusao || '';
-            document.getElementById('impedimentos').value = proj.impedimentos || '';
-            document.getElementById('nota_inicial').value = proj.notes?.map(n => `[${n.date}] ${n.text}`).join('\n\n') || '';
-            document.querySelectorAll('input[name="responsavel_check"]').forEach(cb => { cb.checked = Array.isArray(proj.responsavel) ? proj.responsavel.includes(cb.value) : proj.responsavel === cb.value; });
-            document.getElementById('envolvidos-container').innerHTML = '';
-            if(proj.envolvidos) proj.envolvidos.forEach(p => addEnvolvidoInput(p));
-            document.getElementById('links-container').innerHTML = '';
-            if(proj.links) proj.links.forEach(url => addLinkInput(url));
-            document.getElementById('no-blockers').checked = (!proj.impedimentos || proj.impedimentos === "");
-            toggleImpedimentos(document.getElementById('no-blockers'));
-            document.getElementById('btn-print-project').classList.remove('hidden');
-            document.getElementById('campo-conclusao').classList.toggle('hidden', proj.status !== 'Finalizado');
-            switchTab('form');
-        };
-
-        window.resetForm = () => {
-            document.getElementById('project-form').reset();
-            document.getElementById('edit-id').value = "";
-            document.getElementById('links-container').innerHTML = '';
-            document.getElementById('envolvidos-container').innerHTML = '';
-            document.getElementById('form-title').innerText = "Novo Registro";
-            document.getElementById('campo-conclusao').classList.add('hidden');
-            document.getElementById('no-blockers').checked = false;
-            toggleImpedimentos(document.getElementById('no-blockers'));
-            initFormDates();
-        };
-
         document.getElementById('project-form').addEventListener('submit', async (e) => {
             e.preventDefault();
-            if(!currentUser) return;
+            if (!currentUser) return;
+            const btn = document.getElementById('btn-submit');
             const editId = document.getElementById('edit-id').value;
-            const selectedResponsaveis = Array.from(document.querySelectorAll('input[name="responsavel_check"]:checked')).map(cb => cb.value);
-            const pData = {
+            const newNote = document.getElementById('new-milestone-note').value.trim();
+            const originalText = btn.innerText;
+            
+            btn.innerText = "SINCRONIZANDO...";
+            btn.disabled = true;
+
+            const selectedLeaders = Array.from(document.querySelectorAll('input[name="responsavel_check"]:checked')).map(cb => cb.value);
+
+            // Coletar métricas dinâmicas
+            const metricas = Array.from(document.querySelectorAll('.metrica-row')).map(row => ({
+                label: row.querySelector('.metrica-label').value,
+                meta: row.querySelector('.metrica-meta').value,
+                real: row.querySelector('.metrica-real').value
+            })).filter(m => m.label.trim() !== "");
+
+            const data = {
                 iniciativa: document.getElementById('iniciativa').value.toUpperCase(),
                 prioridade: document.getElementById('prioridade').value,
+                esforco: document.getElementById('esforco').value,
                 time: document.getElementById('time').value,
                 frente: document.getElementById('frente').value,
                 status: document.getElementById('status').value,
                 data_criacao: document.getElementById('data_criacao').value,
                 prazo: document.getElementById('prazo').value,
                 data_conclusao: document.getElementById('data_conclusao').value || null,
-                responsavel: selectedResponsaveis,
-                impedimentos: document.getElementById('no-blockers').checked ? "" : document.getElementById('impedimentos').value,
-                links: Array.from(document.querySelectorAll('#links-container input')).map(i => i.value).filter(v => v.trim() !== ""),
-                envolvidos: Array.from(document.querySelectorAll('#envolvidos-container input')).map(i => i.value).filter(v => v.trim() !== "")
+                responsavel: selectedLeaders,
+                metricas: metricas,
+                impedimentos: document.getElementById('impedimentos').value,
+                nota_inicial: document.getElementById('nota_inicial').value,
+                atividades: [...currentTasks]
             };
+
             try {
-                if (editId) await updateDoc(doc(db, 'artifacts', appId, 'public', 'data', 'projects', editId), pData);
-                else {
-                    pData.notes = [{ text: document.getElementById('nota_inicial').value || "Iniciado.", date: new Date().toLocaleDateString('pt-BR') }];
-                    await addDoc(collection(db, 'artifacts', appId, 'public', 'data', 'projects'), pData);
+                if (editId) {
+                    const existing = projects.find(p => p.id === editId);
+                    const notes = [...(existing?.notes || [])];
+                    if (newNote) notes.push({ text: newNote, date: new Date().toLocaleDateString('pt-BR') });
+                    data.notes = notes;
+                    await updateDoc(doc(db, 'artifacts', appId, 'public', 'data', 'projects', editId), data);
+                } else {
+                    data.notes = [{ text: "Iniciativa registrada.", date: new Date().toLocaleDateString('pt-BR') }];
+                    await addDoc(collection(db, 'artifacts', appId, 'public', 'data', 'projects'), data);
                 }
                 resetForm(); switchTab('dashboard');
-            } catch (err) { console.error(err); }
+            } catch (err) { console.error("Save error:", err); }
+            finally { btn.innerText = originalText; btn.disabled = false; }
         });
+
+        window.editProjectByID = (id) => { const idx = projects.findIndex(p => p.id === id); if(idx !== -1) editProject(idx); };
+
+        window.editProject = (idx) => {
+            const p = projects[idx];
+            if (!p) return;
+            document.getElementById('edit-id').value = p.id;
+            document.getElementById('form-title').innerText = "Ficha Técnica";
+            document.getElementById('iniciativa').value = p.iniciativa || "";
+            document.getElementById('prioridade').value = p.prioridade || 'Baixa';
+            document.getElementById('esforco').value = p.esforco || 'Rápido';
+            document.getElementById('time').value = p.time || "";
+            document.getElementById('frente').value = p.frente || "";
+            document.getElementById('status').value = p.status || "Backlog";
+            document.getElementById('data_criacao').value = p.data_criacao || "";
+            document.getElementById('prazo').value = p.prazo || "";
+            document.getElementById('data_conclusao').value = p.data_conclusao || "";
+            document.getElementById('impedimentos').value = p.impedimentos || "";
+            document.getElementById('nota_inicial').value = p.nota_inicial || "";
+            
+            toggleConclusionField(p.status);
+            currentTasks = Array.isArray(p.atividades) ? [...p.atividades] : [];
+            renderTasksList();
+
+            // Repopular métricas
+            const mContainer = document.getElementById('metricas-container');
+            mContainer.innerHTML = '';
+            if(p.metricas && p.metricas.length > 0) {
+                p.metricas.forEach(m => addMetricaInput(m.label, m.meta, m.real));
+            } else {
+                addMetricaInput(); // Linha vazia se não houver métricas
+            }
+
+            document.querySelectorAll('input[name="responsavel_check"]').forEach(cb => {
+                cb.checked = Array.isArray(p.responsavel) ? p.responsavel.includes(cb.value) : p.responsavel === cb.value;
+            });
+
+            document.getElementById('notes-section').classList.remove('hidden');
+            const history = document.getElementById('notes-history-list');
+            history.innerHTML = '';
+            [...(p.notes || [])].reverse().forEach(n => {
+                history.innerHTML += `<div class="p-4 bg-slate-50 rounded-2xl border border-slate-100"><span class="text-[8px] font-black text-cyan-500 uppercase">${n.date}</span><p class="text-xs text-slate-700 font-bold mt-1">${n.text}</p></div>`;
+            });
+            document.getElementById('new-milestone-note').value = "";
+            document.getElementById('btn-print-project').classList.remove('hidden');
+            switchTab('form');
+        };
+
+        window.deleteProject = async (id) => {
+            if (confirm('Eliminar permanentemente este projeto?')) {
+                await deleteDoc(doc(db, 'artifacts', appId, 'public', 'data', 'projects', id));
+            }
+        };
+
+        window.switchTab = (tab) => {
+            ['view-dashboard', 'view-form', 'view-list'].forEach(v => document.getElementById(v).classList.add('hidden'));
+            document.getElementById('view-' + tab).classList.remove('hidden');
+            ['tab-dashboard', 'tab-form', 'tab-list'].forEach(t => document.getElementById(t).classList.remove('active-tab'));
+            document.getElementById('tab-' + tab).classList.add('active-tab');
+            refreshUI();
+        };
+
+        window.resetForm = () => {
+            document.getElementById('project-form').reset();
+            document.getElementById('edit-id').value = "";
+            document.getElementById('form-title').innerText = "Nova Iniciativa";
+            document.getElementById('notes-section').classList.add('hidden');
+            document.getElementById('btn-print-project').classList.add('hidden');
+            document.getElementById('conclusao-container').classList.add('hidden');
+            document.getElementById('metricas-container').innerHTML = '';
+            addMetricaInput(); 
+            document.querySelectorAll('input[name="responsavel_check"]').forEach(cb => cb.checked = false);
+            currentTasks = [];
+            renderTasksList();
+            const today = new Date().toISOString().split('T')[0];
+            document.getElementById('data_criacao').value = today;
+            document.getElementById('prazo').value = today;
+        };
 
         const renderTeamCheckboxes = () => {
             const container = document.getElementById('responsaveis-grid');
             if (!container) return;
-            const fullTeam = Array.from(new Set([...defaultTeam, ...dynamicTeam])).sort((a,b) => a.localeCompare(b));
+            const fullTeam = Array.from(new Set([...defaultTeam, ...dynamicTeam])).sort();
             container.innerHTML = '';
             fullTeam.forEach(name => {
-                container.innerHTML += `<label class="checkbox-item text-xs font-bold text-slate-600"><input type="checkbox" name="responsavel_check" value="${name}" class="w-4 h-4 rounded accent-cyan-500"><span>${name}</span></label>`;
+                container.innerHTML += `<label class="checkbox-item text-xs font-bold text-slate-600"><input type="checkbox" name="responsavel_check" value="${name}" class="w-4 h-4 rounded border-slate-300 accent-cyan-500"><span>${name}</span></label>`;
             });
         };
 
-        window.addNewTeamMember = async () => {
-            const newName = prompt("Nome completo:");
-            if (newName && newName.trim() !== "") await addDoc(collection(db, 'artifacts', appId, 'public', 'data', 'team'), { name: newName.trim() });
+        window.toggleConclusionField = (status) => {
+            document.getElementById('conclusao-container').classList.toggle('hidden', status !== 'Finalizado');
         };
 
-        window.addEnvolvidoInput = (val = '') => {
-            const div = document.createElement('div');
-            div.className = 'flex gap-2 link-row';
-            div.innerHTML = `<input type="text" class="input-mega-visivel py-3 text-sm flex-1" value="${val}"><button type="button" onclick="this.parentElement.remove()" class="text-red-400 p-2"><svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z" clip-rule="evenodd" /></svg></button>`;
-            document.getElementById('envolvidos-container').appendChild(div);
-        };
-
-        window.addLinkInput = (url = '') => {
-            const div = document.createElement('div');
-            div.className = 'flex gap-2 link-row';
-            div.innerHTML = `<input type="url" class="input-mega-visivel py-3 text-sm flex-1" value="${url}"><button type="button" onclick="this.parentElement.remove()" class="text-red-400 p-2"><svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z" clip-rule="evenodd" /></svg></button>`;
-            document.getElementById('links-container').appendChild(div);
-        };
-
-        window.toggleImpedimentos = (checkbox) => {
-            const textarea = document.getElementById('impedimentos');
-            if (checkbox.checked) {
-                textarea.value = "";
-                textarea.disabled = true;
-                textarea.classList.add('opacity-50', 'bg-slate-50');
-                textarea.classList.remove('bg-red-50');
-            } else {
-                textarea.disabled = false;
-                textarea.classList.remove('opacity-50', 'bg-slate-50');
-                textarea.classList.add('bg-red-50');
-            }
-        };
-
-        const initFormDates = () => {
-            const today = new Date().toISOString().split('T')[0];
-            if(!document.getElementById('data_criacao').value) document.getElementById('data_criacao').value = today;
-            if(!document.getElementById('prazo').value) document.getElementById('prazo').value = today;
-        };
-
-        const formatDate = (d) => d ? d.split('-').reverse().join('/') : '-';
-
-        document.getElementById('status').addEventListener('change', function() {
-            document.getElementById('campo-conclusao').classList.toggle('hidden', this.value !== 'Finalizado');
-        });
-
-        startApp();
+        const formatDate = (d) => d ? d.split('-').reverse().join('/') : '---';
+        initAuth();
     </script>
 </body>
 </html>

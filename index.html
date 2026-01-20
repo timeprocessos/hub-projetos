@@ -139,7 +139,7 @@
         <div class="w-10 h-10 border-4 border-slate-700 border-t-cyan-400 rounded-full animate-spin"></div>
     </div>
 
-    <div id="custom-modal" class="fixed inset-0 bg-slate-900/60 backdrop-blur-sm hidden items-center justify-center z-[11000] p-4">
+    <div id="custom-modal" class="fixed inset-0 bg-slate-900/60 backdrop-blur-sm hidden items-center justify-center z-[11000] p-4 text-slate-800">
         <div class="bg-white w-full max-w-sm p-8 rounded-[2.5rem] shadow-2xl">
             <h3 id="modal-title" class="text-xl font-black mb-4 uppercase tracking-tighter text-center">Adicionar Item</h3>
             <input type="text" id="modal-input" class="w-full input-premium mb-6" placeholder="Digite o nome...">
@@ -169,8 +169,7 @@
 
     <main class="max-w-7xl mx-auto p-6 mt-4 main-content">
         
-        <!-- DASHBOARD -->
-        <div id="view-dashboard" class="block no-print">
+        <div id="view-dashboard" class="block no-print text-slate-800">
             <div class="mb-10 flex flex-col md:flex-row md:items-end justify-between gap-4">
                 <div>
                     <h1 class="text-4xl font-black tracking-tighter uppercase">Estratégia & Operação</h1>
@@ -183,7 +182,7 @@
                 </div>
             </div>
 
-            <!-- KPIs Expandidos para 7 colunas -->
+            <!-- KPIs -->
             <div class="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-7 gap-3 mb-12 text-center md:text-left">
                 <div class="kpi-card border-l-4 border-slate-900">
                     <p class="label-forte !text-[9px]">Total Projetos</p>
@@ -252,8 +251,7 @@
             <div id="projects-grid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8"></div>
         </div>
 
-        <!-- FORMULÁRIO -->
-        <div id="view-form" class="hidden max-w-5xl mx-auto">
+        <div id="view-form" class="hidden max-w-5xl mx-auto text-slate-800">
             <div class="bg-white p-10 rounded-[2.5rem] shadow-2xl border-t-[12px] border-cyan-400 print-card mb-12">
                 <div class="flex justify-between items-start mb-10">
                     <div>
@@ -287,7 +285,6 @@
                             <div class="flex items-center gap-2 mb-1">
                                 <label class="label-forte !mb-0">Tamanho do Esforço</label>
                                 <div class="cursor-help text-slate-400 hover:text-cyan-400 transition" title="Rápido: Execução imediata e individual. &#10;Intermediário: Exige análise e apoio de outras áreas. &#10;Estruturante: Mudanças complexas ou longo prazo.">
-                                    <!-- Tooltip SVG maior conforme solicitado -->
                                     <svg xmlns="http://www.w3.org/2000/svg" class="h-7 w-7" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" /></svg>
                                 </div>
                             </div>
@@ -320,21 +317,19 @@
                             <input type="text" id="status-display" readonly class="w-full input-premium font-black bg-slate-50 cursor-default" value="Backlog">
                         </div>
                         
-                        <!-- Cronograma -->
-                        <div class="md:col-span-2 bg-slate-50 p-6 rounded-3xl border border-slate-200">
+                        <div class="md:col-span-2 bg-slate-50 p-6 rounded-3xl border border-slate-200 shadow-sm text-slate-800">
                              <label class="label-forte mb-6 text-slate-500">Cronograma da Iniciativa</label>
                              <div class="grid grid-cols-2 gap-6">
                                 <div>
                                     <label class="label-forte !text-slate-600 !mb-2">Data Início</label>
-                                    <input type="date" id="data_criacao" required class="w-full input-premium text-sm font-bold border-slate-300 shadow-sm">
+                                    <input type="date" id="data_criacao" required class="w-full input-premium text-sm font-bold border-slate-300">
                                 </div>
                                 <div>
                                     <label class="label-forte !text-slate-600 !mb-2">Prazo Estimado</label>
-                                    <input type="date" id="prazo" required class="w-full input-premium text-sm font-bold border-slate-300 shadow-sm">
+                                    <input type="date" id="prazo" required class="w-full input-premium text-sm font-bold border-slate-300">
                                 </div>
                              </div>
                              
-                             <!-- Datas e Comentários de Fechamento -->
                              <div id="closure-dates" class="mt-8 pt-6 border-t border-slate-200 hidden">
                                 <div id="container-conclusao" class="grid grid-cols-1 md:grid-cols-2 gap-6 hidden">
                                     <div>
@@ -342,7 +337,7 @@
                                         <input type="date" id="data_conclusao" class="w-full input-premium text-sm font-bold border-green-300 shadow-sm">
                                     </div>
                                     <div>
-                                        <label class="label-forte !text-green-600 !mb-2">Comentário de Finalização</label>
+                                        <label class="label-forte !text-green-600 !mb-2">Descrição da Finalização</label>
                                         <textarea id="comentario_conclusao" class="w-full input-premium text-xs h-11 border-green-200 shadow-sm" placeholder="Opcional..."></textarea>
                                     </div>
                                 </div>
@@ -353,7 +348,7 @@
                                     </div>
                                     <div>
                                         <label class="label-forte !text-red-600 !mb-2">Motivo da Despriorização <span class="text-red-500">*</span></label>
-                                        <textarea id="comentario_cancelamento" class="w-full input-premium text-xs h-11 border-red-200 shadow-sm" placeholder="Obrigatório..."></textarea>
+                                        <textarea id="comentario_cancelamento" class="w-full input-premium text-xs h-11 border-red-200 shadow-sm" placeholder="Campo obrigatório..."></textarea>
                                     </div>
                                 </div>
                              </div>
@@ -362,7 +357,7 @@
                         <div class="md:col-span-2">
                              <label class="label-forte text-cyan-600">Expectativas de Ganho (KPIs)</label>
                              <div class="bg-white p-6 rounded-3xl border-2 border-slate-200 shadow-sm">
-                                <div id="metricas-container" class="space-y-3 mb-4"></div>
+                                <div id="metricas-container" class="space-y-3 mb-4 text-slate-800"></div>
                                 <button type="button" onclick="addMetricaInput()" class="text-[10px] font-black text-cyan-500 hover:text-cyan-700 uppercase tracking-widest">+ Adicionar Métrica</button>
                              </div>
                         </div>
@@ -380,12 +375,12 @@
                         <div class="space-y-8">
                             <div>
                                 <label class="label-forte">Descrição e Objetivo Estratégico</label>
-                                <textarea id="nota_inicial" rows="5" class="w-full input-premium text-sm leading-relaxed" placeholder="Qual o propósito estratégico desta iniciativa?"></textarea>
+                                <textarea id="nota_inicial" rows="5" class="w-full input-premium text-sm leading-relaxed" placeholder="Propósito central da iniciativa..."></textarea>
                             </div>
                             <div class="bg-slate-50 p-6 rounded-3xl border border-slate-200 shadow-sm">
                                 <label class="label-forte !text-slate-600 mb-4">Plano de Atividades</label>
                                 <div class="flex gap-2 mb-4">
-                                    <input type="text" id="task-input" placeholder="O que precisa ser feito?" class="flex-1 input-premium !py-2 !text-sm">
+                                    <input type="text" id="task-input" placeholder="Nova tarefa..." class="flex-1 input-premium !py-2 !text-sm">
                                     <button type="button" onclick="addTaskToList()" class="bg-slate-900 text-white px-4 rounded-xl font-bold transition hover:bg-slate-800 shadow-md">+</button>
                                 </div>
                                 <div id="tasks-container" class="space-y-2 max-h-60 overflow-y-auto pr-1"></div>
@@ -417,12 +412,11 @@
             </div>
         </div>
 
-        <!-- LISTA GERAL -->
-        <div id="view-list" class="hidden no-print">
-            <div class="mb-8 text-slate-800 flex flex-col md:flex-row justify-between items-start md:items-end gap-6">
+        <div id="view-list" class="hidden no-print text-slate-800">
+            <div class="mb-8 flex flex-col md:flex-row justify-between items-start md:items-end gap-6">
                 <div>
-                    <h1 class="text-4xl font-black uppercase tracking-tighter leading-none">Inventário Geral</h1>
-                    <p class="text-slate-400 text-xs font-black uppercase tracking-widest mt-2">Ordenação Crescente por Data de Criação</p>
+                    <h1 class="text-4xl font-black uppercase tracking-tighter">Inventário Geral</h1>
+                    <p class="text-slate-400 text-xs font-black uppercase tracking-widest mt-2">Ordenação Crescente por Data de Criaão</p>
                 </div>
                 <div class="flex flex-wrap gap-2">
                     <select id="list-filter-area" class="input-premium !py-2 !text-[10px]" onchange="refreshUI()"><option value="">Área Impactada</option></select>
@@ -553,7 +547,7 @@
         window.addMetricaInput = (label = '', meta = '', real = '') => {
             const container = document.getElementById('metricas-container');
             const div = document.createElement('div');
-            div.className = 'metrica-row animate-in fade-in slide-in-from-left-2 duration-300';
+            div.className = 'metrica-row animate-in fade-in slide-in-from-left-2 duration-300 mb-4';
             div.innerHTML = `
                 <div><label class="label-forte !text-[9px]">KPI</label><input type="text" class="metrica-label input-premium !py-1.5 !text-[10px] w-full uppercase" value="${label}" placeholder="Ex: TMA"></div>
                 <div><label class="label-forte !text-[9px]">Meta</label><input type="text" class="metrica-meta input-premium !py-1.5 !text-[10px] w-full" value="${meta}" placeholder="15%"></div>
@@ -610,7 +604,6 @@
 
         const updateKPIs = (data) => {
             const setVal = (id, val) => { const el = document.getElementById(id); if(el) el.innerText = val; };
-            
             setVal('kpi-total', data.length);
             const finished = data.filter(p => p.status === 'Finalizado');
             const onTime = finished.filter(p => {
@@ -621,13 +614,10 @@
                 if(!p.data_conclusao || !p.prazo) return false;
                 return new Date(p.data_conclusao) > new Date(p.prazo);
             });
-            
             setVal('kpi-concluidos-prazo', onTime.length);
             setVal('kpi-concluidos-atraso', delayed.length);
-            
             const sla = finished.length > 0 ? Math.round((onTime.length / finished.length) * 100) : 0;
             setVal('kpi-sla', sla + '%');
-            
             const blockers = data.filter(p => p.impedimentos?.trim()).length;
             setVal('kpi-blockers', blockers);
             setVal('kpi-prioridade', data.filter(p => p.prioridade?.includes('Alta')).length);
@@ -644,22 +634,17 @@
                 const lastNote = proj.notes?.length ? proj.notes[proj.notes.length - 1].text : 'Iniciativa registrada.';
                 const isFinished = proj.status === 'Finalizado';
                 const isCancelled = proj.status === 'Despriorizado';
-                
                 let slaBadge = "";
                 if(isFinished && proj.data_conclusao && proj.prazo) {
                     const hit = new Date(proj.data_conclusao) <= new Date(proj.prazo);
-                    slaBadge = `<span class="px-2 py-0.5 rounded-md text-[8px] font-black uppercase ${hit ? 'bg-green-100 text-green-700 border border-green-200' : 'bg-red-100 text-red-700 border border-red-200'} ml-2">
-                        ${hit ? 'No Prazo' : 'Atrasado'}
-                    </span>`;
+                    slaBadge = `<span class="px-2 py-0.5 rounded-md text-[8px] font-black uppercase ${hit ? 'bg-green-100 text-green-700 border border-green-200' : 'bg-red-100 text-red-700 border border-red-200'} ml-2">${hit ? 'No Prazo' : 'Atrasado'}</span>`;
                 }
-
                 let closureNote = '';
                 if(isFinished && proj.comentario_conclusao) {
-                    closureNote = `<div class="mt-2 p-2 bg-green-50 border border-green-100 rounded-lg text-[9px] italic text-green-700">Comentário: ${proj.comentario_conclusao}</div>`;
+                    closureNote = `<div class="mt-2 p-2 bg-green-50 border border-green-100 rounded-lg text-[9px] italic text-green-700">Descrição: ${proj.comentario_conclusao}</div>`;
                 } else if(isCancelled && proj.comentario_cancelamento) {
                     closureNote = `<div class="mt-2 p-2 bg-red-50 border border-red-100 rounded-lg text-[9px] italic text-red-700">Motivo: ${proj.comentario_cancelamento}</div>`;
                 }
-
                 let metricsHTML = '';
                 if(proj.metricas?.length) {
                     metricsHTML = `<div class="bg-slate-50 p-3 rounded-xl mt-3 border border-slate-100">
@@ -672,9 +657,8 @@
                             </div>
                         </div>`).join('')}</div>`;
                 }
-
                 grid.innerHTML += `<div class="card-project p-8 flex flex-col h-full border-t-[12px]" style="border-top-color: ${proj.time === 'Análise' ? '#00e5ff' : '#000a28'}">
-                    <div class="flex justify-between items-start mb-6">
+                    <div class="flex justify-between items-start mb-6 text-slate-800">
                         <span class="text-[9px] font-black uppercase tracking-widest text-slate-300">${proj.time} | ${proj.frente}</span>
                         <div class="flex items-center"><span class="status-pill ${statusClass}">${proj.status}</span>${slaBadge}</div>
                     </div>
@@ -684,7 +668,7 @@
                          ${metricsHTML}
                          ${closureNote}
                     </div>
-                    <div class="bg-slate-50 p-4 rounded-2xl flex-grow mb-6 border border-slate-100 shadow-inner">
+                    <div class="bg-slate-50 p-4 rounded-2xl flex-grow mb-6 border border-slate-100 shadow-inner text-slate-800">
                         <span class="text-[8px] font-black uppercase text-slate-300 mb-2 block">Status Recente</span>
                         <p class="text-[11px] text-slate-600 italic line-clamp-3 leading-relaxed">"${lastNote}"</p>
                     </div>
@@ -766,15 +750,13 @@
             const editId = document.getElementById('edit-id').value;
             const newNote = document.getElementById('new-milestone-note').value.trim();
             const currentStatus = document.getElementById('project-status-internal').value;
-            
             if(currentStatus === 'Finalizado' && !document.getElementById('data_conclusao').value) {
                 alert("Data de conclusão obrigatória."); return;
             } else if(currentStatus === 'Despriorizado') {
                 if(!document.getElementById('data_cancelamento').value || !document.getElementById('comentario_cancelamento').value.trim()) {
-                    alert("Data e Motivo obrigatórios para despriorizar."); return;
+                    alert("Data e Motivo são obrigatórios para despriorizar."); return;
                 }
             }
-
             const originalText = btn.innerText; btn.innerText = "Sincronizando..."; btn.disabled = true;
             const selectedLeaders = Array.from(document.querySelectorAll('input[name="responsavel_check"]:checked')).map(cb => cb.value);
             const metricas = Array.from(document.querySelectorAll('.metrica-row')).map(row => ({
@@ -782,7 +764,6 @@
                 meta: row.querySelector('.metrica-meta').value,
                 real: row.querySelector('.metrica-real').value
             })).filter(m => m.label.trim() !== "");
-
             const data = {
                 iniciativa: document.getElementById('iniciativa').value.toUpperCase(),
                 prioridade: document.getElementById('prioridade').value,
@@ -796,13 +777,11 @@
                 comentario_conclusao: document.getElementById('comentario_conclusao').value || "",
                 data_cancelamento: document.getElementById('data_cancelamento').value || null,
                 comentario_cancelamento: document.getElementById('comentario_cancelamento').value || "",
-                responsavel: selectedLeaders,
-                metricas: metricas,
+                responsavel: selectedLeaders, metricas,
                 impedimentos: document.getElementById('impedimentos').value,
                 nota_inicial: document.getElementById('nota_inicial').value,
                 atividades: [...currentTasks]
             };
-
             try {
                 if (editId) {
                     const existing = projects.find(p => p.id === editId);
@@ -811,7 +790,7 @@
                     data.notes = notes;
                     await updateDoc(doc(db, 'artifacts', appId, 'public', 'data', 'projects', editId), data);
                 } else {
-                    data.notes = [{ text: "Iniciativa registrada.", date: new Date().toLocaleDateString('pt-BR') }];
+                    data.notes = [{ text: "Iniciativa registrada no sistema.", date: new Date().toLocaleDateString('pt-BR') }];
                     await addDoc(collection(db, 'artifacts', appId, 'public', 'data', 'projects'), data);
                 }
                 resetForm(); switchTab('dashboard');

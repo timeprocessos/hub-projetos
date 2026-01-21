@@ -14,7 +14,7 @@
             --success-color: #10b981;
             --bg-body: #f8fafc;
             
-            /* Status Colors */
+            /* Cores de Status */
             --color-backlog: #94a3b8;
             --color-andamento: #fbbf24;
             --color-finalizado: #10b981;
@@ -115,7 +115,6 @@
             text-transform: uppercase;
         }
         
-        /* Card Status Styling */
         .card-project {
             background: white;
             border-radius: 24px;
@@ -188,6 +187,23 @@
             min-height: 400px;
             height: fit-content;
         }
+
+        .task-item {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            padding: 0.5rem 0.75rem;
+            background: #fff;
+            border: 1px solid #f1f5f9;
+            border-radius: 10px;
+            margin-bottom: 0.5rem;
+        }
+        .task-item input[type="checkbox"] {
+            width: 1.1rem;
+            height: 1.1rem;
+            accent-color: var(--success-color);
+            cursor: pointer;
+        }
     </style>
 </head>
 <body class="min-h-screen">
@@ -199,12 +215,12 @@
     </div>
 
     <!-- MODAL DE EXCLUSÃO -->
-    <div id="delete-modal" class="modal-overlay">
-        <div class="modal-content text-center text-slate-800">
+    <div id="delete-modal" class="modal-overlay text-slate-800">
+        <div class="modal-content text-center">
             <div class="w-16 h-16 md:w-20 md:h-20 bg-red-50 text-red-500 rounded-full flex items-center justify-center mx-auto mb-6">
                 <svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8 md:h-10 md:w-10" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" /></svg>
             </div>
-            <h3 class="text-xl md:text-2xl font-black mb-2 uppercase tracking-tighter">Excluir Iniciativa?</h3>
+            <h3 class="text-xl md:text-2xl font-black mb-2 uppercase tracking-tighter text-slate-800">Excluir Iniciativa?</h3>
             <p class="text-slate-500 mb-8 font-medium text-sm">Os dados serão removidos permanentemente.</p>
             <div class="flex flex-col sm:flex-row gap-3">
                 <button onclick="window.confirmDelete()" class="flex-1 bg-red-500 text-white py-3.5 rounded-2xl font-black uppercase text-[11px] tracking-widest hover:bg-red-600 transition-all">Confirmar</button>
@@ -214,7 +230,7 @@
     </div>
 
     <!-- MODAL ADICIONAR ITEM -->
-    <div id="add-item-modal" class="modal-overlay">
+    <div id="add-item-modal" class="modal-overlay text-slate-800">
         <div class="modal-content text-slate-800">
             <h3 id="add-item-title" class="text-xl font-black mb-6 uppercase tracking-tighter">Adicionar Opção</h3>
             <input type="text" id="new-item-input" class="input-premium mb-8" placeholder="Digite o novo nome...">
@@ -225,8 +241,8 @@
         </div>
     </div>
 
-    <header class="bg-white border-b border-slate-100 sticky top-0 z-50 no-print">
-        <div class="max-w-7xl mx-auto px-4 md:px-8 h-16 md:h-20 flex justify-between items-center text-slate-800">
+    <header class="bg-white border-b border-slate-100 sticky top-0 z-50 no-print text-slate-800">
+        <div class="max-w-7xl mx-auto px-4 md:px-8 h-16 md:h-20 flex justify-between items-center">
             <div class="flex items-center gap-4 md:gap-8">
                 <img src="https://cloudfilesdm.com/postcards/unico-color__1-878cebbc.png" class="h-5 md:h-8" alt="Unico Logo">
                 <div id="sync-indicator" class="hidden sm:flex items-center gap-2 px-3 md:px-4 py-1.5 bg-green-50 rounded-full border border-green-100">
@@ -243,16 +259,16 @@
         </div>
     </header>
 
-    <main class="max-w-7xl mx-auto p-4 md:p-8 mt-2 md:mt-4">
+    <main class="max-w-7xl mx-auto p-4 md:p-8 mt-2 md:mt-4 text-slate-800">
         <!-- VIEW DASHBOARD -->
-        <div id="view-dashboard" class="block no-print text-slate-800">
+        <div id="view-dashboard" class="block no-print">
             <div class="mb-8 md:mb-12 flex flex-col xl:flex-row xl:items-end justify-between gap-6">
                 <div>
                     <h1 class="text-2xl md:text-4xl font-black tracking-tighter uppercase leading-none text-slate-900">Estratégia & Operação</h1>
                     <p class="text-slate-400 text-[10px] md:text-xs font-bold uppercase mt-2 md:mt-3 tracking-widest">Painel de Decisões e Eficiência</p>
                 </div>
                 <div class="flex flex-wrap gap-2 md:gap-3">
-                    <input type="text" id="search-dash" class="input-premium !py-1.5 !px-3 !text-[10px] !w-40" placeholder="Buscar projeto..." oninput="window.refreshUI()">
+                    <input type="text" id="search-dash" class="input-premium !py-1.5 !px-3 !text-[10px] !w-40 shadow-sm" placeholder="Buscar projeto..." oninput="window.refreshUI()">
                     <select id="dash-filter-period" class="input-premium !py-1.5 !px-3 !text-[10px] !w-auto shadow-sm" onchange="window.refreshUI()">
                         <option value="all">Todo o Período</option>
                         <option value="mes">Mensal</option>
@@ -270,8 +286,8 @@
                 <div class="kpi-card"><p class="label-forte !mb-0 text-[9px] md:text-[11px]">Total</p><h2 id="kpi-total" class="text-2xl md:text-3xl font-black text-slate-900">0</h2></div>
                 <div class="kpi-card"><p class="label-forte !mb-0 text-cyan-500 text-[9px] md:text-[11px]">SLA Geral</p><h2 id="kpi-sla" class="text-2xl md:text-3xl font-black text-cyan-500">0%</h2></div>
                 <div class="kpi-card"><p class="label-forte !mb-0 text-green-500 text-[9px] md:text-[11px]">Aderência</p><h2 id="kpi-performance" class="text-2xl md:text-3xl font-black text-green-500">0%</h2></div>
-                <div class="kpi-card"><p class="label-forte !mb-0 text-blue-500 text-[9px] md:text-[11px]">Riscos</p><h2 id="kpi-riscos" class="text-2xl md:text-3xl font-black text-blue-500">0</h2></div>
-                <div class="kpi-card"><p class="label-forte !mb-0 text-red-500 text-[9px] md:text-[11px]">Problemas</p><h2 id="kpi-problemas" class="text-2xl md:text-3xl font-black text-red-500">0</h2></div>
+                <div class="kpi-card"><p class="label-forte !mb-0 text-blue-500 text-[9px] md:text-[11px]">Riscos</p><h2 id="kpi-riscos" class="text-xl md:text-2xl font-black text-blue-500">0</h2></div>
+                <div class="kpi-card"><p class="label-forte !mb-0 text-red-500 text-[9px] md:text-[11px]">Problemas</p><h2 id="kpi-problemas" class="text-xl md:text-2xl font-black text-red-500">0</h2></div>
                 <div class="kpi-card"><p class="label-forte !mb-0 text-indigo-500 text-[9px] md:text-[11px]">Saúde</p><h2 id="kpi-saude" class="text-2xl md:text-3xl font-black text-indigo-500">100%</h2></div>
             </div>
 
@@ -279,13 +295,13 @@
 
             <!-- GRÁFICOS (EM CIMA) -->
             <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 md:gap-8 mb-8 md:mb-12">
-                <div class="bg-white p-4 md:p-8 rounded-[1.5rem] md:rounded-[2rem] border border-slate-100 shadow-sm flex flex-col items-center"><span class="label-forte mb-2 md:mb-4">Status</span><div class="w-full h-40 md:h-44"><canvas id="chartStatus"></canvas></div></div>
-                <div class="bg-white p-4 md:p-8 rounded-[1.5rem] md:rounded-[2rem] border border-slate-100 shadow-sm flex flex-col items-center"><span class="label-forte mb-2 md:mb-4">Área</span><div class="w-full h-40 md:h-44"><canvas id="chartTime"></canvas></div></div>
-                <div class="bg-white p-4 md:p-8 rounded-[1.5rem] md:rounded-[2rem] border border-slate-100 shadow-sm flex flex-col items-center"><span class="label-forte mb-2 md:mb-4">Frentes Ativas</span><div class="w-full h-40 md:h-44"><canvas id="chartFrente"></canvas></div></div>
-                <div class="bg-white p-4 md:p-8 rounded-[1.5rem] md:rounded-[2rem] border border-slate-100 shadow-sm flex flex-col items-center"><span class="label-forte mb-2 md:mb-4">Lead Time Médio</span><div class="w-full h-40 md:h-44"><canvas id="chartLeadTime"></canvas></div></div>
+                <div class="bg-white p-4 md:p-8 rounded-[1.5rem] md:rounded-[2rem] border border-slate-100 shadow-sm flex flex-col items-center text-slate-800"><span class="label-forte mb-2 md:mb-4 text-slate-800">Status</span><div class="w-full h-40 md:h-44"><canvas id="chartStatus"></canvas></div></div>
+                <div class="bg-white p-4 md:p-8 rounded-[1.5rem] md:rounded-[2rem] border border-slate-100 shadow-sm flex flex-col items-center text-slate-800"><span class="label-forte mb-2 md:mb-4 text-slate-800">Área</span><div class="w-full h-40 md:h-44"><canvas id="chartTime"></canvas></div></div>
+                <div class="bg-white p-4 md:p-8 rounded-[1.5rem] md:rounded-[2rem] border border-slate-100 shadow-sm flex flex-col items-center text-slate-800"><span class="label-forte mb-2 md:mb-4 text-slate-800">Frentes Ativas</span><div class="w-full h-40 md:h-44"><canvas id="chartFrente"></canvas></div></div>
+                <div class="bg-white p-4 md:p-8 rounded-[1.5rem] md:rounded-[2rem] border border-slate-100 shadow-sm flex flex-col items-center text-slate-800"><span class="label-forte mb-2 md:mb-4 text-slate-800">Lead Time Médio</span><div class="w-full h-40 md:h-44"><canvas id="chartLeadTime"></canvas></div></div>
             </div>
 
-            <!-- QUADRO KANBAN (EMBAIXO DOS GRÁFICOS) -->
+            <!-- QUADRO KANBAN -->
             <div class="grid grid-cols-1 md:grid-cols-2 gap-8 mb-12">
                 <div class="column-board">
                     <label class="label-forte text-slate-400 mb-6 flex justify-between items-center">
@@ -304,15 +320,15 @@
             </div>
         </div>
 
-        <!-- VIEW LISTA (PROJETOS) -->
-        <div id="view-list" class="hidden no-print text-slate-800">
-            <div class="mb-8 flex flex-col md:flex-row justify-between items-start md:items-end gap-6">
+        <!-- VIEW LISTA -->
+        <div id="view-list" class="hidden no-print">
+            <div class="mb-8 flex flex-col md:flex-row justify-between items-start md:items-end gap-6 text-slate-800">
                 <div>
                     <h1 class="text-2xl md:text-4xl font-black tracking-tighter uppercase leading-none text-slate-900">Projetos</h1>
                     <p class="text-slate-400 text-[10px] md:text-xs font-bold uppercase mt-2 md:mt-3 tracking-widest">Controle e Listagem Geral</p>
                 </div>
-                <div class="flex flex-wrap gap-2 md:gap-3">
-                    <input type="text" id="search-list" class="input-premium !py-1.5 !px-3 !text-[10px] !w-40" placeholder="Buscar projeto..." oninput="window.refreshUI()">
+                <div class="flex flex-wrap gap-2 md:gap-3 text-slate-800">
+                    <input type="text" id="search-list" class="input-premium !py-1.5 !px-3 !text-[10px] !w-40 shadow-sm" placeholder="Buscar projeto..." oninput="window.refreshUI()">
                     <select id="list-filter-period" class="input-premium !py-1.5 !px-3 !text-[10px] !w-auto shadow-sm" onchange="window.refreshUI()">
                         <option value="all">Todo o Período</option>
                         <option value="mes">Mensal</option>
@@ -320,10 +336,10 @@
                         <option value="ano">Anual</option>
                     </select>
                     <select id="list-filter-analista" class="input-premium !py-1.5 !px-3 !text-[10px] !w-auto shadow-sm" onchange="window.refreshUI()"><option value="">Analistas (Todos)</option></select>
-                    <select id="list-filter-area" class="input-premium !py-2 !text-[10px] !w-auto" onchange="window.refreshUI()"><option value="">Todas as Áreas</option></select>
+                    <select id="list-filter-area" class="input-premium !py-2 !text-[10px] !w-auto shadow-sm" onchange="window.refreshUI()"><option value="">Todas as Áreas</option></select>
                 </div>
             </div>
-            <div class="bg-white rounded-[1.5rem] md:rounded-[2.25rem] border border-slate-100 shadow-sm overflow-hidden">
+            <div class="bg-white rounded-[1.5rem] md:rounded-[2.25rem] border border-slate-100 shadow-sm overflow-hidden text-slate-800">
                 <div class="overflow-x-auto">
                     <table class="w-full text-left min-w-[1000px]">
                         <thead class="bg-slate-50 border-b border-slate-100 text-[10px] font-black uppercase tracking-widest text-slate-400">
@@ -338,7 +354,7 @@
         <!-- VIEW ARQUIVO -->
         <div id="view-archive" class="hidden no-print text-slate-800">
             <div class="mb-8">
-                <h1 class="text-2xl md:text-4xl font-black tracking-tighter uppercase leading-none text-slate-900">Arquivo</h1>
+                <h1 class="text-2xl md:text-4xl font-black tracking-tighter uppercase leading-none text-slate-900 text-slate-800">Arquivo</h1>
                 <p class="text-slate-400 text-[10px] md:text-xs font-bold uppercase mt-2 md:mt-3 tracking-widest">Histórico de Conclusões e Despriorizações</p>
             </div>
             <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
@@ -365,9 +381,10 @@
             
             <form id="project-form">
                 <input type="hidden" id="edit-id" value=""><input type="hidden" id="impedimento_tipo" value="nenhum">
+                
                 <div class="form-section-box shadow-sm">
                     <label class="label-forte text-slate-300 mb-6 pb-2 border-b border-slate-50">1. Identificação Geral</label>
-                    <div class="grid grid-cols-1 md:grid-cols-12 gap-6 md:gap-10">
+                    <div class="grid grid-cols-1 md:grid-cols-12 gap-6 md:gap-10 text-slate-800">
                         <div class="md:col-span-8"><label class="label-forte">Nome da Iniciativa</label><input type="text" id="iniciativa" required class="input-premium uppercase"></div>
                         <div class="md:col-span-4"><label class="label-forte">Prioridade</label><select id="prioridade" class="input-premium font-bold"><option value="Baixa">Baixa</option><option value="Média">Média</option><option value="Alta">Alta</option></select></div>
                     </div>
@@ -375,7 +392,7 @@
 
                 <div class="form-section-box shadow-sm">
                     <label class="label-forte text-slate-400 mb-6 pb-2 border-b border-slate-50">2. Definição Operacional</label>
-                    <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-4 md:gap-8">
+                    <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-4 md:gap-8 text-slate-800">
                         <div><div class="flex justify-between items-center mb-1"><label class="label-forte !mb-0">Tipo</label><span class="btn-add-item" onclick="window.openAddModal('tipo_atividade')">+</span></div><select id="tipo_atividade" required class="input-premium font-bold"><option value="Incidente">Incidente</option><option value="Manutenção">Manutenção</option><option value="Melhoria" selected>Melhoria</option><option value="Projeto">Projeto</option></select></div>
                         <div><div class="flex justify-between items-center mb-1"><label class="label-forte !mb-0">Área</label><span class="btn-add-item" onclick="window.openAddModal('time')">+</span></div><select id="time" required class="input-premium"></select></div>
                         <div><div class="flex justify-between items-center mb-1"><label class="label-forte !mb-0">Frente</label><span class="btn-add-item" onclick="window.openAddModal('frente')">+</span></div><select id="frente" required class="input-premium"></select></div>
@@ -384,7 +401,7 @@
                     </div>
                 </div>
 
-                <div class="grid grid-cols-1 md:grid-cols-2 gap-6 md:gap-8">
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-6 md:gap-8 text-slate-800">
                     <div class="form-section-box shadow-sm">
                         <label class="label-forte text-slate-400 mb-6 pb-2 border-b border-slate-50">3. Cronograma</label>
                         <div class="grid grid-cols-1 sm:grid-cols-2 gap-6">
@@ -395,7 +412,7 @@
                             <label class="label-forte !text-emerald-600">Conclusão Realizada</label><input type="date" id="data_conclusao" class="input-premium text-xs border-emerald-100 bg-emerald-50/20 text-slate-900">
                         </div>
                     </div>
-                    <div class="form-section-box shadow-sm text-slate-800">
+                    <div class="form-section-box shadow-sm">
                         <label class="label-forte text-slate-400 mb-6 pb-2 border-b border-slate-50">4. KPIs Estratégicos</label>
                         <div id="metricas-container" class="space-y-4 mb-6"></div>
                         <button type="button" onclick="window.addMetricaInput()" class="text-[10px] font-black text-cyan-500 uppercase tracking-widest">+ Adicionar</button>
@@ -403,16 +420,26 @@
                 </div>
 
                 <div class="form-section-box shadow-sm text-slate-800">
-                    <div class="flex justify-between items-center mb-8 pb-3 border-b border-slate-50">
+                    <div class="flex justify-between items-center mb-8 pb-3 border-b border-slate-50 text-slate-800">
                         <label class="label-forte text-slate-400 !mb-0">5. Analistas Responsáveis</label>
                         <span class="btn-add-item" onclick="window.openAddModal('analista')">+ Novo</span>
                     </div>
                     <div id="responsaveis-grid" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-y-3 gap-x-12 max-h-48 overflow-y-auto pr-2"></div>
                 </div>
 
-                <div class="grid grid-cols-1 md:grid-cols-2 gap-6 md:gap-10">
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-6 md:gap-10 text-slate-800">
                     <div class="form-section-box shadow-sm space-y-6">
-                        <div><label class="label-forte">Escopo Executivo</label><textarea id="nota_inicial" rows="4" class="input-premium text-xs leading-relaxed" placeholder="Resumo estratégico..."></textarea></div>
+                        <div><label class="label-forte">Descrição detalhada</label><textarea id="nota_inicial" rows="4" class="input-premium text-xs leading-relaxed" placeholder="Resumo estratégico..."></textarea></div>
+                        
+                        <div class="pt-6 border-t border-slate-50">
+                            <label class="label-forte">Atividades / Tasks</label>
+                            <div id="tasks-list-container" class="space-y-2 mb-4 max-h-48 overflow-y-auto pr-2"></div>
+                            <div class="flex gap-2">
+                                <input type="text" id="new-task-input" class="input-premium !text-xs" placeholder="Nova tarefa...">
+                                <button type="button" onclick="window.addTaskToProject()" class="bg-slate-900 text-white px-4 py-2 rounded-xl font-bold text-[10px] uppercase hover:bg-slate-800 transition-all">Adicionar</button>
+                            </div>
+                        </div>
+
                         <div class="pt-6 border-t border-slate-50">
                             <label class="label-forte">Log de Updates</label>
                             <div id="notes-history-list" class="space-y-3 max-h-56 overflow-y-auto mb-4 pr-3 text-[11px]"></div>
@@ -423,11 +450,11 @@
                         </div>
                     </div>
 
-                    <div class="space-y-6">
+                    <div class="space-y-6 text-slate-800">
                         <div id="impedimento-container" class="form-section-box !bg-slate-50 !border-slate-200 transition-colors duration-500">
                             <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center mb-4 gap-3">
                                 <label class="label-forte !mb-0">Atenção Executiva</label>
-                                <div class="flex gap-2">
+                                <div class="flex gap-4">
                                     <button type="button" id="toggle-risco" onclick="window.setImpedimentoTipo('Risco')" class="toggle-btn inactive">Risco ?</button>
                                     <button type="button" id="toggle-problema" onclick="window.setImpedimentoTipo('Problema')" class="toggle-btn inactive">Problema ?</button>
                                 </div>
@@ -438,7 +465,7 @@
                             <label class="label-forte">Lições Aprendidas</label>
                             <div id="lessons-history-list" class="space-y-2 max-h-56 overflow-y-auto mb-4 pr-3 text-[11px]"></div>
                             <div class="flex flex-col sm:flex-row gap-2">
-                                <textarea id="new-lesson-note" rows="2" class="input-premium !text-xs" placeholder="Novo aprendizado..."></textarea>
+                                <textarea id="new-lesson-note" rows="2" class="input-premium !text-xs shadow-inner" placeholder="Novo aprendizado..."></textarea>
                                 <button type="button" onclick="window.addItemToHistory('lesson')" class="bg-slate-900 text-white px-6 py-2.5 rounded-xl font-bold text-[10px] uppercase hover:bg-slate-800 transition-all self-end">Incluir</button>
                             </div>
                         </div>
@@ -481,6 +508,7 @@
 
         let tempNotes = [];
         let tempLessons = [];
+        let tempTasks = [];
 
         const defaultTeam = ["Cauan Pereira Da Silva", "Diego Francisco Rocha", "Hudson Nestor Pereira Cortes", "Lucas Henrique Jantsch", "Luiz Gustavo Ribeiro", "Michael Gabriel Moraes Faria", "Otávio Augusto Oliveira", "Rodrigo Prinz De Paiva", "Simone Thomé de Andrade"];
         const defaultAreas = ["Análise", "CX", "Comunicação", "Mesa", "Onboarding"];
@@ -615,7 +643,6 @@
             const remainingDays = Math.ceil((end - today) / 86400000);
             const isOverdue = today > end && p.status !== 'Finalizado';
             
-            // Color Logic
             let topColor = 'var(--color-backlog)';
             if(p.status === 'Em Andamento') topColor = 'var(--color-andamento)';
             if(p.status === 'Finalizado') topColor = 'var(--color-finalizado)';
@@ -623,12 +650,12 @@
 
             return `
                 <div class="card-project p-6 flex flex-col h-full ${p.impedimento_tipo === 'Problema' ? 'border-2 border-red-500' : ''}" style="border-top-color: ${topColor}">
-                    <div class="flex justify-between items-start mb-4 md:mb-6"><span class="text-[8px] md:text-[9px] font-black text-slate-400 uppercase tracking-widest">${p.tipo_atividade} | ${p.time}</span><span class="status-pill status-${sS}">${p.status}</span></div>
+                    <div class="flex justify-between items-start mb-4 md:mb-6 text-slate-800"><span class="text-[8px] md:text-[9px] font-black text-slate-400 uppercase tracking-widest">${p.tipo_atividade} | ${p.time}</span><span class="status-pill status-${sS}">${p.status}</span></div>
                     <h3 class="text-lg md:text-xl font-black mb-4 uppercase leading-tight text-slate-800">${p.iniciativa}</h3>
                     <div class="text-[10px] md:text-[11px] font-bold space-y-2 mb-6 text-slate-500">
-                        <p class="flex justify-between"><span>ESTIMADO:</span> <span class="text-slate-900 font-black">${p.prazo ? p.prazo.split('-').reverse().join('/') : '--'}</span></p>
-                        <p class="flex justify-between"><span>DIAS EM ABERTO:</span> <span class="text-slate-900 font-black">${Math.max(0, openDays)} dias</span></p>
-                        <p class="flex justify-between items-center">
+                        <p class="flex justify-between text-slate-800"><span>ESTIMADO:</span> <span class="text-slate-900 font-black">${p.prazo ? p.prazo.split('-').reverse().join('/') : '--'}</span></p>
+                        <p class="flex justify-between text-slate-800"><span>DIAS EM ABERTO:</span> <span class="text-slate-900 font-black">${Math.max(0, openDays)} dias</span></p>
+                        <p class="flex justify-between items-center text-slate-800">
                             <span>STATUS PRAZO:</span> 
                             <span class="${isOverdue ? 'text-red-600' : 'text-slate-900'} font-black flex items-center gap-1.5">
                                 ${isOverdue ? '<span class="w-2.5 h-2.5 rounded-full bg-red-600 animate-pulse"></span> EM ATRASO' : (remainingDays + ' DIAS RESTANTES')}
@@ -735,6 +762,42 @@
             container.appendChild(div);
         };
 
+        // --- GESTÃO DE TASKS ---
+        window.addTaskToProject = () => {
+            const input = document.getElementById('new-task-input');
+            const val = input.value.trim();
+            if(!val) return;
+            tempTasks.push({ id: Date.now(), text: val, completed: false });
+            input.value = '';
+            renderTasksList();
+        };
+
+        window.toggleTaskStatus = (id) => {
+            tempTasks = tempTasks.map(t => t.id === id ? {...t, completed: !t.completed} : t);
+            renderTasksList();
+        };
+
+        window.removeTaskFromProject = (id) => {
+            tempTasks = tempTasks.filter(t => t.id !== id);
+            renderTasksList();
+        };
+
+        const renderTasksList = () => {
+            const container = document.getElementById('tasks-list-container');
+            if(!container) return;
+            container.innerHTML = '';
+            tempTasks.forEach(t => {
+                container.innerHTML += `
+                    <div class="task-item">
+                        <input type="checkbox" ${t.completed ? 'checked' : ''} onchange="window.toggleTaskStatus(${t.id})">
+                        <span class="flex-1 text-xs font-bold ${t.completed ? 'line-through text-slate-300' : 'text-slate-700'}">${t.text}</span>
+                        <button type="button" onclick="window.removeTaskFromProject(${t.id})" class="text-red-300 hover:text-red-500">
+                            <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" /></svg>
+                        </button>
+                    </div>`;
+            });
+        };
+
         window.addItemToHistory = (type) => {
             const dateStr = new Date().toLocaleDateString('pt-BR');
             if(type === 'note') {
@@ -748,14 +811,14 @@
 
         const renderHistoryLists = () => {
             const nList = document.getElementById('notes-history-list'); const lList = document.getElementById('lessons-history-list');
-            if(nList) { nList.innerHTML = ''; tempNotes.forEach(n => { nList.innerHTML += `<div class="history-entry"><span class="text-cyan-500 font-black text-[9px] uppercase tracking-widest">${n.date}</span><p class="mt-1 font-semibold text-slate-700 text-xs">${n.text}</p></div>`; }); }
-            if(lList) { lList.innerHTML = ''; tempLessons.forEach(l => { lList.innerHTML += `<div class="history-entry"><span class="text-emerald-500 font-black text-[9px] uppercase tracking-widest">${l.date}</span><p class="mt-1 font-semibold text-slate-700 text-xs">${l.text}</p></div>`; }); }
+            if(nList) { nList.innerHTML = ''; tempNotes.forEach(n => { nList.innerHTML += `<div class="history-entry text-slate-800"><span class="text-cyan-500 font-black text-[9px] uppercase tracking-widest">${n.date}</span><p class="mt-1 font-semibold text-xs">${n.text}</p></div>`; }); }
+            if(lList) { lList.innerHTML = ''; tempLessons.forEach(l => { lList.innerHTML += `<div class="history-entry text-slate-800"><span class="text-emerald-500 font-black text-[9px] uppercase tracking-widest">${l.date}</span><p class="mt-1 font-semibold text-xs">${l.text}</p></div>`; }); }
         };
 
         window.resetForm = () => {
             document.getElementById('project-form').reset(); document.getElementById('edit-id').value = '';
             document.getElementById('metricas-container').innerHTML = ''; document.getElementById('notes-history-list').innerHTML = '';
-            tempNotes = []; tempLessons = []; renderHistoryLists(); window.addMetricaInput(); window.setImpedimentoTipo('nenhum');
+            tempNotes = []; tempLessons = []; tempTasks = []; renderHistoryLists(); renderTasksList(); window.addMetricaInput(); window.setImpedimentoTipo('nenhum');
         };
 
         window.editProjectByID = (id) => {
@@ -768,7 +831,8 @@
             document.getElementById('data_criacao').value = p.data_criacao || ''; document.getElementById('prazo').value = p.prazo || '';
             document.getElementById('impedimentos').value = p.impedimentos || ''; document.getElementById('nota_inicial').value = p.nota_inicial || '';
             document.getElementById('data_conclusao').value = p.data_conclusao || '';
-            tempNotes = p.notes || []; tempLessons = p.lessons || []; renderHistoryLists();
+            tempNotes = p.notes || []; tempLessons = p.lessons || []; tempTasks = p.tasks || [];
+            renderHistoryLists(); renderTasksList();
             window.setImpedimentoTipo(p.impedimento_tipo || 'nenhum'); window.updateStatusUI(p.status);
             document.querySelectorAll('input[name="responsavel_check"]').forEach(cb => { cb.checked = p.responsavel?.includes(cb.value); });
             const mC = document.getElementById('metricas-container'); mC.innerHTML = '';
@@ -787,7 +851,7 @@
                 status: document.getElementById('status').value, data_criacao: document.getElementById('data_criacao').value,
                 prazo: document.getElementById('prazo').value, impedimentos: document.getElementById('impedimentos').value,
                 impedimento_tipo: document.getElementById('impedimento_tipo').value, nota_inicial: document.getElementById('nota_inicial').value,
-                data_conclusao: document.getElementById('data_conclusao').value, notes: tempNotes, lessons: tempLessons,
+                data_conclusao: document.getElementById('data_conclusao').value, notes: tempNotes, lessons: tempLessons, tasks: tempTasks,
                 responsavel: Array.from(document.querySelectorAll('input[name="responsavel_check"]:checked')).map(cb => cb.value),
                 metricas: Array.from(document.querySelectorAll('#metricas-container > div')).map(row => ({
                     label: row.querySelector('.metrica-label').value, meta: row.querySelector('.metrica-meta').value, real: row.querySelector('.metrica-real').value

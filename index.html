@@ -75,7 +75,7 @@
         .checkbox-item {
             display: flex;
             align-items: center;
-            gap: 1rem;
+            gap: 1.25rem;
             padding: 0.6rem 0.85rem;
             border-radius: 0.75rem;
             cursor: pointer;
@@ -87,7 +87,7 @@
             border-color: #e2e8f0;
         }
         .toggle-btn {
-            padding: 8px 14px;
+            padding: 8px 16px;
             border-radius: 12px;
             font-size: 10px;
             font-weight: 800;
@@ -183,7 +183,6 @@
 </head>
 <body class="min-h-screen">
 
-    <!-- OVERLAY CARREGAMENTO -->
     <div id="loading-overlay">
         <img src="https://cloudfilesdm.com/postcards/unico-color__1-878cebbc.png" class="w-24 md:w-32 mb-8 invert" alt="Unico">
         <div class="w-10 h-10 border-4 border-slate-700 border-t-cyan-400 rounded-full animate-spin"></div>
@@ -236,8 +235,8 @@
 
     <main class="max-w-7xl mx-auto p-4 md:p-8 mt-2 md:mt-4">
         <!-- VIEW DASHBOARD -->
-        <div id="view-dashboard" class="block no-print">
-            <div class="mb-8 md:mb-12 flex flex-col xl:flex-row xl:items-end justify-between gap-6 text-slate-800">
+        <div id="view-dashboard" class="block no-print text-slate-800">
+            <div class="mb-8 md:mb-12 flex flex-col xl:flex-row xl:items-end justify-between gap-6">
                 <div>
                     <h1 class="text-2xl md:text-4xl font-black tracking-tighter uppercase leading-none text-slate-900">Estratégia & Operação</h1>
                     <p class="text-slate-400 text-[10px] md:text-xs font-bold uppercase mt-2 md:mt-3 tracking-widest">Painel de Decisões e Eficiência</p>
@@ -247,7 +246,6 @@
                         <option value="all">Todo o Período</option>
                         <option value="mes">Mensal</option>
                         <option value="trimestre">Trimestral</option>
-                        <option value="semestre">Semestral</option>
                         <option value="ano">Anual</option>
                     </select>
                     <select id="dash-filter-analista" class="input-premium !py-1.5 !px-3 !text-[10px] !w-auto shadow-sm" onchange="window.refreshUI()"><option value="">Analistas (Todos)</option></select>
@@ -280,8 +278,8 @@
         </div>
 
         <!-- VIEW LISTA -->
-        <div id="view-list" class="hidden no-print">
-            <div class="mb-8 flex flex-col md:flex-row justify-between items-start md:items-end gap-6 text-slate-800">
+        <div id="view-list" class="hidden no-print text-slate-800">
+            <div class="mb-8 flex flex-col md:flex-row justify-between items-start md:items-end gap-6">
                 <div>
                     <h1 class="text-2xl md:text-4xl font-black tracking-tighter uppercase leading-none text-slate-900">Gestão de Projetos</h1>
                     <p class="text-slate-400 text-[10px] md:text-xs font-bold uppercase mt-2 md:mt-3 tracking-widest">Controle e Listagem Geral</p>
@@ -299,9 +297,9 @@
             </div>
             <div class="bg-white rounded-[1.5rem] md:rounded-[2.25rem] border border-slate-100 shadow-sm overflow-hidden">
                 <div class="overflow-x-auto">
-                    <table class="w-full text-left min-w-[800px]">
+                    <table class="w-full text-left min-w-[1000px]">
                         <thead class="bg-slate-50 border-b border-slate-100 text-[10px] font-black uppercase tracking-widest text-slate-400">
-                            <tr><th class="p-6 md:p-8">Iniciativa</th><th class="p-6 md:p-8">Área</th><th class="p-6 md:p-8">Responsável</th><th class="p-6 md:p-8 text-center">Estimado</th><th class="p-6 md:p-8 text-center">Status</th><th class="p-6 md:p-8 text-right">Ações</th></tr>
+                            <tr><th class="p-6 md:p-8">Iniciativa</th><th class="p-6 md:p-8">Área</th><th class="p-6 md:p-8">Responsáveis</th><th class="p-6 md:p-8 text-center">Estimado</th><th class="p-6 md:p-8 text-center">Status</th><th class="p-6 md:p-8 text-right">Ações</th></tr>
                         </thead>
                         <tbody id="detailed-table-body" class="divide-y divide-slate-100 text-[11px] md:text-[13px] font-bold text-slate-700"></tbody>
                     </table>
@@ -310,7 +308,7 @@
         </div>
 
         <!-- VIEW FORM -->
-        <div id="view-form" class="hidden max-w-6xl mx-auto">
+        <div id="view-form" class="hidden max-w-6xl mx-auto text-slate-800">
             <div class="mb-6 md:mb-10 flex flex-col sm:flex-row justify-between items-start sm:items-end gap-4">
                 <h2 id="form-title" class="text-2xl md:text-3xl font-black uppercase tracking-tighter text-slate-900">Ficha Técnica</h2>
                 <div class="flex gap-2 md:gap-4 no-print w-full sm:w-auto">
@@ -354,7 +352,7 @@
                 </div>
 
                 <div class="grid grid-cols-1 md:grid-cols-2 gap-6 md:gap-8">
-                    <div class="form-section-box shadow-sm text-slate-800">
+                    <div class="form-section-box shadow-sm">
                         <label class="label-forte text-slate-400 mb-6 pb-2 border-b border-slate-50">3. Cronograma</label>
                         <div class="grid grid-cols-1 sm:grid-cols-2 gap-6">
                             <div><label class="label-forte">Início</label><input type="date" id="data_criacao" required class="input-premium text-xs"></div>
@@ -379,8 +377,8 @@
                     <div id="responsaveis-grid" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-y-3 gap-x-12 max-h-48 overflow-y-auto pr-2"></div>
                 </div>
 
-                <div class="grid grid-cols-1 md:grid-cols-2 gap-6 md:gap-10 text-slate-800">
-                    <div class="form-section-box space-y-6">
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-6 md:gap-10">
+                    <div class="form-section-box shadow-sm space-y-6">
                         <div><label class="label-forte">Escopo Executivo</label><textarea id="nota_inicial" rows="4" class="input-premium text-xs leading-relaxed" placeholder="Resumo estratégico..."></textarea></div>
                         <div class="pt-6 border-t border-slate-50">
                             <label class="label-forte">Log de Updates</label>
@@ -497,6 +495,7 @@
             const date = new Date(dateStr); const now = new Date();
             if (period === 'mes') return date.getMonth() === now.getMonth() && date.getFullYear() === now.getFullYear();
             if (period === 'trimestre') return Math.floor(now.getMonth() / 3) === Math.floor(date.getMonth() / 3);
+            if (period === 'semestre') return Math.floor(now.getMonth() / 6) === Math.floor(date.getMonth() / 6);
             if (period === 'ano') return date.getFullYear() === now.getFullYear();
             return true;
         };
@@ -529,11 +528,11 @@
                 const onTime = finished.filter(p => p.data_conclusao && p.prazo && new Date(p.data_conclusao) <= new Date(p.prazo)).length;
                 adherence = Math.round((onTime / finished.length) * 100);
             }
-            document.getElementById('kpi-total').innerText = data.length;
-            document.getElementById('kpi-sla').innerText = (finished.length ? Math.round((finished.filter(p => p.data_conclusao <= p.prazo).length/finished.length)*100) : 0) + '%';
-            document.getElementById('kpi-performance').innerText = adherence + '%';
-            document.getElementById('kpi-riscos').innerText = data.filter(p => p.status !== 'Finalizado' && p.impedimento_tipo === 'Risco').length;
-            document.getElementById('kpi-problemas').innerText = problemas;
+            const totalEl = document.getElementById('kpi-total'); if(totalEl) totalEl.innerText = data.length;
+            const slaEl = document.getElementById('kpi-sla'); if(slaEl) slaEl.innerText = (finished.length ? Math.round((finished.filter(p => p.data_conclusao <= p.prazo).length/finished.length)*100) : 0) + '%';
+            const perfEl = document.getElementById('kpi-performance'); if(perfEl) perfEl.innerText = adherence + '%';
+            const riskEl = document.getElementById('kpi-riscos'); if(riskEl) riskEl.innerText = data.filter(p => p.status !== 'Finalizado' && p.impedimento_tipo === 'Risco').length;
+            const probEl = document.getElementById('kpi-problemas'); if(probEl) probEl.innerText = problemas;
             const saude = problemas === 0 ? 100 : (problemas === 1 ? 50 : 0);
             const saEl = document.getElementById('kpi-saude');
             if(saEl) {
@@ -583,7 +582,6 @@
 
         window.refreshUI = () => {
             const isDash = document.getElementById('view-dashboard').classList.contains('hidden') === false;
-            
             const period = document.getElementById(isDash ? 'dash-filter-period' : 'list-filter-period')?.value || 'all';
             const analyst = document.getElementById(isDash ? 'dash-filter-analista' : 'list-filter-analista')?.value || '';
             const area = document.getElementById(isDash ? 'dash-filter-area' : 'list-filter-area')?.value || '';
@@ -601,13 +599,35 @@
             
             const grid = document.getElementById('projects-grid'); if(grid) {
                 grid.innerHTML = '';
+                const today = new Date(); today.setHours(0,0,0,0);
+
                 filtered.filter(p => p.status !== 'Finalizado' && p.status !== 'Despriorizado').forEach(p => {
                     const sS = (p.status || 'backlog').toLowerCase().replace(/\s/g, '');
+                    
+                    // Lógica de Contagem de Dias
+                    const start = p.data_criacao ? new Date(p.data_criacao) : today;
+                    const end = p.prazo ? new Date(p.prazo) : today;
+                    
+                    const openDays = Math.floor((today - start) / 86400000);
+                    const remainingDays = Math.ceil((end - today) / 86400000);
+                    const isOverdue = today > end;
+
                     grid.innerHTML += `
                         <div class="card-project p-6 md:p-8 flex flex-col h-full border-t-[10px] md:border-t-[12px] ${p.impedimento_tipo === 'Problema' ? 'border-2 border-red-500' : ''}" style="border-top-color: ${p.impedimento_tipo === 'Problema' ? '#ef4444' : '#000a28'}">
                             <div class="flex justify-between items-start mb-4 md:mb-6"><span class="text-[8px] md:text-[9px] font-black text-slate-400 uppercase tracking-widest">${p.tipo_atividade} | ${p.time}</span><span class="status-pill status-${sS}">${p.status}</span></div>
                             <h3 class="text-lg md:text-xl font-black mb-4 uppercase leading-tight text-slate-800">${p.iniciativa}</h3>
-                            <div class="text-[10px] md:text-[11px] font-bold space-y-2 mb-6 text-slate-500"><p class="flex justify-between"><span>ESTIMADO:</span> <span class="text-slate-900 font-black">${p.prazo ? p.prazo.split('-').reverse().join('/') : '--'}</span></p></div>
+                            
+                            <div class="text-[10px] md:text-[11px] font-bold space-y-2 mb-6 text-slate-500">
+                                <p class="flex justify-between"><span>ESTIMADO:</span> <span class="text-slate-900 font-black">${p.prazo ? p.prazo.split('-').reverse().join('/') : '--'}</span></p>
+                                <p class="flex justify-between"><span>DIAS EM ABERTO:</span> <span class="text-slate-900 font-black">${Math.max(0, openDays)} dias</span></p>
+                                <p class="flex justify-between items-center">
+                                    <span>STATUS PRAZO:</span> 
+                                    <span class="${isOverdue ? 'text-red-600' : 'text-slate-900'} font-black flex items-center gap-1.5">
+                                        ${isOverdue ? '<span class="w-2.5 h-2.5 rounded-full bg-red-600 animate-pulse"></span> EM ATRASO' : (remainingDays + ' DIAS RESTANTES')}
+                                    </span>
+                                </p>
+                            </div>
+                            
                             <button onclick="window.editProjectByID('${p.id}')" class="bg-slate-900 text-white py-4 rounded-2xl font-black uppercase text-[10px] tracking-widest hover:bg-slate-800 transition mt-auto shadow-lg shadow-slate-200">Gerenciar</button>
                         </div>`;
                 });
@@ -617,11 +637,12 @@
                 tbody.innerHTML = '';
                 filtered.forEach(p => {
                     const sS = (p.status || 'backlog').toLowerCase().replace(/\s/g, '');
+                    const envolvidos = Array.isArray(p.responsavel) ? p.responsavel.join(', ') : (p.responsavel || '--');
                     tbody.innerHTML += `
                         <tr>
                             <td class="p-6 md:p-8 uppercase text-slate-900">${p.iniciativa}</td>
                             <td class="p-6 md:p-8 text-slate-500">${p.time}</td>
-                            <td class="p-6 md:p-8 text-slate-500">${p.responsavel ? p.responsavel[0] : '--'}</td>
+                            <td class="p-6 md:p-8 text-slate-500">${envolvidos}</td>
                             <td class="p-6 md:p-8 text-center text-slate-900 font-bold">${p.prazo ? p.prazo.split('-').reverse().join('/') : '--'}</td>
                             <td class="p-6 md:p-8 text-center"><span class="status-pill status-${sS}">${p.status}</span></td>
                             <td class="p-6 md:p-8 text-right flex items-center justify-end gap-3 md:gap-5">
@@ -644,7 +665,7 @@
         };
 
         window.updateStatusUI = (v) => {
-            document.getElementById('closure-dates').classList.toggle('hidden', v !== 'Finalizado');
+            const clo = document.getElementById('closure-dates'); if(clo) clo.classList.toggle('hidden', v !== 'Finalizado');
         };
 
         window.showFinishAction = () => {
@@ -751,27 +772,12 @@
         initAuth();
         const setup = () => {
             defaultTeam.sort().forEach(n => renderAnalistaCheckbox(n));
-            const selects = ['time', 'dash-filter-area', 'list-filter-area'];
-            defaultAreas.sort().forEach(a => {
-                selects.forEach(id => {
-                    const el = document.getElementById(id);
-                    if(el) el.innerHTML += `<option value="${a}">${a}</option>`;
-                });
-            });
-            const fSelects = ['frente', 'dash-filter-frente'];
-            defaultFrentes.sort().forEach(f => {
-                fSelects.forEach(id => {
-                    const el = document.getElementById(id);
-                    if(el) el.innerHTML += `<option value="${f}">${f}</option>`;
-                });
-            });
-            const aSelects = ['dash-filter-analista', 'list-filter-analista'];
-            defaultTeam.sort().forEach(t => {
-                aSelects.forEach(id => {
-                    const el = document.getElementById(id);
-                    if(el) el.innerHTML += `<option value="${t}">${t}</option>`;
-                });
-            });
+            const areasIds = ['time', 'dash-filter-area', 'list-filter-area'];
+            defaultAreas.sort().forEach(a => { areasIds.forEach(id => { const el = document.getElementById(id); if(el) el.innerHTML += `<option value="${a}">${a}</option>`; }); });
+            const frentesIds = ['frente', 'dash-filter-frente'];
+            defaultFrentes.sort().forEach(f => { frentesIds.forEach(id => { const el = document.getElementById(id); if(el) el.innerHTML += `<option value="${f}">${f}</option>`; }); });
+            const analystsIds = ['dash-filter-analista', 'list-filter-analista'];
+            defaultTeam.sort().forEach(t => { analystsIds.forEach(id => { const el = document.getElementById(id); if(el) el.innerHTML += `<option value="${t}">${t}</option>`; }); });
         };
         setup();
         window.addMetricaInput();

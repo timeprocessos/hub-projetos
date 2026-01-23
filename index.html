@@ -7,6 +7,8 @@
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Nunito+Sans:wght@300;400;600;700;800;900&display=swap" rel="stylesheet">
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <!-- Plugin para exibir valores nos gráficos permanentemente -->
+    <script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-datalabels@2.0.0"></script>
     <style>
         :root {
             --primary-color: #000a28;
@@ -17,6 +19,16 @@
             --color-andamento: #fbbf24;
             --color-finalizado: #10b981;
             --color-despriorizado: #ef4444;
+            
+            /* Cores Unico Oficiais */
+            --u-azul: #00A5FF;
+            --u-rosa: #FF1A5C;
+            --u-purpura: #A35F9D;
+            --u-roxo: #8D7AD2;
+            --u-verde: #32B77E;
+            --u-azul-pay: #5C86C4;
+            --u-azul-escuro: #070047;
+            --u-cinza: #333333;
         }
         body {
             font-family: 'Nunito Sans', sans-serif;
@@ -73,8 +85,9 @@
             margin-bottom: 1.5rem;
             box-shadow: 0 1px 3px rgba(0,0,0,0.02);
         }
+        @media (min-width: 768px) { .form-section-box { padding: 2.5rem; } }
         
-        /* ANALISTAS RESPONSÁVEIS - DESIGN PREMIUM */
+        /* ANALISTAS RESPONSÁVEIS - 3 COLUNAS */
         .checkbox-item {
             display: flex;
             align-items: center;
@@ -89,8 +102,8 @@
         .checkbox-item:hover { background: #f8fafc; border-color: #e2e8f0; }
         .checkbox-item input[type="checkbox"] {
             appearance: none;
-            width: 20px;
-            height: 20px;
+            width: 22px;
+            height: 22px;
             border: 2px solid #cbd5e1;
             border-radius: 6px;
             cursor: pointer;
@@ -145,6 +158,18 @@
         .modal-overlay { position: fixed; inset: 0; background: rgba(0, 10, 40, 0.5); backdrop-filter: blur(8px); display: none; align-items: center; justify-content: center; z-index: 10000; }
         .modal-content { background: white; padding: 2rem; border-radius: 2rem; width: 90%; max-width: 450px; box-shadow: 0 25px 50px -12px rgba(0,0,0,0.25); }
 
+        /* DROP ZONE - ESTILO DRAG & DROP */
+        .drop-zone {
+            border: 2px dashed #cbd5e1;
+            border-radius: 20px;
+            padding: 2.5rem;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.2s;
+            background: #fcfdfe;
+        }
+        .drop-zone:hover { border-color: var(--accent-color); background: rgba(0, 229, 255, 0.05); }
+
         @media print {
             .no-print { display: none !important; }
             body { background: white; padding: 0; }
@@ -160,6 +185,21 @@
         <p class="text-[10px] uppercase font-black tracking-widest mt-4 opacity-50">Sincronizando ambiente...</p>
     </div>
 
+    <!-- MODAL CONFIRMAÇÃO SAÍDA (Heurística #5) -->
+    <div id="confirm-exit-modal" class="modal-overlay">
+        <div class="modal-content text-center text-slate-800">
+            <div class="w-16 h-16 bg-amber-50 text-amber-500 rounded-full flex items-center justify-center mx-auto mb-6">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" /></svg>
+            </div>
+            <h3 class="text-xl md:text-2xl font-black mb-2 uppercase tracking-tighter">Alterações não salvas</h3>
+            <p class="text-slate-500 mb-8 font-medium text-sm">Você tem alterações pendentes na Ficha Técnica. Deseja salvar seu progresso antes de sair?</p>
+            <div class="flex flex-col sm:flex-row gap-3">
+                <button onclick="window.saveAndExit()" class="flex-1 bg-slate-900 text-white py-3.5 rounded-2xl font-black uppercase text-[11px] tracking-widest hover:bg-slate-800 transition-all">Salvar e Sair</button>
+                <button onclick="window.discardAndExit()" class="flex-1 bg-slate-100 text-slate-500 py-3.5 rounded-2xl font-black uppercase text-[11px] tracking-widest hover:bg-slate-200 transition-all text-slate-500">Descartar</button>
+            </div>
+        </div>
+    </div>
+
     <!-- MODAL DELETE -->
     <div id="delete-modal" class="modal-overlay">
         <div class="modal-content text-center text-slate-800">
@@ -167,34 +207,19 @@
             <p class="text-slate-500 mb-8 font-medium text-sm">A remoção será permanente.</p>
             <div class="flex flex-col sm:flex-row gap-3">
                 <button onclick="window.confirmDelete()" class="flex-1 bg-red-500 text-white py-3.5 rounded-2xl font-black uppercase text-[11px] tracking-widest hover:bg-red-600 transition-all">Confirmar</button>
-                <button onclick="window.closeDeleteModal()" class="flex-1 bg-slate-100 text-slate-500 py-3.5 rounded-2xl font-black uppercase text-[11px] tracking-widest hover:bg-slate-200 transition-all">Cancelar</button>
+                <button onclick="window.closeDeleteModal()" class="flex-1 bg-slate-100 text-slate-500 py-3.5 rounded-2xl font-black uppercase text-[11px] tracking-widest hover:bg-slate-200 transition-all text-slate-500">Cancelar</button>
             </div>
         </div>
     </div>
 
-    <!-- MODAL CONFIRMAÇÃO SAÍDA (UX DESIGN) -->
-    <div id="confirm-exit-modal" class="modal-overlay">
-        <div class="modal-content text-center text-slate-800">
-            <div class="w-16 h-16 bg-amber-50 text-amber-500 rounded-full flex items-center justify-center mx-auto mb-6">
-                <svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" /></svg>
-            </div>
-            <h3 class="text-xl md:text-2xl font-black mb-2 uppercase tracking-tighter">Salvar alterações?</h3>
-            <p class="text-slate-500 mb-8 font-medium text-sm">Existem alterações não salvas na Ficha Técnica. Deseja salvar antes de sair?</p>
-            <div class="flex flex-col sm:flex-row gap-3">
-                <button onclick="window.saveAndExit()" class="flex-1 bg-slate-900 text-white py-3.5 rounded-2xl font-black uppercase text-[11px] tracking-widest hover:bg-slate-800 transition-all">Salvar e Sair</button>
-                <button onclick="window.discardAndExit()" class="flex-1 bg-slate-100 text-slate-500 py-3.5 rounded-2xl font-black uppercase text-[11px] tracking-widest hover:bg-slate-200 transition-all">Descartar</button>
-            </div>
-        </div>
-    </div>
-
-    <!-- MODAL ADICIONAR ITEM -->
+    <!-- MODAL ADD OPÇÃO -->
     <div id="add-item-modal" class="modal-overlay">
-        <div class="modal-content text-slate-800">
-            <h3 id="add-item-title" class="text-xl font-black mb-6 uppercase tracking-tighter">Adicionar Opção</h3>
-            <input type="text" id="new-item-input" class="input-premium mb-8" placeholder="Digite o nome...">
-            <div class="flex gap-3">
-                <button onclick="window.processAddItem()" class="flex-1 bg-slate-900 text-white py-3.5 rounded-2xl font-black uppercase text-[11px] tracking-widest shadow-xl hover:bg-slate-800 transition-all">Adicionar</button>
-                <button onclick="window.closeAddModal()" class="flex-1 bg-slate-100 text-slate-500 py-3.5 rounded-2xl font-black uppercase text-[11px] tracking-widest transition-all">Sair</button>
+        <div class="modal-content">
+            <h3 id="add-item-title" class="text-xl font-black mb-6 uppercase tracking-tighter text-slate-800 text-slate-800">Adicionar Opção</h3>
+            <input type="text" id="new-item-input" class="input-premium mb-8 text-slate-800" placeholder="Digite o nome...">
+            <div class="flex gap-3 text-slate-800">
+                <button onclick="window.processAddItem()" class="flex-1 bg-slate-900 text-white py-3.5 rounded-2xl font-black uppercase text-[11px] tracking-widest shadow-xl hover:bg-slate-800 transition-all text-white">Adicionar</button>
+                <button onclick="window.closeAddModal()" class="flex-1 bg-slate-100 text-slate-500 py-3.5 rounded-black uppercase text-[11px] tracking-widest transition-all">Sair</button>
             </div>
         </div>
     </div>
@@ -204,7 +229,7 @@
             <div class="flex items-center gap-4 md:gap-8">
                 <img src="https://cloudfilesdm.com/postcards/unico-color__1-878cebbc.png" class="h-6" alt="Unico Logo">
                 <div id="sync-indicator" class="hidden sm:flex items-center gap-2 px-3 md:px-4 py-1.5 bg-green-50 rounded-full border border-green-100">
-                    <span class="w-1.5 h-1.5 rounded-full bg-green-500 animate-pulse"></span>
+                    <span class="w-1.5 md:w-2 h-1.5 md:h-2 rounded-full bg-green-500 animate-pulse"></span>
                     <span class="text-[8px] md:text-[10px] font-black text-green-600 uppercase tracking-widest">Tempo Real</span>
                 </div>
             </div>
@@ -219,61 +244,60 @@
 
     <main class="max-w-7xl mx-auto p-4 md:p-8 mt-2 md:mt-4 text-slate-800">
         <!-- VIEW DASHBOARD -->
-        <div id="view-dashboard" class="block no-print">
-            <div class="mb-8 md:mb-12 flex flex-col xl:flex-row xl:items-end justify-between gap-6 text-slate-800">
+        <div id="view-dashboard" class="block no-print text-slate-800">
+            <div class="mb-8 md:mb-12 flex flex-col xl:flex-row xl:items-end justify-between gap-6">
                 <div>
                     <h1 class="text-2xl md:text-4xl font-black tracking-tighter uppercase leading-none text-slate-900">Estratégia & Operação</h1>
-                    <p class="text-slate-400 text-[10px] md:text-xs font-bold uppercase mt-2 md:mt-3 tracking-widest">Painel de Decisões e Eficiência</p>
+                    <p class="text-slate-400 text-[10px] md:text-xs font-bold uppercase mt-2 md:mt-3 tracking-widest text-slate-400">Painel de Decisões e Eficiência</p>
                 </div>
-                <div class="flex flex-wrap gap-2 md:gap-3 text-slate-800">
-                    <input type="text" id="search-dash" class="input-premium !py-1.5 !px-3 !text-[10px] !w-40 shadow-sm" placeholder="Buscar projeto..." oninput="window.refreshUI()">
-                    <select id="dash-filter-period" class="input-premium !py-1.5 !px-3 !text-[10px] !w-auto shadow-sm" onchange="window.refreshUI()">
+                <div class="flex flex-wrap gap-2 md:gap-3">
+                    <input type="text" id="search-dash" class="input-premium !py-1.5 !px-3 !text-[10px] !w-40 shadow-sm text-slate-800" placeholder="Buscar projeto..." oninput="window.refreshUI()">
+                    <select id="dash-filter-period" class="input-premium !py-1.5 !px-3 !text-[10px] !w-auto shadow-sm text-slate-800" onchange="window.refreshUI()">
                         <option value="all">Todo o Período</option><option value="mes">Mensal</option><option value="trimestre">Trimestral</option><option value="ano">Anual</option>
                     </select>
-                    <select id="dash-filter-area" class="input-premium !py-1.5 !px-3 !text-[10px] !w-auto shadow-sm" onchange="window.refreshUI()"><option value="">Áreas (Todas)</option></select>
                 </div>
             </div>
 
             <!-- KPIs -->
-            <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-4 md:gap-6 mb-8 md:mb-12">
+            <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-4 md:gap-6 mb-8 md:mb-12 text-slate-800">
                 <div class="kpi-card"><p class="label-forte !mb-0 text-[9px] md:text-[11px] text-slate-400">Total</p><h2 id="kpi-total" class="text-2xl md:text-3xl font-black text-slate-900">0</h2></div>
                 <div class="kpi-card"><p class="label-forte !mb-0 text-cyan-500 text-[9px] md:text-[11px]">SLA Geral</p><h2 id="kpi-sla" class="text-2xl md:text-3xl font-black text-cyan-500">0%</h2></div>
                 <div class="kpi-card"><p class="label-forte !mb-0 text-green-500 text-[9px] md:text-[11px]">Aderência</p><h2 id="kpi-performance" class="text-2xl md:text-3xl font-black text-green-500">0%</h2></div>
                 <div class="kpi-card"><p class="label-forte !mb-0 text-blue-500 text-[9px] md:text-[11px]">Riscos</p><h2 id="kpi-riscos" class="text-xl md:text-2xl font-black text-blue-500">0</h2></div>
-                <div class="kpi-card"><p class="label-forte !mb-0 text-red-500 text-[9px] md:text-[11px]">Problemas</p><h2 id="kpi-problemas" class="text-xl md:text-2xl font-black text-red-500">0</h2></div>
+                <div class="kpi-card"><p class="label-forte !mb-0 text-red-500 text-[9px] md:text-[11px]">Problemas</p><h2 id="kpi-problemas" class="text-xl md:text-2xl font-black text-red-500 text-red-500">0</h2></div>
                 <div class="kpi-card"><p class="label-forte !mb-0 text-indigo-500 text-[9px] md:text-[11px]">Saúde</p><h2 id="kpi-saude" class="text-2xl md:text-3xl font-black text-indigo-500">100%</h2></div>
             </div>
 
-            <div class="h-px bg-slate-200 w-full mb-8 md:mb-12 opacity-30 shadow-sm"></div>
+            <div class="h-px bg-slate-200 w-full mb-8 md:mb-12 opacity-30 shadow-sm text-slate-800 text-slate-800 text-slate-800"></div>
 
-            <!-- GRÁFICOS -->
+            <!-- GRÁFICOS INFORMATIVOS -->
             <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 md:gap-8 mb-8 md:mb-12 text-slate-800">
                 <div class="bg-white p-4 md:p-8 rounded-[1.5rem] md:rounded-[2rem] border border-slate-100 shadow-sm flex flex-col items-center"><span class="label-forte mb-2 md:mb-4">Status</span><div class="w-full h-40 md:h-44"><canvas id="chartStatus"></canvas></div></div>
                 <div class="bg-white p-4 md:p-8 rounded-[1.5rem] md:rounded-[2rem] border border-slate-100 shadow-sm flex flex-col items-center"><span class="label-forte mb-2 md:mb-4">Área</span><div class="w-full h-40 md:h-44"><canvas id="chartTime"></canvas></div></div>
-                <div class="bg-white p-4 md:p-8 rounded-[1.5rem] md:rounded-[2rem] border border-slate-100 shadow-sm flex flex-col items-center"><span class="label-forte mb-2 md:mb-4 text-slate-800">Frentes Ativas</span><div class="w-full h-40 md:h-44"><canvas id="chartFrente"></canvas></div></div>
-                <div class="bg-white p-4 md:p-8 rounded-[1.5rem] md:rounded-[2rem] border border-slate-100 shadow-sm flex flex-col items-center"><span class="label-forte mb-2 md:mb-4 text-slate-800">Lead Time Médio</span><div class="w-full h-40 md:h-44"><canvas id="chartLeadTime"></canvas></div></div>
+                <div class="bg-white p-4 md:p-8 rounded-[1.5rem] md:rounded-[2rem] border border-slate-100 shadow-sm flex flex-col items-center"><span class="label-forte mb-2 md:mb-4">Frentes Ativas</span><div class="w-full h-40 md:h-44"><canvas id="chartFrente"></canvas></div></div>
+                <div class="bg-white p-4 md:p-8 rounded-[1.5rem] md:rounded-[2rem] border border-slate-100 shadow-sm flex flex-col items-center text-slate-800"><span class="label-forte mb-2 md:mb-4 text-slate-800">Lead Time Médio</span><div class="w-full h-40 md:h-44"><canvas id="chartLeadTime"></canvas></div></div>
             </div>
 
-            <!-- QUADRO KANBAN -->
+            <!-- KANBAN -->
             <div class="grid grid-cols-1 md:grid-cols-2 gap-8 mb-12 text-slate-800">
                 <div class="column-board">
                     <label class="label-forte text-slate-400 mb-6 flex justify-between items-center text-slate-400">
                         <span>Backlog</span>
                         <span id="count-backlog" class="bg-slate-200 text-slate-600 px-3 py-1 rounded-full text-[10px]">0</span>
                     </label>
-                    <div id="grid-backlog" class="space-y-6"></div>
+                    <div id="grid-backlog" class="space-y-6 text-slate-800"></div>
                 </div>
-                <div class="column-board text-slate-800">
+                <div class="column-board text-slate-800 text-slate-800 text-slate-800">
                     <label class="label-forte text-slate-400 mb-6 flex justify-between items-center text-slate-400">
                         <span>Em Andamento</span>
                         <span id="count-andamento" class="bg-amber-100 text-amber-700 px-3 py-1 rounded-full text-[10px]">0</span>
                     </label>
-                    <div id="grid-andamento" class="space-y-6"></div>
+                    <div id="grid-andamento" class="space-y-6 text-slate-800"></div>
                 </div>
             </div>
         </div>
 
-        <!-- VIEW LISTA (PROJETOS) -->
+        <!-- VIEW LISTA -->
         <div id="view-list" class="hidden no-print text-slate-800">
             <div class="mb-8 flex flex-col md:flex-row justify-between items-start md:items-end gap-6">
                 <div>
@@ -281,19 +305,19 @@
                     <p class="text-slate-400 text-[10px] md:text-xs font-bold uppercase mt-2 md:mt-3 tracking-widest text-slate-400">Controle e Listagem Geral</p>
                 </div>
                 <div class="flex flex-wrap gap-2 md:gap-3 text-slate-800">
-                    <button onclick="window.exportToXLS()" class="bg-white border border-slate-200 px-4 py-2 rounded-xl font-black text-[9px] uppercase tracking-widest shadow-sm hover:bg-slate-50">Exportar XLS</button>
-                    <button onclick="window.exportPDF()" class="bg-slate-900 text-white px-4 py-2 rounded-xl font-black text-[9px] uppercase tracking-widest shadow-sm hover:bg-slate-800">Exportar PDF</button>
-                    <input type="text" id="search-list" class="input-premium !py-1.5 !px-3 !text-[10px] !w-40 shadow-sm" placeholder="Buscar projeto..." oninput="window.refreshUI()">
-                    <select id="list-filter-period" class="input-premium !py-1.5 !px-3 !text-[10px] !w-auto shadow-sm" onchange="window.refreshUI()">
+                    <button onclick="window.exportToXLS()" class="bg-white border border-slate-200 px-5 py-2.5 rounded-xl font-black text-[9px] uppercase tracking-widest hover:bg-slate-50 shadow-sm text-slate-800 text-slate-800">Exportar XLS</button>
+                    <button onclick="window.exportPDF()" class="bg-slate-900 text-white px-5 py-2.5 rounded-xl font-black text-[9px] uppercase tracking-widest hover:bg-slate-800 shadow-sm text-white">Exportar PDF</button>
+                    <input type="text" id="search-list" class="input-premium !py-1.5 !px-3 !text-[10px] !w-40 shadow-sm text-slate-800" placeholder="Buscar projeto..." oninput="window.refreshUI()">
+                    <select id="list-filter-period" class="input-premium !py-1.5 !px-3 !text-[10px] !w-auto shadow-sm text-slate-800" onchange="window.refreshUI()">
                         <option value="all">Todo o Período</option><option value="mes">Mensal</option><option value="trimestre">Trimestral</option><option value="ano">Anual</option>
                     </select>
                 </div>
             </div>
             <div class="bg-white rounded-[1.5rem] md:rounded-[2.25rem] border border-slate-100 shadow-sm overflow-hidden text-slate-800">
-                <div class="overflow-x-auto">
-                    <table class="w-full text-left min-w-[1000px] text-slate-800">
+                <div class="overflow-x-auto text-slate-800">
+                    <table class="w-full text-left min-w-[1000px] text-slate-800 text-slate-800 text-slate-800">
                         <thead class="bg-slate-50 border-b border-slate-100 text-[10px] font-black uppercase tracking-widest text-slate-400 text-slate-400">
-                            <tr><th class="p-6 md:p-8">Iniciativa</th><th class="p-6 md:p-8">Área</th><th class="p-6 md:p-8 text-center text-slate-400">Responsáveis</th><th class="p-6 md:p-8 text-center">Estimado</th><th class="p-6 md:p-8 text-center">Status</th><th class="p-6 md:p-8 text-right text-slate-400">Ações</th></tr>
+                            <tr><th class="p-6 md:p-8">Iniciativa</th><th class="p-6 md:p-8">Área</th><th class="p-6 md:p-8 text-center text-slate-400">Responsáveis</th><th class="p-6 md:p-8 text-center text-slate-400">Estimado</th><th class="p-6 md:p-8 text-center">Status</th><th class="p-6 md:p-8 text-right text-slate-400">Ações</th></tr>
                         </thead>
                         <tbody id="detailed-table-body" class="divide-y divide-slate-100 text-[11px] md:text-[13px] font-bold text-slate-700"></tbody>
                     </table>
@@ -304,7 +328,7 @@
         <!-- VIEW ARQUIVO -->
         <div id="view-archive" class="hidden no-print text-slate-800">
             <div class="mb-8">
-                <h1 class="text-2xl md:text-4xl font-black tracking-tighter uppercase leading-none text-slate-900">Arquivo</h1>
+                <h1 class="text-2xl md:text-4xl font-black tracking-tighter uppercase leading-none text-slate-900 text-slate-900">Arquivo</h1>
                 <div class="flex flex-wrap gap-2 md:gap-3 mt-4 text-slate-800">
                     <input type="text" id="search-archive" class="input-premium !py-1.5 !px-3 !text-[10px] !w-40 shadow-sm text-slate-800" placeholder="Pesquisar arquivo..." oninput="window.refreshUI()">
                     <select id="archive-filter-period" class="input-premium !py-1.5 !px-3 !text-[10px] !w-auto shadow-sm text-slate-800" onchange="window.refreshUI()">
@@ -312,25 +336,25 @@
                     </select>
                 </div>
             </div>
-            <div class="grid grid-cols-1 md:grid-cols-2 gap-8 text-slate-800 text-slate-800 text-slate-800">
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-8 text-slate-800 text-slate-800">
                 <div class="column-board text-slate-800 text-slate-800">
                     <label class="label-forte text-emerald-600 mb-6 uppercase text-emerald-600">Finalizados</label>
-                    <div id="grid-finalizado" class="space-y-6"></div>
+                    <div id="grid-finalizado" class="space-y-6 text-slate-800 text-slate-800"></div>
                 </div>
-                <div class="column-board text-slate-800 text-slate-800">
+                <div class="column-board text-slate-800 text-slate-800 text-slate-800">
                     <label class="label-forte text-red-600 mb-6 uppercase text-red-600">Despriorizados</label>
-                    <div id="grid-despriorizado" class="space-y-6"></div>
+                    <div id="grid-despriorizado" class="space-y-6 text-slate-800 text-slate-800"></div>
                 </div>
             </div>
         </div>
 
         <!-- VIEW FORM -->
         <div id="view-form" class="hidden max-w-6xl mx-auto text-slate-800">
-            <div class="mb-6 md:mb-10 flex flex-col sm:flex-row justify-between items-start sm:items-end gap-4 text-slate-800">
-                <h2 id="form-title" class="text-2xl md:text-3xl font-black uppercase tracking-tighter text-slate-900">Ficha Técnica</h2>
+            <div class="mb-6 md:mb-10 flex flex-col sm:flex-row justify-between items-start sm:items-end gap-4 text-slate-800 text-slate-800">
+                <h2 id="form-title" class="text-2xl md:text-3xl font-black uppercase tracking-tighter text-slate-900 text-slate-900">Ficha Técnica</h2>
                 <div class="flex gap-2 md:gap-4 no-print w-full sm:w-auto text-slate-800">
-                    <button id="btn-concluir-quick" onclick="window.showFinishAction()" class="hidden bg-emerald-500 text-white px-4 md:px-8 py-3 md:py-3.5 rounded-xl md:rounded-2xl font-black text-[9px] md:text-[10px] uppercase tracking-widest shadow-lg shadow-emerald-100 hover:scale-105 transition-all text-white">Finalizar Projeto</button>
-                    <button onclick="window.exportPDF()" class="bg-slate-900 text-white px-4 md:px-8 py-3 md:py-3.5 rounded-xl md:rounded-2xl font-black text-[9px] md:text-[10px] uppercase tracking-widest shadow-lg flex-1 sm:flex-none">Exportar PDF</button>
+                    <button id="btn-concluir-quick" onclick="window.showFinishAction()" class="bg-emerald-500 text-white px-4 md:px-8 py-3 md:py-3.5 rounded-xl md:rounded-2xl font-black text-[9px] md:text-[10px] uppercase tracking-widest shadow-lg shadow-emerald-100 hover:scale-105 transition-all text-white">Finalizar Projeto</button>
+                    <button onclick="window.exportPDF()" class="bg-slate-900 text-white px-4 md:px-8 py-3 md:py-3.5 rounded-xl md:rounded-2xl font-black text-[9px] md:text-[10px] uppercase tracking-widest shadow-lg flex-1 sm:flex-none text-white text-white">Exportar PDF</button>
                 </div>
             </div>
             
@@ -339,96 +363,105 @@
                 <div class="form-section-box shadow-sm">
                     <label class="label-forte text-slate-300 mb-6 pb-2 border-b border-slate-50 uppercase text-slate-300">1. Identificação Geral</label>
                     <div class="grid grid-cols-1 md:grid-cols-12 gap-6 md:gap-10">
-                        <div class="md:col-span-8"><label class="label-forte text-slate-800">Nome da Iniciativa</label><input type="text" id="iniciativa" required class="input-premium uppercase"></div>
-                        <div class="md:col-span-4"><label class="label-forte text-slate-800">Prioridade</label><select id="prioridade" class="input-premium font-bold text-slate-800"><option value="Baixa">Baixa</option><option value="Média">Média</option><option value="Alta">Alta</option></select></div>
+                        <div class="md:col-span-8">
+                            <label class="label-forte text-slate-800">Nome da Iniciativa <span class="text-red-500 font-black">*</span></label>
+                            <input type="text" id="iniciativa" required class="input-premium uppercase">
+                        </div>
+                        <div class="md:col-span-4"><label class="label-forte text-slate-800">Prioridade</label><select id="prioridade" class="input-premium font-bold text-slate-800 text-slate-800"><option value="Baixa">Baixa</option><option value="Média">Média</option><option value="Alta">Alta</option></select></div>
                     </div>
                 </div>
 
                 <div class="form-section-box shadow-sm text-slate-800">
                     <label class="label-forte text-slate-400 mb-6 pb-2 border-b border-slate-50 uppercase text-slate-400">2. Definição Operacional</label>
-                    <!-- GRID REFORMULADO (12 colunas) PARA EVITAR CORTES -->
-                    <div class="grid grid-cols-1 md:grid-cols-12 gap-4 text-slate-800">
-                        <div class="md:col-span-2 text-slate-800">
-                            <div class="flex justify-between items-center mb-1"><label class="label-forte !mb-0 text-slate-800 text-slate-800">Tipo</label><span class="btn-add-item" onclick="window.openAddModal('tipo_atividade')">+</span></div>
+                    <!-- LAYOUT FLEX PARA DEFINIÇÃO OPERACIONAL -->
+                    <div class="flex flex-wrap items-end gap-4 text-slate-800">
+                        <div class="flex-1 min-w-[120px]">
+                            <div class="flex justify-between items-center mb-1"><label class="label-forte !mb-0 text-slate-800">Tipo</label><span class="btn-add-item" onclick="window.openAddModal('tipo_atividade')">+</span></div>
                             <select id="tipo_atividade" required class="input-premium font-bold text-slate-800"><option value="Melhoria" selected>Melhoria</option><option value="Projeto">Projeto</option><option value="Incidente">Incidente</option><option value="Manutenção">Manutenção</option></select>
                         </div>
-                        <div class="md:col-span-2 text-slate-800">
-                            <div class="flex justify-between items-center mb-1 text-slate-800 text-slate-800 text-slate-800 text-slate-800"><label class="label-forte !mb-0 text-slate-800">Área</label><span class="btn-add-item" onclick="window.openAddModal('time')">+</span></div>
+                        <div class="flex-1 min-w-[140px]">
+                            <div class="flex justify-between items-center mb-1 text-slate-800"><label class="label-forte !mb-0 text-slate-800">Área</label><span class="btn-add-item" onclick="window.openAddModal('time')">+</span></div>
                             <select id="time" required class="input-premium text-slate-800 text-slate-800"></select>
                         </div>
-                        <div class="md:col-span-2 text-slate-800">
-                            <div class="flex justify-between items-center mb-1 text-slate-800 text-slate-800"><label class="label-forte !mb-0 text-slate-800">Frente</label><span class="btn-add-item" onclick="window.openAddModal('frente')">+</span></div>
+                        <div class="flex-1 min-w-[140px]">
+                            <div class="flex justify-between items-center mb-1 text-slate-800"><label class="label-forte !mb-0 text-slate-800">Frente</label><span class="btn-add-item" onclick="window.openAddModal('frente')">+</span></div>
                             <select id="frente" required class="input-premium text-slate-800 text-slate-800"></select>
                         </div>
-                        <div class="md:col-span-2 text-slate-800">
+                        <!-- Classificação com largura flexível para o texto completo -->
+                        <div class="flex-[1.5] min-w-[200px]">
                             <label class="label-forte text-cyan-600 text-cyan-600">Classificação</label>
-                            <select id="classificacao" required class="input-premium font-black text-cyan-600 text-cyan-600 text-cyan-600"><option value="Eficiência Operacional">Eficiência Operacional</option><option value="Rotina">Rotina</option></select>
+                            <select id="classificacao" required class="input-premium font-black text-cyan-600 text-cyan-600"><option value="Eficiência Operacional">Eficiência Operacional</option><option value="Rotina">Rotina</option></select>
                         </div>
-                        <div class="md:col-span-2 text-slate-800">
-                            <label class="label-forte text-slate-800 text-slate-800">Esforço</label>
+                        <!-- Esforço não corta mais -->
+                        <div class="flex-1 min-w-[100px]">
+                            <label class="label-forte text-slate-800">Esforço</label>
                             <select id="esforco" required class="input-premium text-slate-800 text-slate-800"><option value="Rápido">Rápido</option><option value="Intermediário">Intermediário</option><option value="Estruturante">Estruturante</option></select>
                         </div>
-                        <div class="md:col-span-2 text-slate-800"><label class="label-forte text-slate-800">Status</label><select id="status" class="input-premium font-black text-slate-900 text-slate-900" onchange="window.updateStatusUI(this.value)"><option value="Backlog">Backlog</option><option value="Em Andamento">Em Andamento</option><option value="Finalizado">Finalizado</option><option value="Despriorizado">Despriorizado</option></select></div>
+                        <div class="flex-1 min-w-[130px]"><label class="label-forte text-slate-800 text-slate-800">Status</label><select id="status" class="input-premium font-black text-slate-900 text-slate-900" onchange="window.updateStatusUI(this.value)"><option value="Backlog">Backlog</option><option value="Em Andamento">Em Andamento</option><option value="Finalizado">Finalizado</option><option value="Despriorizado">Despriorizado</option></select></div>
                     </div>
                 </div>
 
                 <div class="grid grid-cols-1 md:grid-cols-2 gap-6 md:gap-8 text-slate-800 text-slate-800">
                     <div class="form-section-box shadow-sm">
                         <label class="label-forte text-slate-400 mb-6 pb-2 border-b border-slate-50 uppercase text-slate-400">3. Cronograma</label>
-                        <div class="grid grid-cols-1 sm:grid-cols-2 gap-6 text-slate-800">
-                            <div><label class="label-forte text-slate-800">Início</label><input type="date" id="data_criacao" required class="input-premium text-xs text-slate-800"></div>
-                            <div><label class="label-forte text-slate-800 text-slate-800">Prazo Estimado</label><input type="date" id="prazo" required class="input-premium text-xs text-slate-800 text-slate-800"></div>
+                        <div class="grid grid-cols-1 sm:grid-cols-2 gap-6 text-slate-800 text-slate-800">
+                            <div><label class="label-forte text-slate-800">Início <span class="text-red-500 font-black">*</span></label><input type="date" id="data_criacao" required class="input-premium text-xs text-slate-800"></div>
+                            <div><label class="label-forte text-slate-800 text-slate-800">Prazo Estimado <span class="text-red-500 font-black">*</span></label><input type="date" id="prazo" required class="input-premium text-xs text-slate-800 text-slate-800"></div>
                         </div>
-                        <div id="closure-dates" class="mt-8 pt-8 border-t border-slate-100 hidden text-slate-800">
+                        <div id="closure-dates" class="mt-8 pt-8 border-t border-slate-100 hidden text-slate-800 text-slate-800">
                             <label class="label-forte !text-emerald-600 text-emerald-600">Conclusão Realizada</label><input type="date" id="data_conclusao" class="input-premium text-xs border-emerald-100 bg-emerald-50/20 text-slate-900 text-slate-900">
                         </div>
-                        <div id="deprioritize-box" class="mt-8 pt-8 border-t border-slate-100 hidden text-slate-800">
+                        <div id="deprioritize-box" class="mt-8 pt-8 border-t border-slate-100 hidden text-slate-800 text-slate-800 text-slate-800">
                             <label class="label-forte !text-red-600 text-red-600">Motivo da Despriorização</label>
-                            <textarea id="justificativa_despriorizacao" rows="3" class="input-premium !bg-red-50/10 text-xs text-slate-800" placeholder="Descreva o motivo..."></textarea>
+                            <textarea id="justificativa_despriorizacao" rows="3" class="input-premium !bg-red-50/10 text-xs text-slate-800 text-slate-800" placeholder="Motivo..."></textarea>
                         </div>
                     </div>
                     <div class="form-section-box shadow-sm text-slate-800 text-slate-800">
                         <label class="label-forte text-slate-400 mb-6 pb-2 border-b border-slate-50 uppercase text-slate-400">4. Atividades / Tasks</label>
-                        <div class="flex justify-between items-center mb-2 text-slate-800 text-slate-800">
+                        <div class="flex justify-between items-center mb-2">
                             <span id="progress-percent" class="text-[10px] font-black text-emerald-600">PROGRESSO: 0%</span>
                         </div>
-                        <div class="progress-container text-slate-800"><div id="task-progress-bar" class="progress-bar-fill text-slate-800"></div></div>
+                        <div class="progress-container text-slate-800"><div id="task-progress-bar" class="progress-bar-fill text-slate-800 text-slate-800"></div></div>
                         <div id="tasks-list-container" class="space-y-2 mb-4 max-h-48 overflow-y-auto text-slate-800 text-slate-800 text-slate-800"></div>
                         <div class="flex gap-2">
-                            <input type="text" id="new-task-input" class="input-premium !text-xs text-slate-800" placeholder="Nova tarefa...">
-                            <button type="button" onclick="window.addTaskToProject()" class="bg-slate-900 text-white px-4 py-2 rounded-xl font-bold text-[10px] uppercase hover:bg-slate-800 transition-all text-white">Adicionar</button>
+                            <input type="text" id="new-task-input" class="input-premium !text-xs text-slate-800 text-slate-800 text-slate-800" placeholder="Nova tarefa...">
+                            <button type="button" onclick="window.addTaskToProject()" class="bg-slate-900 text-white px-4 py-2 rounded-xl font-bold text-[10px] uppercase hover:bg-slate-800 transition-all text-white text-white">Adicionar</button>
                         </div>
                     </div>
                 </div>
 
-                <div class="form-section-box shadow-sm text-slate-800">
-                    <div class="flex justify-between items-center mb-8 pb-3 border-b border-slate-50 text-slate-800">
-                        <label class="label-forte text-slate-400 !mb-0 text-slate-400">5. Analistas Responsáveis</label>
-                        <span class="btn-add-item text-slate-800" onclick="window.openAddModal('analista')">+ Novo</span>
+                <div class="form-section-box shadow-sm text-slate-800 text-slate-800">
+                    <div class="flex justify-between items-center mb-8 pb-3 border-b border-slate-50 text-slate-800 text-slate-800 text-slate-800">
+                        <label class="label-forte text-slate-400 !mb-0 text-slate-400">5. Analistas Responsáveis <span class="text-red-500 font-black">*</span></label>
+                        <span class="btn-add-item text-slate-800 text-slate-800 text-slate-800" onclick="window.openAddModal('analista')">+ Novo</span>
                     </div>
-                    <div id="responsaveis-grid" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-y-3 gap-x-12 max-h-48 overflow-y-auto pr-2 text-slate-800 text-slate-800 text-slate-800"></div>
+                    <!-- GRID PREMIUM ANALISTAS -->
+                    <div id="responsaveis-grid" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-y-3 gap-x-12 max-h-56 overflow-y-auto pr-2 text-slate-800 text-slate-800 text-slate-800"></div>
                 </div>
 
                 <div class="grid grid-cols-1 md:grid-cols-2 gap-6 md:gap-10 text-slate-800 text-slate-800 text-slate-800">
                     <div class="form-section-box shadow-sm space-y-6 text-slate-800 text-slate-800">
-                        <div><label class="label-forte text-slate-800 text-slate-800">Descrição detalhada</label><textarea id="nota_inicial" rows="4" class="input-premium text-xs leading-relaxed text-slate-800 text-slate-800"></textarea></div>
+                        <div>
+                            <label class="label-forte text-slate-800">Descrição detalhada <span class="text-red-500 font-black">*</span></label>
+                            <textarea id="nota_inicial" required rows="4" class="input-premium text-xs leading-relaxed text-slate-800 text-slate-800"></textarea>
+                        </div>
                         <div class="pt-6 border-t border-slate-50 text-slate-800">
                             <label class="label-forte text-slate-800">Log de Updates</label>
                             <div id="notes-history-list" class="space-y-3 max-h-56 overflow-y-auto mb-4 pr-3 text-[11px] text-slate-800 text-slate-800"></div>
                             <div class="flex flex-col sm:flex-row gap-2">
                                 <textarea id="new-milestone-note" rows="4" class="input-premium !text-xs text-slate-800 text-slate-800" placeholder="Evolução de hoje..."></textarea>
-                                <button type="button" onclick="window.addItemToHistory('note')" class="bg-slate-900 text-white px-6 py-2.5 rounded-xl font-bold text-[10px] uppercase hover:bg-slate-800 transition-all self-end text-white text-white">Incluir</button>
+                                <button type="button" onclick="window.addItemToHistory('note')" class="bg-slate-900 text-white px-6 py-2.5 rounded-xl font-bold text-[10px] uppercase hover:bg-slate-800 transition-all self-end text-white text-white text-white">Incluir</button>
                             </div>
                         </div>
                     </div>
 
-                    <div class="space-y-6 text-slate-800 text-slate-800">
-                        <div id="attention-box" class="form-section-box !bg-slate-50 !border-slate-200 transition-colors duration-500 text-slate-800">
-                            <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center mb-4 gap-3">
+                    <div class="space-y-6 text-slate-800 text-slate-800 text-slate-800">
+                        <div id="attention-box" class="form-section-box !bg-slate-50 !border-slate-200 transition-colors duration-500 text-slate-800 text-slate-800">
+                            <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center mb-4 gap-3 text-slate-800 text-slate-800">
                                 <label class="label-forte !mb-0 text-slate-800">Atenção Executiva</label>
                                 <div class="flex gap-4">
-                                    <button type="button" id="toggle-list-risco" onclick="window.setAttentionType('Risco')" class="toggle-btn active-risco text-slate-800 text-slate-800">Risco ?</button>
-                                    <button type="button" id="toggle-list-problema" onclick="window.setAttentionType('Problema')" class="toggle-btn inactive text-slate-800 text-slate-800">Problema ?</button>
+                                    <button type="button" id="toggle-list-risco" onclick="window.setAttentionType('Risco')" class="toggle-btn active-risco text-slate-800">Risco ?</button>
+                                    <button type="button" id="toggle-list-problema" onclick="window.setAttentionType('Problema')" class="toggle-btn inactive text-slate-800">Problema ?</button>
                                 </div>
                             </div>
                             <div id="attention-history-list" class="space-y-3 max-h-48 overflow-y-auto mb-4 pr-3 text-[11px] text-slate-800 text-slate-800"></div>
@@ -437,18 +470,21 @@
                                 <button type="button" onclick="window.addItemToHistory('attention')" class="bg-slate-900 text-white px-6 py-2.5 rounded-xl font-bold text-[10px] uppercase hover:bg-slate-800 transition-all self-end text-white text-white">Incluir</button>
                             </div>
                         </div>
-                        <div class="form-section-box shadow-sm text-slate-800">
-                            <label class="label-forte text-slate-800 text-slate-800">Lições Aprendidas</label>
-                            <div id="lessons-history-list" class="space-y-2 max-h-56 overflow-y-auto mb-4 pr-3 text-[11px] text-slate-800 text-slate-800"></div>
-                            <div class="flex flex-col sm:flex-row gap-2 text-slate-800">
-                                <textarea id="new-lesson-note" rows="4" class="input-premium !text-xs shadow-inner text-slate-800 text-slate-800" placeholder="Novo aprendizado..."></textarea>
-                                <button type="button" onclick="window.addItemToHistory('lesson')" class="bg-slate-900 text-white px-6 py-2.5 rounded-xl font-bold text-[10px] uppercase hover:bg-slate-800 transition-all self-end text-white text-white">Incluir</button>
+                        
+                        <div class="form-section-box shadow-sm">
+                            <label class="label-forte text-slate-800">Anexos / Documentos</label>
+                            <div id="drop-zone" onclick="document.getElementById('file-input').click()" class="drop-zone mt-2 text-slate-800">
+                                <svg xmlns="http://www.w3.org/2000/svg" class="h-10 w-10 text-slate-300 mx-auto mb-3" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M15 13l-3-3m0 0l-3 3m3-3v12" /></svg>
+                                <p class="text-[11px] font-bold text-slate-600">Clique aqui ou arraste para anexar</p>
+                                <p class="text-[10px] text-slate-400 mt-1">Formatos aceitos: PDF, JPG, PNG</p>
+                                <input type="file" id="file-input" class="hidden" multiple onchange="window.handleFiles(this.files)">
                             </div>
+                            <div id="file-list" class="mt-4 space-y-2 text-[10px] text-slate-800"></div>
                         </div>
                     </div>
                 </div>
 
-                <div class="pt-10 flex flex-col sm:flex-row gap-4 border-t border-slate-100 no-print pb-10 text-slate-800">
+                <div class="pt-10 flex flex-col sm:flex-row gap-4 border-t border-slate-100 no-print pb-10 text-slate-800 text-slate-800 text-slate-800">
                     <button type="submit" class="bg-slate-900 text-white px-12 py-5 rounded-[1.5rem] font-black shadow-2xl flex-1 uppercase text-xs tracking-widest hover:bg-slate-800 transition-all hover:scale-[1.01] text-white">Salvar Projeto</button>
                     <button type="button" onclick="window.trySwitchTab('dashboard');" class="bg-white text-slate-400 border border-slate-200 px-10 py-5 rounded-[1.5rem] font-bold text-xs uppercase hover:bg-slate-50 transition-all text-slate-800">Sair</button>
                 </div>
@@ -465,7 +501,7 @@
         const app = initializeApp(firebaseConfig); const auth = getAuth(app); const db = getFirestore(app);
         const appId = typeof __app_id !== 'undefined' ? __app_id : 'unico-eficiencia-2026';
         
-        let projects = [], tempNotes = [], tempLessons = [], tempTasks = [], tempAttention = [], projectToDeleteId = null, currentTargetField = null, user = null;
+        let projects = [], tempNotes = [], tempLessons = [], tempTasks = [], tempAttention = [], tempFiles = [], projectToDeleteId = null, currentTargetField = null, user = null;
         let charts = {};
         let isFormDirty = false;
         let pendingTab = null;
@@ -505,21 +541,34 @@
 
         window.updateCharts = (data) => {
             const sCounts = data.reduce((acc,v) => { acc[v.status] = (acc[v.status]||0)+1; return acc; }, {});
-            window.renderChart('chartStatus', 'pie', sCounts, ['#f1f5f9', '#fef3c7', '#dcfce7', '#fee2e2']);
+            const paleta = ['#FF1A5C', '#00A5FF', '#A35F9D', '#8D7AD2', '#32B77E', '#5C86C4', '#070047', '#333333'];
+            window.renderChart('chartStatus', 'pie', sCounts, paleta);
             const areasSet = Array.from(new Set(data.map(p => p.time))).sort();
-            if(charts['chartTime']) charts['chartTime'].destroy();
-            const ctxTime = document.getElementById('chartTime')?.getContext('2d');
-            if(ctxTime) charts['chartTime'] = new Chart(ctxTime, { type: 'bar', data: { labels: areasSet, datasets: [{ label: 'Projetos', data: areasSet.map(a => data.filter(p => p.time === a).length), backgroundColor: '#00e5ff' }]}, options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { display: false } }, scales: { y: { beginAtZero: true, ticks: { precision: 0 } } } } });
+            window.renderChart('chartTime', 'bar', areasSet.reduce((a,v) => { a[v] = data.filter(p => p.time === v).length; return a; }, {}), paleta);
+            const fCounts = data.reduce((acc,v) => { acc[v.frente||'N/A'] = (acc[v.frente||'N/A']||0)+1; return acc; }, {});
+            window.renderChart('chartFrente', 'bar', fCounts, paleta);
             const concl = data.filter(p => p.status === 'Finalizado' && p.data_criacao && p.data_conclusao);
             let cor = 0, ute = 0; if(concl.length) { cor = concl.reduce((acc, p) => acc + (new Date(p.data_conclusao) - new Date(p.data_criacao)) / 86400000, 0) / concl.length; ute = concl.reduce((acc, p) => acc + window.getBusinessDays(p.data_criacao, p.data_conclusao), 0) / concl.length; }
-            if(charts['chartLeadTime']) charts['chartLeadTime'].destroy();
-            const ctxLead = document.getElementById('chartLeadTime')?.getContext('2d');
-            if(ctxLead) charts['chartLeadTime'] = new Chart(ctxLead, { type: 'bar', data: { labels: ['Corridos', 'Úteis'], datasets: [{ data: [cor.toFixed(1), ute.toFixed(1)], backgroundColor: ['#64748b', '#00e5ff'], borderRadius: 8 }]}, options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { display: false } }, scales: { y: { beginAtZero: true } } } });
-            const fCounts = data.reduce((acc,v) => { acc[v.frente||'N/A'] = (acc[v.frente||'N/A']||0)+1; return acc; }, {});
-            window.renderChart('chartFrente', 'bar', fCounts, ['#000a28', '#00e5ff', '#fbbf24', '#f8fafc']);
+            window.renderChart('chartLeadTime', 'bar', { 'Corridos': cor.toFixed(1), 'Úteis': ute.toFixed(1) }, ['#FF1A5C', '#00A5FF']);
         };
 
-        window.renderChart = (id, type, data, colors) => { if(charts[id]) charts[id].destroy(); const canvas = document.getElementById(id); if(!canvas) return; charts[id] = new Chart(canvas.getContext('2d'), { type: type, data: { labels: Object.keys(data), datasets: [{ data: Object.values(data), backgroundColor: colors, borderWidth: 0, borderRadius: 8 }] }, options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { display: type === 'pie', position: 'bottom', labels: { boxWidth: 10, font: { size: 9 } } } } } }); };
+        window.renderChart = (id, type, data, colors) => { 
+            if(charts[id]) charts[id].destroy(); 
+            const canvas = document.getElementById(id); if(!canvas) return; 
+            charts[id] = new Chart(canvas.getContext('2d'), { 
+                type: type, 
+                data: { labels: Object.keys(data), datasets: [{ data: Object.values(data), backgroundColor: colors, borderWidth: 0, borderRadius: type === 'pie' ? 0 : 8 }] }, 
+                plugins: [ChartDataLabels],
+                options: { 
+                    responsive: true, maintainAspectRatio: false, 
+                    scales: type === 'pie' ? {} : { x: { grid: { display: false } }, y: { grid: { display: false }, ticks: { display: false } } },
+                    plugins: { 
+                        legend: { display: type === 'pie', position: 'bottom', labels: { boxWidth: 10, font: { size: 9 } } },
+                        datalabels: { display: true, anchor: type === 'pie' ? 'center' : 'end', align: type === 'pie' ? 'center' : 'top', color: type === 'pie' ? '#fff' : '#070047', font: { weight: 'bold', size: 10 } }
+                    } 
+                } 
+            }); 
+        };
 
         const createProjectCard = (p, today) => {
             const start = p.data_criacao ? new Date(p.data_criacao) : today; const end = p.prazo ? new Date(p.prazo) : today;
@@ -527,13 +576,14 @@
             let topColor = 'var(--color-backlog)'; if(p.status === 'Em Andamento') topColor = 'var(--color-andamento)'; if(p.status === 'Finalizado') topColor = 'var(--color-finalizado)'; if(p.status === 'Despriorizado') topColor = 'var(--color-despriorizado)';
             const totalT = p.tasks ? p.tasks.length : 0; const completedT = p.tasks ? p.tasks.filter(t => t.completed).length : 0;
             const pCent = totalT > 0 ? Math.round((completedT / totalT) * 100) : (p.status === 'Finalizado' ? 100 : 0);
-            let statsHtml = `<p class="flex justify-between"><span>ESTIMADO:</span> <span class="font-black text-slate-900">${p.prazo ? p.prazo.split('-').reverse().join('/') : '--'}</span></p><p class="flex justify-between"><span>ABERTO HÁ:</span> <span class="font-black text-slate-900">${Math.max(0, openDays)} dias</span></p><p class="flex justify-between"><span>CLASSIFICAÇÃO:</span> <span class="text-cyan-600 font-black">${p.classificacao || '--'}</span></p>`;
+            
+            let statsHtml = `<p class="flex justify-between"><span>ESTIMADO:</span> <span class="font-black text-slate-900">${p.prazo ? p.prazo.split('-').reverse().join('/') : '--'}</span></p><p class="flex justify-between"><span>ABERTO HÁ:</span> <span class="font-black text-slate-900">${Math.max(0, openDays)} dias</span></p><p class="flex justify-between text-cyan-600"><span>CLASSIFICAÇÃO:</span> <span class="font-black">${p.classificacao || '--'}</span></p>`;
             if(totalT > 0 || p.status === 'Finalizado') statsHtml += `<div class="mt-3"><div class="flex justify-between items-center mb-1"><span class="text-[8px] font-black opacity-40">PROGRESSO</span><span class="text-[8px] font-black text-emerald-600">${pCent}%</span></div><div class="w-full bg-slate-100 rounded-full h-1.5 overflow-hidden"><div class="bg-emerald-500 h-full transition-all duration-500" style="width: ${pCent}%"></div></div></div>`;
-            if(p.status === 'Finalizado') { const conc = p.data_conclusao ? new Date(p.data_conclusao) : null; const est = p.prazo ? new Date(p.prazo) : null; let pTxt = (conc && est && conc > est) ? "COM ATRASO" : "NO PRAZO"; let pCls = pTxt === "NO PRAZO" ? "text-emerald-600" : "text-red-600"; statsHtml += `<p class="flex justify-between mt-2"><span>CONCLUSÃO:</span> <span class="font-black text-slate-900">${p.data_conclusao ? p.data_conclusao.split('-').reverse().join('/') : '--'}</span></p><p class="text-center font-black mt-2 ${pCls} text-[9px] border border-current rounded-lg p-1 uppercase tracking-widest">${pTxt}</p>`; }
-            else if(p.status === 'Despriorizado') statsHtml += `<div class="mt-2 p-2 bg-red-50 rounded-lg border border-red-100"><span class="text-[8px] font-black text-red-400">MOTIVO:</span><p class="text-red-700 italic text-[10px] leading-tight">${p.justificativa_despriorizacao || '--'}</p></div>`;
-            else statsHtml += `<p class="flex justify-between mt-2"><span>STATUS:</span> <span class="${isOverdue ? 'text-red-600 animate-pulse' : 'text-slate-900'} font-black uppercase text-[10px]">${isOverdue ? 'EM ATRASO' : 'NO PRAZO'}</span></p>`;
+            if(p.status === 'Finalizado') { const conc = p.data_conclusao ? new Date(p.data_conclusao) : null; const est = p.prazo ? new Date(p.prazo) : null; let pTxt = (conc && est && conc > est) ? "COM ATRASO" : "NO PRAZO"; let pCls = pTxt === "NO PRAZO" ? "text-emerald-600" : "text-red-600"; statsHtml += `<p class="flex justify-between mt-2 text-slate-800"><span>CONCLUSÃO:</span> <span class="font-black text-slate-900">${p.data_conclusao ? p.data_conclusao.split('-').reverse().join('/') : '--'}</span></p><p class="text-center font-black mt-2 ${pCls} text-[9px] border border-current rounded-lg p-1 uppercase tracking-widest text-white" style="color: white; background: ${pCls === 'text-emerald-600' ? '#32B77E' : '#FF1A5C'}">${pTxt}</p>`; }
+            else if(p.status === 'Despriorizado') statsHtml += `<div class="mt-2 p-2 bg-red-50 rounded-lg border border-red-100 text-red-700"><span class="text-[8px] font-black text-red-400">MOTIVO:</span><p class="text-[10px] italic leading-tight">${p.justificativa_despriorizacao || '--'}</p></div>`;
+            else statsHtml += `<p class="flex justify-between mt-2 text-slate-800"><span>STATUS:</span> <span class="${isOverdue ? 'text-red-600 animate-pulse' : 'text-slate-900'} font-black uppercase text-[10px]">${isOverdue ? 'EM ATRASO' : 'NO PRAZO'}</span></p>`;
             const hasProb = p.attention?.some(att => att.type === 'Problema');
-            return `<div class="card-project p-6 flex flex-col h-full ${hasProb ? 'border-2 border-red-500' : ''}" style="border-top-color: ${topColor}"><div class="flex justify-between items-start mb-4 text-slate-800"><span class="text-[8px] font-black text-slate-400 uppercase tracking-widest">${p.tipo_atividade} | ${p.time}</span><span class="status-pill status-${(p.status||'backlog').toLowerCase().replace(/\s/g, '')}">${p.status}</span></div><h3 class="text-lg font-black mb-4 uppercase leading-tight text-slate-900">${p.iniciativa}</h3><div class="text-[10px] space-y-2 mb-6 text-slate-500">${statsHtml}</div><button onclick="window.editProjectByID('${p.id}')" class="bg-slate-900 text-white py-4 rounded-2xl font-black uppercase text-[10px] hover:bg-slate-800 transition-all mt-auto shadow-lg shadow-slate-200">Gerenciar</button></div>`;
+            return `<div class="card-project p-6 flex flex-col h-full ${hasProb ? 'border-2 border-red-500' : ''}" style="border-top-color: ${topColor}"><div class="flex justify-between items-start mb-4 text-slate-800"><span class="text-[8px] font-black text-slate-400 uppercase tracking-widest text-slate-400">${p.tipo_atividade} | ${p.time}</span><span class="status-pill status-${(p.status||'backlog').toLowerCase().replace(/\s/g, '')}">${p.status}</span></div><h3 class="text-lg font-black mb-4 uppercase leading-tight text-slate-900">${p.iniciativa}</h3><div class="text-[10px] space-y-2 mb-6 text-slate-500">${statsHtml}</div><button onclick="window.editProjectByID('${p.id}')" class="bg-slate-900 text-white py-4 rounded-2xl font-black uppercase text-[10px] hover:bg-slate-800 transition-all mt-auto shadow-lg shadow-slate-200 text-white">Gerenciar</button></div>`;
         };
 
         window.refreshUI = () => {
@@ -546,7 +596,7 @@
             window.updateKPIs(filtered); window.updateCharts(filtered);
             if(activeTab === 'dashboard') { const bG = document.getElementById('grid-backlog'), aG = document.getElementById('grid-andamento'); if(bG && aG) { bG.innerHTML = ''; aG.innerHTML = ''; const bP = filtered.filter(p => p.status === 'Backlog'), aP = filtered.filter(p => p.status === 'Em Andamento'); if(document.getElementById('count-backlog')) document.getElementById('count-backlog').innerText = bP.length; if(document.getElementById('count-andamento')) document.getElementById('count-andamento').innerText = aP.length; bP.forEach(p => bG.innerHTML += createProjectCard(p, today)); aP.forEach(p => aG.innerHTML += createProjectCard(p, today)); } }
             if(activeTab === 'archive') { const fG = document.getElementById('grid-finalizado'), dG = document.getElementById('grid-despriorizado'); if(fG && dG) { fG.innerHTML = ''; dG.innerHTML = ''; filtered.filter(p => p.status === 'Finalizado').forEach(p => fG.innerHTML += createProjectCard(p, today)); filtered.filter(p => p.status === 'Despriorizado').forEach(p => dG.innerHTML += createProjectCard(p, today)); } }
-            const tbody = document.getElementById('detailed-table-body'); if(tbody) { tbody.innerHTML = ''; filtered.forEach(p => { const env = Array.isArray(p.responsavel) ? p.responsavel.join(', ') : (p.responsavel || '--'); tbody.innerHTML += `<tr><td class="p-6 md:p-8 uppercase text-slate-900 font-bold">${p.iniciativa}</td><td class="p-6 md:p-8 text-slate-500">${p.time}</td><td class="p-6 md:p-8 text-center text-slate-500">${env}</td><td class="p-6 md:p-8 text-center text-slate-900 font-bold">${p.prazo ? p.prazo.split('-').reverse().join('/') : '--'}</td><td class="p-6 md:p-8 text-center"><span class="status-pill status-${(p.status||'').toLowerCase().replace(/\s/g,'')}">${p.status}</span></td><td class="p-6 md:p-8 text-right flex items-center justify-end gap-3 md:gap-5"><button onclick="window.editProjectByID('${p.id}')" class="text-cyan-500 hover:scale-110 transition uppercase text-[10px] font-black">Editar</button><button onclick="window.openDeleteModal('${p.id}')" class="text-red-300 hover:text-red-500 transition-all"><svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" /></svg></button></td></tr>`; }); }
+            const tbody = document.getElementById('detailed-table-body'); if(tbody) { tbody.innerHTML = ''; filtered.forEach(p => { const env = Array.isArray(p.responsavel) ? p.responsavel.join(', ') : (p.responsavel || '--'); tbody.innerHTML += `<tr><td class="p-6 md:p-8 uppercase text-slate-900 font-bold">${p.iniciativa}</td><td class="p-6 md:p-8 text-slate-500">${p.time}</td><td class="p-6 md:p-8 text-center text-slate-500">${env}</td><td class="p-6 md:p-8 text-center text-slate-900 font-bold">${p.prazo ? p.prazo.split('-').reverse().join('/') : '--'}</td><td class="p-6 md:p-8 text-center"><span class="status-pill status-${(p.status||'').toLowerCase().replace(/\s/g,'')}">${p.status}</span></td><td class="p-6 md:p-8 text-right flex items-center justify-end gap-3 md:gap-5"><button onclick="window.editProjectByID('${p.id}')" class="text-cyan-500 hover:scale-110 transition uppercase text-[10px] font-black text-cyan-500">Editar</button><button onclick="window.openDeleteModal('${p.id}')" class="text-red-300 hover:text-red-500 transition-all text-red-500 text-red-500"><svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" /></svg></button></td></tr>`; }); }
         };
 
         window.exportToXLS = () => { let csv = "\uFEFFIniciativa;Área;Classificação;Responsáveis;Estimado;Status\n"; projects.forEach(p => { const resps = Array.isArray(p.responsavel) ? p.responsavel.join(', ') : p.responsavel; csv += `${p.iniciativa};${p.time};${p.classificacao};${resps};${p.prazo};${p.status}\n`; }); const blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' }); const link = document.createElement("a"); link.href = URL.createObjectURL(blob); link.setAttribute("download", `Projetos_Unico_${new Date().toLocaleDateString()}.csv`); document.body.appendChild(link); link.click(); document.body.removeChild(link); };
@@ -563,14 +613,23 @@
         window.openAddModal = (target) => { currentTargetField = target; document.getElementById('add-item-title').innerText = "Adicionar: " + target; document.getElementById('add-item-modal').style.display = 'flex'; };
         window.closeAddModal = () => { document.getElementById('add-item-modal').style.display = 'none'; document.getElementById('new-item-input').value = ''; };
         window.processAddItem = () => { const val = document.getElementById('new-item-input').value.trim(); if(!val) return; if(currentTargetField === 'analista') { renderAnalistaCheckbox(val, true); } else { const el = document.getElementById(currentTargetField); if(el) el.add(new Option(val, val, true, true)); } window.closeAddModal(); };
-        const renderAnalistaCheckbox = (name, checked = false) => { const grid = document.getElementById('responsaveis-grid'); if(!grid) return; const label = document.createElement('label'); label.className = "checkbox-item"; label.innerHTML = `<input type="checkbox" name="responsavel_check" value="${name}" ${checked ? 'checked':''} class="w-4 h-4 rounded border-slate-300 accent-cyan-500"><span>${name}</span>`; grid.appendChild(label); };
-        window.addMetricaInput = (l='', m='', r='') => { const container = document.getElementById('metricas-container'); if(!container) return; const div = document.createElement('div'); div.className = 'grid grid-cols-1 sm:grid-cols-6 gap-3 items-end mb-4 border-b border-slate-50 sm:border-none pb-4 sm:pb-0 text-slate-800'; div.innerHTML = `<div class="col-span-3"><input type="text" placeholder="KPI" class="metrica-label input-premium !py-2 !text-[10px] uppercase text-slate-800" value="${l}"></div><div class="col-span-1"><input type="text" placeholder="Meta" class="metrica-meta input-premium !py-2 !text-[10px] text-slate-800" value="${m}"></div><div class="col-span-1"><input type="text" placeholder="Real" class="metrica-real input-premium !py-2 !text-[10px] text-slate-800" value="${r}"></div><button type="button" onclick="this.parentElement.remove()" class="text-red-300 font-bold text-xl px-2 self-center text-red-500">×</button>`; container.appendChild(div); };
+        const renderAnalistaCheckbox = (name, checked = false) => { const grid = document.getElementById('responsaveis-grid'); if(!grid) return; const label = document.createElement('label'); label.className = "checkbox-item"; label.innerHTML = `<input type="checkbox" name="responsavel_check" value="${name}" ${checked ? 'checked':''} class="w-4 h-4 rounded border-slate-300 accent-cyan-500 text-slate-800"><span>${name}</span>`; grid.appendChild(label); };
+        window.addMetricaInput = (l='', m='', r='') => { const container = document.getElementById('metricas-container'); if(!container) return; const div = document.createElement('div'); div.className = 'grid grid-cols-1 sm:grid-cols-6 gap-3 items-end mb-4 border-b border-slate-50 sm:border-none pb-4 sm:pb-0 text-slate-800'; div.innerHTML = `<div class="col-span-3"><input type="text" placeholder="KPI" class="metrica-label input-premium !py-2 !text-[10px] uppercase text-slate-800" value="${l}"></div><div class="col-span-1"><input type="text" placeholder="Meta" class="metrica-meta input-premium !py-2 !text-[10px] text-slate-800 text-slate-800" value="${m}"></div><div class="col-span-1"><input type="text" placeholder="Real" class="metrica-real input-premium !py-2 !text-[10px] text-slate-800 text-slate-800" value="${r}"></div><button type="button" onclick="this.parentElement.remove()" class="text-red-300 font-bold text-xl px-2 self-center text-red-500 text-red-500">×</button>`; container.appendChild(div); };
 
         window.addTaskToProject = () => { const input = document.getElementById('new-task-input'); const val = input.value.trim(); if(!val) return; tempTasks.push({ id: Date.now(), text: val, completed: false }); input.value = ''; renderTasksList(); isFormDirty = true; };
         window.toggleTaskStatus = (id) => { tempTasks = tempTasks.map(t => t.id === id ? {...t, completed: !t.completed} : t); renderTasksList(); isFormDirty = true; };
         window.removeTaskFromProject = (id) => { tempTasks = tempTasks.filter(t => t.id !== id); renderTasksList(); isFormDirty = true; };
-        const renderTasksList = () => { const container = document.getElementById('tasks-list-container'); if(!container) return; container.innerHTML = ''; tempTasks.forEach(t => { container.innerHTML += `<div class="task-item text-slate-800"><input type="checkbox" ${t.completed ? 'checked' : ''} onchange="window.toggleTaskStatus(${t.id})"><span class="flex-1 text-xs font-bold ${t.completed ? 'line-through text-slate-300' : 'text-slate-700'} text-slate-700 text-slate-700">${t.text}</span><button type="button" onclick="window.removeTaskFromProject(${t.id})" class="text-red-300 text-red-500"><svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" /></svg></button></div>`; }); updateTaskProgress(); };
+        const renderTasksList = () => { const container = document.getElementById('tasks-list-container'); if(!container) return; container.innerHTML = ''; tempTasks.forEach(t => { container.innerHTML += `<div class="task-item text-slate-800"><input type="checkbox" ${t.completed ? 'checked' : ''} onchange="window.toggleTaskStatus(${t.id})"><span class="flex-1 text-xs font-bold ${t.completed ? 'line-through text-slate-300' : 'text-slate-700'} text-slate-700 text-slate-700 text-slate-700 text-slate-700 text-slate-700">${t.text}</span><button type="button" onclick="window.removeTaskFromProject(${t.id})" class="text-red-300 text-red-500"><svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" /></svg></button></div>`; }); updateTaskProgress(); };
         const updateTaskProgress = () => { const total = tempTasks.length, completed = tempTasks.filter(t => t.completed).length, percent = total > 0 ? Math.round((completed / total) * 100) : 0; const bar = document.getElementById('task-progress-bar'), txt = document.getElementById('progress-percent'); if(bar) bar.style.width = percent + '%'; if(txt) txt.innerText = `PROGRESSO: ${percent}%`; };
+
+        window.handleFiles = (files) => {
+            const list = document.getElementById('file-list');
+            Array.from(files).forEach(f => {
+                tempFiles.push(f.name);
+                list.innerHTML += `<div class="flex items-center gap-2 p-2 bg-slate-50 rounded-lg border border-slate-100 text-slate-800"><svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 text-slate-400" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15.172 7l-6.586 6.586a2 2 0 102.828 2.828l6.414-6.586a4 4 0 00-5.656-5.656l-6.415 6.585a6 6 0 108.486 8.486L20.5 13" /></svg><span class="text-[10px] font-bold text-slate-600">${f.name}</span></div>`;
+            });
+            isFormDirty = true;
+        };
 
         window.addItemToHistory = (type) => {
             const dateStr = new Date().toLocaleDateString('pt-BR');
@@ -579,18 +638,17 @@
             else if (type === 'attention') { const input = document.getElementById('new-attention-note'), val = input.value.trim(); if(!val) return; tempAttention.unshift({ date: dateStr, text: val, type: document.getElementById('impedimento_tipo_list').value }); input.value = ''; renderAttentionList(); isFormDirty = true; }
         };
         window.editHistoryItem = (type, index) => {
-            if(type === 'note') { const item = tempNotes[index]; const nN = document.getElementById('new-milestone-note'); if(nN) nN.value = item.text; tempNotes.splice(index, 1); renderHistoryLists(); isFormDirty = true; }
-            else if(type === 'lesson') { const item = tempLessons[index]; const lN = document.getElementById('new-lesson-note'); if(lN) lN.value = item.text; tempLessons.splice(index, 1); renderHistoryLists(); isFormDirty = true; }
-            else if(type === 'attention') { const item = tempAttention[index]; const aN = document.getElementById('new-attention-note'); if(aN) aN.value = item.text; window.setAttentionType(item.type); tempAttention.splice(index, 1); renderAttentionList(); isFormDirty = true; }
+            if(type === 'note') { const item = tempNotes[index]; const nEl = document.getElementById('new-milestone-note'); if(nEl) nEl.value = item.text; tempNotes.splice(index, 1); renderHistoryLists(); isFormDirty = true; }
+            else if(type === 'lesson') { const item = tempLessons[index]; const lEl = document.getElementById('new-lesson-note'); if(lEl) lEl.value = item.text; tempLessons.splice(index, 1); renderHistoryLists(); isFormDirty = true; }
+            else if(type === 'attention') { const item = tempAttention[index]; const aEl = document.getElementById('new-attention-note'); if(aEl) aEl.value = item.text; window.setAttentionType(item.type); tempAttention.splice(index, 1); renderAttentionList(); isFormDirty = true; }
         };
         window.removeAttention = (index) => { tempAttention.splice(index, 1); renderAttentionList(); isFormDirty = true; };
-        
-        const renderHistoryLists = () => {
-            const nList = document.getElementById('notes-history-list'), lList = document.getElementById('lessons-history-list');
-            if(nList) { nList.innerHTML = ''; tempNotes.forEach((n, i) => { nList.innerHTML += `<div class="history-entry group relative text-slate-800"><span class="text-cyan-500 font-black text-[9px] uppercase tracking-widest">${n.date}</span><p class="mt-1 font-semibold text-xs pr-8">${n.text}</p><button type="button" onclick="window.editHistoryItem('note', ${i})" class="absolute right-2 top-2 text-slate-400 hover:text-cyan-500"><svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" /></svg></button></div>`; }); }
-            if(lList) { lList.innerHTML = ''; tempLessons.forEach((l, i) => { lList.innerHTML += `<div class="history-entry group relative text-slate-800"><span class="text-emerald-500 font-black text-[9px] uppercase tracking-widest">${l.date}</span><p class="mt-1 font-semibold text-xs pr-8">${l.text}</p><button type="button" onclick="window.editHistoryItem('lesson', ${i})" class="absolute right-2 top-2 text-slate-400 hover:text-emerald-500"><svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" /></svg></button></div>`; }); }
+        const renderHistoryLists = () => { 
+            const nList = document.getElementById('notes-history-list'), lList = document.getElementById('lessons-history-list'); 
+            if(nList) { nList.innerHTML = ''; tempNotes.forEach((n, i) => { nList.innerHTML += `<div class="history-entry group relative text-slate-800"><span class="text-cyan-500 font-black text-[9px] uppercase tracking-widest text-cyan-500">${n.date}</span><p class="mt-1 font-semibold text-xs pr-8 text-slate-800">${n.text}</p><button type="button" onclick="window.editHistoryItem('note', ${i})" class="absolute right-2 top-2 text-slate-400 hover:text-cyan-500"><svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" /></svg></button></div>`; }); } 
+            if(lList) { lList.innerHTML = ''; tempLessons.forEach((l, i) => { lList.innerHTML += `<div class="history-entry group relative text-slate-800"><span class="text-emerald-500 font-black text-[9px] uppercase tracking-widest text-emerald-500 text-emerald-500">${l.date}</span><p class="mt-1 font-semibold text-xs pr-8 text-slate-800">${l.text}</p><button type="button" onclick="window.editHistoryItem('lesson', ${i})" class="absolute right-2 top-2 text-slate-400 hover:text-emerald-500 text-emerald-500"><svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" /></svg></button></div>`; }); } 
         };
-        const renderAttentionList = () => { const aL = document.getElementById('attention-history-list'); if(!aL) return; aL.innerHTML = ''; tempAttention.forEach((a, i) => { const c = a.type === 'Problema' ? 'text-red-500' : 'text-amber-500'; aL.innerHTML += `<div class="history-entry relative border-l-4 ${a.type === 'Problema' ? 'border-red-500' : 'border-amber-500'} text-slate-800"><div class="flex justify-between items-start"><span class="${c} font-black text-[9px] uppercase tracking-widest">${a.type} | ${a.date}</span><div class="flex gap-2"><button type="button" onclick="window.editHistoryItem('attention', ${i})" class="text-slate-400 hover:text-cyan-500"><svg xmlns="http://www.w3.org/2000/svg" class="h-3 w-3" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" /></svg></button><button type="button" onclick="window.removeAttention(${i})" class="text-slate-400 hover:text-red-500"><svg xmlns="http://www.w3.org/2000/svg" class="h-3 w-3" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" /></svg></button></div></div><p class="mt-1 font-semibold text-xs text-slate-800">${a.text}</p></div>`; }); };
+        const renderAttentionList = () => { const aL = document.getElementById('attention-history-list'); if(!aL) return; aL.innerHTML = ''; tempAttention.forEach((a, i) => { const c = a.type === 'Problema' ? 'text-red-500' : 'text-amber-500'; aL.innerHTML += `<div class="history-entry relative border-l-4 ${a.type === 'Problema' ? 'border-red-500' : 'border-amber-500'} text-slate-800 text-slate-800 text-slate-800"><div class="flex justify-between items-start text-slate-800 text-slate-800 text-slate-800"><span class="${c} font-black text-[9px] uppercase tracking-widest">${a.type} | ${a.date}</span><div class="flex gap-2 text-slate-800 text-slate-800 text-slate-800"><button type="button" onclick="window.editHistoryItem('attention', ${i})" class="text-slate-400 hover:text-cyan-500"><svg xmlns="http://www.w3.org/2000/svg" class="h-3 w-3" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" /></svg></button><button type="button" onclick="window.removeAttention(${i})" class="text-slate-400 hover:text-red-500"><svg xmlns="http://www.w3.org/2000/svg" class="h-3 w-3" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" /></svg></button></div></div><p class="mt-1 font-semibold text-xs text-slate-800">${a.text}</p></div>`; }); };
 
         window.resetForm = () => { 
             const form = document.getElementById('project-form'); if(form) form.reset(); 
@@ -598,24 +656,75 @@
             const metCont = document.getElementById('metricas-container'); if(metCont) metCont.innerHTML = ''; 
             const notesHist = document.getElementById('notes-history-list'); if(notesHist) notesHist.innerHTML = ''; 
             const attHist = document.getElementById('attention-history-list'); if(attHist) attHist.innerHTML = '';
+            const fileListEl = document.getElementById('file-list'); if(fileListEl) fileListEl.innerHTML = '';
             const btnConc = document.getElementById('btn-concluir-quick'); if(btnConc) btnConc.classList.add('hidden'); 
-            tempNotes = []; tempLessons = []; tempTasks = []; tempAttention = []; isFormDirty = false;
+            tempNotes = []; tempLessons = []; tempTasks = []; tempAttention = []; tempFiles = []; isFormDirty = false;
             renderHistoryLists(); renderTasksList(); renderAttentionList(); 
             window.addMetricaInput(); window.updateStatusUI('Backlog'); 
         };
         
-        window.editProjectByID = (id) => { const p = projects.find(x => x.id === id); if (!p) return; window.switchTab('form'); document.getElementById('edit-id').value = p.id; document.getElementById('iniciativa').value = p.iniciativa || ''; document.getElementById('tipo_atividade').value = p.tipo_atividade || 'Melhoria'; document.getElementById('prioridade').value = p.prioridade || 'Média'; document.getElementById('time').value = p.time || ''; document.getElementById('frente').value = p.frente || ''; document.getElementById('classificacao').value = p.classificacao || 'Eficiência Operacional'; document.getElementById('esforco').value = p.esforco || 'Intermediário'; document.getElementById('status').value = p.status || 'Backlog'; document.getElementById('data_criacao').value = p.data_criacao || ''; document.getElementById('prazo').value = p.prazo || ''; document.getElementById('nota_inicial').value = p.nota_inicial || ''; document.getElementById('data_conclusao').value = p.data_conclusao || ''; document.getElementById('justificativa_despriorizacao').value = p.justificativa_despriorizacao || ''; tempNotes = p.notes || []; tempLessons = p.lessons || []; tempTasks = p.tasks || []; tempAttention = p.attention || []; renderHistoryLists(); renderTasksList(); renderAttentionList(); window.updateStatusUI(p.status); document.querySelectorAll('input[name="responsavel_check"]').forEach(cb => { cb.checked = p.responsavel?.includes(cb.value); }); const btnConc = document.getElementById('btn-concluir-quick'); if(btnConc) btnConc.classList.remove('hidden'); const mCon = document.getElementById('metricas-container'); if(mCon) { mCon.innerHTML = ''; if (p.metricas?.length) p.metricas.forEach(m => window.addMetricaInput(m.label, m.meta, m.real)); else window.addMetricaInput(); } isFormDirty = false; };
+        window.editProjectByID = (id) => { 
+            const p = projects.find(x => x.id === id); if (!p) return; 
+            window.switchTab('form'); 
+            document.getElementById('edit-id').value = p.id; 
+            document.getElementById('iniciativa').value = p.iniciativa || ''; 
+            document.getElementById('tipo_atividade').value = p.tipo_atividade || 'Melhoria'; 
+            document.getElementById('prioridade').value = p.prioridade || 'Média'; 
+            document.getElementById('time').value = p.time || ''; 
+            document.getElementById('frente').value = p.frente || ''; 
+            document.getElementById('classificacao').value = p.classificacao || 'Eficiência Operacional'; 
+            document.getElementById('esforco').value = p.esforco || 'Intermediário'; 
+            document.getElementById('status').value = p.status || 'Backlog'; 
+            document.getElementById('data_criacao').value = p.data_criacao || ''; 
+            document.getElementById('prazo').value = p.prazo || ''; 
+            document.getElementById('nota_inicial').value = p.nota_inicial || ''; 
+            document.getElementById('data_conclusao').value = p.data_conclusao || ''; 
+            document.getElementById('justificativa_despriorizacao').value = p.justificativa_despriorizacao || ''; 
+            tempNotes = p.notes || []; tempLessons = p.lessons || []; tempTasks = p.tasks || []; tempAttention = p.attention || []; tempFiles = p.files || [];
+            renderHistoryLists(); renderTasksList(); renderAttentionList(); 
+            window.updateStatusUI(p.status); 
+            document.querySelectorAll('input[name="responsavel_check"]').forEach(cb => { cb.checked = p.responsavel?.includes(cb.value); }); 
+            const btnC = document.getElementById('btn-concluir-quick'); if(btnC) btnC.classList.remove('hidden'); 
+            const mC = document.getElementById('metricas-container'); if(mC) { mC.innerHTML = ''; if (p.metricas?.length) p.metricas.forEach(m => window.addMetricaInput(m.label, m.meta, m.real)); else window.addMetricaInput(); } 
+            isFormDirty = false; 
+        };
+
         window.exportPDF = () => { window.print(); };
-        document.getElementById('project-form').onsubmit = async (e) => { e.preventDefault(); if (!user) return; const id = document.getElementById('edit-id').value, status = document.getElementById('status').value; const data = { iniciativa: document.getElementById('iniciativa').value, tipo_atividade: document.getElementById('tipo_atividade').value, prioridade: document.getElementById('prioridade').value, time: document.getElementById('time').value, frente: document.getElementById('frente').value, classificacao: document.getElementById('classificacao').value, esforco: document.getElementById('esforco').value, status: status, data_criacao: document.getElementById('data_criacao').value, prazo: document.getElementById('prazo').value, nota_inicial: document.getElementById('nota_inicial').value, data_conclusao: status === 'Finalizado' ? document.getElementById('data_conclusao').value : "", justificativa_despriorizacao: status === 'Despriorizado' ? document.getElementById('justificativa_despriorizacao').value : "", notes: tempNotes, lessons: tempLessons, tasks: tempTasks, attention: tempAttention, responsavel: Array.from(document.querySelectorAll('input[name="responsavel_check"]:checked')).map(cb => cb.value), metricas: Array.from(document.querySelectorAll('#metricas-container > div')).map(row => ({ label: row.querySelector('.metrica-label').value, meta: row.querySelector('.metrica-meta').value, real: row.querySelector('.metrica-real').value })) }; try { if (id) await updateDoc(doc(db, 'artifacts', appId, 'public', 'data', 'projects', id), data); else await addDoc(collection(db, 'artifacts', appId, 'public', 'data', 'projects'), data); isFormDirty = false; window.switchTab('dashboard'); } catch (err) { console.error(err); } };
+
+        document.getElementById('project-form').onsubmit = async (e) => { 
+            e.preventDefault(); if (!user) return; 
+            const responsaveis = Array.from(document.querySelectorAll('input[name="responsavel_check"]:checked')).map(cb => cb.value);
+            if(responsaveis.length === 0) {
+                const mod = document.createElement('div'); mod.className = "fixed inset-0 flex items-center justify-center bg-black/50 z-[20000]";
+                mod.innerHTML = `<div class="bg-white p-8 rounded-3xl max-w-sm text-center"><h3 class="font-black uppercase text-red-500 mb-4">Ação Necessária</h3><p class="text-sm font-medium mb-6">Por favor, selecione pelo menos um Analista Responsável.</p><button onclick="this.parentElement.parentElement.remove()" class="bg-slate-900 text-white px-8 py-3 rounded-2xl font-black uppercase text-[10px]">Entendido</button></div>`;
+                document.body.appendChild(mod);
+                return;
+            }
+
+            const id = document.getElementById('edit-id').value, status = document.getElementById('status').value; 
+            const data = { 
+                iniciativa: document.getElementById('iniciativa').value, tipo_atividade: document.getElementById('tipo_atividade').value, prioridade: document.getElementById('prioridade').value, time: document.getElementById('time').value, frente: document.getElementById('frente').value, classificacao: document.getElementById('classificacao').value, esforco: document.getElementById('esforco').value, status: status, data_criacao: document.getElementById('data_criacao').value, prazo: document.getElementById('prazo').value, nota_inicial: document.getElementById('nota_inicial').value, data_conclusao: status === 'Finalizado' ? document.getElementById('data_conclusao').value : "", justificativa_despriorizacao: status === 'Despriorizado' ? document.getElementById('justificativa_despriorizacao').value : "", notes: tempNotes, lessons: tempLessons, tasks: tempTasks, attention: tempAttention, files: tempFiles, responsavel: responsaveis, metricas: Array.from(document.querySelectorAll('#metricas-container > div')).map(row => ({ label: row.querySelector('.metrica-label').value, meta: row.querySelector('.metrica-meta').value, real: row.querySelector('.metrica-real').value })) 
+            }; 
+            try { if (id) await updateDoc(doc(db, 'artifacts', appId, 'public', 'data', 'projects', id), data); else await addDoc(collection(db, 'artifacts', appId, 'public', 'data', 'projects'), data); isFormDirty = false; window.switchTab('dashboard'); } catch (err) { console.error(err); } 
+        };
 
         initAuth();
         const setup = () => {
+            const grid = document.getElementById('responsaveis-grid'); if(grid) grid.innerHTML = '';
             defaultTeam.sort().forEach(n => renderAnalistaCheckbox(n));
             const aIs = ['time', 'dash-filter-area', 'list-filter-area']; defaultAreas.sort().forEach(a => aIs.forEach(id => { const el = document.getElementById(id); if(el) el.innerHTML += `<option value="${a}">${a}</option>`; }));
             const fIs = ['frente', 'dash-filter-frente']; defaultFrentes.sort().forEach(f => fIs.forEach(id => { const el = document.getElementById(id); if(el) el.innerHTML += `<option value="${f}">${f}</option>`; }));
             const nIs = ['list-filter-analista']; defaultTeam.sort().forEach(t => nIs.forEach(id => { const el = document.getElementById(id); if(el) el.innerHTML += `<option value="${t}">${t}</option>`; }));
         };
         setup(); window.addMetricaInput();
+
+        const dz = document.getElementById('drop-zone');
+        if(dz) {
+            ['dragenter', 'dragover', 'dragleave', 'drop'].forEach(e => { dz.addEventListener(e, (ev) => { ev.preventDefault(); ev.stopPropagation(); }); });
+            dz.addEventListener('dragover', () => dz.classList.add('drag-over'));
+            dz.addEventListener('dragleave', () => dz.classList.remove('drag-over'));
+            dz.addEventListener('drop', (e) => { dz.classList.remove('drag-over'); window.handleFiles(e.dataTransfer.files); });
+        }
     </script>
 </body>
 </html>

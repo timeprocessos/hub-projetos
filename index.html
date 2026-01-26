@@ -15,7 +15,7 @@
             --success-color: #10b981;
             --bg-body: #f8fafc;
             --color-backlog: #94a3b8;
-            --color-andamento: #fbbf24;
+            --color-andamento: #fabd23;
             --color-finalizado: #10b981;
             --color-despriorizado: #ef4444;
             --u-azul: #00A5FF;
@@ -134,7 +134,19 @@
         .toggle-btn.active-problema { background: #fee2e2; border-color: #ef4444; color: #991b1b; }
         .toggle-btn.inactive { background: #f8fafc; color: #94a3b8; border-color: #e2e8f0; }
         .card-project { background: white; border-radius: 24px; border: 1px solid #e2e8f0; transition: all 0.3s ease; border-top-width: 12px; }
-        .status-pill { font-size: 0.6rem; font-weight: 900; padding: 4px 10px; border-radius: 100px; text-transform: uppercase; }
+        .status-pill { 
+            font-size: 0.6rem; 
+            font-weight: 900; 
+            padding: 4px 12px; 
+            border-radius: 100px; 
+            text-transform: uppercase; 
+            white-space: nowrap; 
+            display: inline-flex; 
+            align-items: center; 
+            justify-content: center;
+            min-width: 110px;
+            height: 24px;
+        }
         .btn-add-item { display: inline-flex; align-items: center; justify-content: center; width: 22px; height: 22px; background: #f1f5f9; color: #64748b; border-radius: 6px; font-size: 14px; font-weight: bold; cursor: pointer; transition: all 0.2s; margin-left: 8px; }
         .progress-container { width: 100%; background-color: #e2e8f0; border-radius: 999px; height: 8px; overflow: hidden; margin-top: 10px; }
         .progress-bar-fill { height: 100%; background-color: var(--success-color); transition: width 0.4s cubic-bezier(0.4, 0, 0.2, 1); }
@@ -145,6 +157,17 @@
         .column-board { background: rgba(226, 232, 240, 0.3); border-radius: 1.5rem; padding: 1.25rem; min-height: 400px; height: fit-content; }
         .modal-overlay { position: fixed; inset: 0; background: rgba(0, 10, 40, 0.5); backdrop-filter: blur(8px); display: none; align-items: center; justify-content: center; z-index: 10000; }
         .modal-content { background: white; padding: 2rem; border-radius: 2rem; width: 90%; max-width: 450px; box-shadow: 0 25px 50px -12px rgba(0,0,0,0.25); }
+        
+        /* Badge de Contagem - Design System */
+        .count-badge {
+            padding: 2px 8px;
+            border-radius: 999px;
+            font-size: 10px;
+            font-weight: 900;
+            min-width: 24px;
+            text-align: center;
+        }
+
         .drop-zone {
             border: 2px dashed #cbd5e1;
             border-radius: 20px;
@@ -169,6 +192,7 @@
         <p class="text-[10px] uppercase font-black tracking-widest mt-4 opacity-50">Sincronizando ambiente...</p>
     </div>
 
+    <!-- MODAL CONFIRMAÇÃO SAÍDA -->
     <div id="confirm-exit-modal" class="modal-overlay">
         <div class="modal-content text-center text-slate-800">
             <div class="w-16 h-16 bg-amber-50 text-amber-500 rounded-full flex items-center justify-center mx-auto mb-6">
@@ -285,14 +309,14 @@
                 <div class="column-board">
                     <label class="label-forte text-slate-400 mb-6 flex justify-between items-center">
                         <span>Backlog</span>
-                        <span id="count-backlog" class="bg-slate-200 text-slate-600 px-3 py-1 rounded-full text-[10px]">0</span>
+                        <span id="count-backlog" class="bg-[#94a3b8] text-white px-3 py-1 rounded-full text-[10px] font-black">0</span>
                     </label>
                     <div id="grid-backlog" class="space-y-6"></div>
                 </div>
                 <div class="column-board">
                     <label class="label-forte text-slate-400 mb-6 flex justify-between items-center">
                         <span>Em Andamento</span>
-                        <span id="count-andamento" class="bg-amber-100 text-amber-700 px-3 py-1 rounded-full text-[10px]">0</span>
+                        <span id="count-andamento" class="bg-[#fef3c7] text-[#92400e] px-3 py-1 rounded-full text-[10px] font-black">0</span>
                     </label>
                     <div id="grid-andamento" class="space-y-6"></div>
                 </div>
@@ -352,19 +376,51 @@
 
         <!-- VIEW ARQUIVO -->
         <div id="view-archive" class="hidden no-print">
-            <div class="mb-8">
-                <h1 class="text-2xl md:text-4xl font-black tracking-tighter uppercase leading-none text-slate-900">Arquivo</h1>
-                <div class="flex flex-wrap gap-2 md:gap-3 mt-4">
+            <div class="mb-8 flex flex-col md:flex-row justify-between items-start md:items-end gap-6">
+                <div>
+                    <h1 class="text-2xl md:text-4xl font-black tracking-tighter uppercase leading-none text-slate-900">Arquivo</h1>
+                    <p class="text-slate-400 text-[10px] md:text-xs font-bold uppercase mt-2 md:mt-3 tracking-widest">Controle de Projetos Concluídos</p>
+                </div>
+                <div class="flex flex-wrap gap-2 md:gap-3">
                     <input type="text" id="search-archive" class="input-premium !py-1.5 !px-3 !text-[10px] !w-40 shadow-sm" placeholder="Pesquisar arquivo..." oninput="window.refreshUI()">
                 </div>
             </div>
+
+            <!-- BARRA DE FILTROS ARQUIVO -->
+            <div class="mb-6 flex flex-wrap items-center gap-4 bg-white p-4 rounded-2xl border border-slate-100 shadow-sm">
+                <div class="flex flex-col w-full sm:w-auto min-w-[200px]">
+                    <label class="label-forte !mb-1 text-[8px]">Analista Responsável</label>
+                    <select id="archive-filter-analista" class="input-premium !py-2 !px-3 !text-[10px] shadow-sm" onchange="window.refreshUI()">
+                        <option value="">Todos Analistas</option>
+                    </select>
+                </div>
+                <div class="flex flex-col w-full sm:w-auto min-w-[150px]">
+                    <label class="label-forte !mb-1 text-[8px]">Frente</label>
+                    <select id="archive-filter-frente" class="input-premium !py-2 !px-3 !text-[10px] shadow-sm" onchange="window.refreshUI()">
+                        <option value="">Todas Frentes</option>
+                    </select>
+                </div>
+                <div class="flex flex-col w-full sm:w-auto min-w-[150px]">
+                    <label class="label-forte !mb-1 text-[8px]">Área</label>
+                    <select id="archive-filter-area" class="input-premium !py-2 !px-3 !text-[10px] shadow-sm" onchange="window.refreshUI()">
+                        <option value="">Todas Áreas</option>
+                    </select>
+                </div>
+            </div>
+
             <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
                 <div class="column-board">
-                    <label class="label-forte text-emerald-600 mb-6 uppercase">Finalizados</label>
+                    <label class="label-forte text-emerald-600 mb-6 flex justify-between items-center uppercase">
+                        <span>Finalizados</span>
+                        <span id="count-finalizado-archive" class="count-badge bg-emerald-50 text-emerald-700">0</span>
+                    </label>
                     <div id="grid-finalizado" class="space-y-6"></div>
                 </div>
                 <div class="column-board">
-                    <label class="label-forte text-red-600 mb-6 uppercase">Despriorizados</label>
+                    <label class="label-forte text-red-600 mb-6 flex justify-between items-center uppercase">
+                        <span>Despriorizados</span>
+                        <span id="count-despriorizado-archive" class="count-badge bg-red-50 text-red-700">0</span>
+                    </label>
                     <div id="grid-despriorizado" class="space-y-6"></div>
                 </div>
             </div>
@@ -376,7 +432,7 @@
                 <h2 id="form-title" class="text-2xl md:text-3xl font-black uppercase tracking-tighter text-slate-900">Ficha Técnica</h2>
                 <div class="flex gap-2 md:gap-4 no-print w-full sm:w-auto">
                     <button id="btn-concluir-quick" onclick="window.showFinishAction()" class="bg-emerald-500 text-white px-4 md:px-8 py-3 md:py-3.5 rounded-xl md:rounded-2xl font-black text-[9px] md:text-[10px] uppercase tracking-widest shadow-lg shadow-emerald-100 hover:scale-105 transition-all">Finalizar Projeto</button>
-                    <button onclick="window.exportPDF()" class="bg-slate-900 text-white px-4 md:px-8 py-3 rounded-xl md:rounded-2xl font-black text-[9px] uppercase tracking-widest shadow-lg flex-1 sm:flex-none">Exportar PDF</button>
+                    <button onclick="window.exportPDF()" class="bg-slate-900 text-white px-4 md:px-8 py-3 rounded-xl md:rounded-2xl font-black text-[9px] md:text-[10px] uppercase tracking-widest shadow-lg flex-1 sm:flex-none">Exportar PDF</button>
                 </div>
             </div>
             <form id="project-form" oninput="window.setDirty()">
@@ -580,7 +636,7 @@
             else statsHtml += `<p class="flex justify-between mt-2 text-slate-800"><span>STATUS:</span> <span class="${isOverdue ? 'text-red-600 animate-pulse' : 'text-slate-900'} font-black uppercase text-[10px]">${isOverdue ? 'EM ATRASO' : 'NO PRAZO'}</span></p>`;
             
             const hasProb = p.attention?.some(att => att.type === 'Problema');
-            return `<div class="card-project p-6 flex flex-col h-full ${hasProb ? 'border-2 border-red-500' : ''}" style="border-top-color: ${topColor}"><div class="flex justify-between items-start mb-4 text-slate-800"><span class="text-[8px] font-black text-slate-400 uppercase tracking-widest">${p.tipo_atividade} | ${p.time}</span><span class="status-pill status-${(p.status||'backlog').toLowerCase().replace(/\s/g, '')}">${p.status}</span></div><h3 class="text-lg font-black mb-4 uppercase leading-tight text-slate-900">${p.iniciativa}</h3><div class="text-[10px] space-y-2 mb-6 text-slate-500">${statsHtml}</div><button onclick="window.editProjectByID('${p.id}')" class="bg-slate-900 text-white py-4 rounded-2xl font-black uppercase text-[10px] hover:bg-slate-800 transition-all mt-auto shadow-lg shadow-slate-200">Gerenciar</button></div>`;
+            return `<div class="card-project p-6 flex flex-col h-full ${hasProb ? 'border-2 border-red-500' : ''}" style="border-top-color: ${topColor}"><div class="flex justify-between items-start mb-4 text-slate-800"><span class="text-[8px] font-black text-slate-400 uppercase tracking-widest">${p.tipo_atividade} | ${p.time}</span><span class="status-pill" style="background: ${topColor}; color: ${p.status === 'Em Andamento' ? '#000a28' : '#fff'}">${p.status}</span></div><h3 class="text-lg font-black mb-4 uppercase leading-tight text-slate-900">${p.iniciativa}</h3><div class="text-[10px] space-y-2 mb-6 text-slate-500">${statsHtml}</div><button onclick="window.editProjectByID('${p.id}')" class="bg-slate-900 text-white py-4 rounded-2xl font-black uppercase text-[10px] hover:bg-slate-800 transition-all mt-auto shadow-lg shadow-slate-200">Gerenciar</button></div>`;
         }
 
         function refreshUI() {
@@ -601,6 +657,10 @@
             const listFrente = document.getElementById('list-filter-frente')?.value || '';
             const searchList = document.getElementById('search-list')?.value.toLowerCase() || '';
             
+            // Filtros Arquivo
+            const archiveAnalista = document.getElementById('archive-filter-analista')?.value || '';
+            const archiveFrente = document.getElementById('archive-filter-frente')?.value || '';
+            const archiveArea = document.getElementById('archive-filter-area')?.value || '';
             const searchArchive = document.getElementById('search-archive')?.value.toLowerCase() || '';
 
             const filtered = projects.filter(p => { 
@@ -622,6 +682,9 @@
                     if(listFrente) match = match && p.frente === listFrente;
                 } else if (activeTab === 'archive') {
                     match = (p.iniciativa || '').toLowerCase().includes(searchArchive);
+                    if(archiveAnalista) match = match && p.responsavel?.includes(archiveAnalista);
+                    if(archiveFrente) match = match && p.frente === archiveFrente;
+                    if(archiveArea) match = match && p.time === archiveArea;
                 }
                 return match;
             });
@@ -629,14 +692,30 @@
             updateKPIs(filtered); updateCharts(filtered);
             if(activeTab === 'dashboard') {
                 const bG = document.getElementById('grid-backlog'), aG = document.getElementById('grid-andamento');
-                if(bG && aG) { bG.innerHTML = ''; aG.innerHTML = ''; filtered.filter(p => p.status === 'Backlog').forEach(p => bG.innerHTML += createProjectCard(p, today)); filtered.filter(p => p.status === 'Em Andamento').forEach(p => aG.innerHTML += createProjectCard(p, today)); if(document.getElementById('count-backlog')) document.getElementById('count-backlog').innerText = filtered.filter(p => p.status === 'Backlog').length; if(document.getElementById('count-andamento')) document.getElementById('count-andamento').innerText = filtered.filter(p => p.status === 'Em Andamento').length; }
+                if(bG && aG) { 
+                    bG.innerHTML = ''; aG.innerHTML = ''; 
+                    const backlogs = filtered.filter(p => p.status === 'Backlog');
+                    const andamentos = filtered.filter(p => p.status === 'Em Andamento');
+                    backlogs.forEach(p => bG.innerHTML += createProjectCard(p, today)); 
+                    andamentos.forEach(p => aG.innerHTML += createProjectCard(p, today)); 
+                    if(document.getElementById('count-backlog')) document.getElementById('count-backlog').innerText = backlogs.length; 
+                    if(document.getElementById('count-andamento')) document.getElementById('count-andamento').innerText = andamentos.length; 
+                }
             }
             if(activeTab === 'archive') {
                 const fG = document.getElementById('grid-finalizado'), dG = document.getElementById('grid-despriorizado');
-                if(fG && dG) { fG.innerHTML = ''; dG.innerHTML = ''; filtered.filter(p => p.status === 'Finalizado').forEach(p => fG.innerHTML += createProjectCard(p, today)); filtered.filter(p => p.status === 'Despriorizado').forEach(p => dG.innerHTML += createProjectCard(p, today)); }
+                if(fG && dG) { 
+                    fG.innerHTML = ''; dG.innerHTML = ''; 
+                    const finals = filtered.filter(p => p.status === 'Finalizado');
+                    const desprs = filtered.filter(p => p.status === 'Despriorizado');
+                    finals.forEach(p => fG.innerHTML += createProjectCard(p, today)); 
+                    desprs.forEach(p => dG.innerHTML += createProjectCard(p, today)); 
+                    if(document.getElementById('count-finalizado-archive')) document.getElementById('count-finalizado-archive').innerText = finals.length;
+                    if(document.getElementById('count-despriorizado-archive')) document.getElementById('count-despriorizado-archive').innerText = desprs.length;
+                }
             }
             const tbody = document.getElementById('detailed-table-body');
-            if(tbody) { tbody.innerHTML = ''; filtered.forEach(p => { const env = Array.isArray(p.responsavel) ? p.responsavel.join(', ') : (p.responsavel || '--'); tbody.innerHTML += `<tr><td class="p-6 md:p-8 uppercase text-slate-900 font-bold">${p.iniciativa}</td><td class="p-6 md:p-8 text-slate-500">${p.time}</td><td class="p-6 md:p-8 text-center text-slate-500">${env}</td><td class="p-6 md:p-8 text-center text-slate-900 font-bold">${p.prazo ? p.prazo.split('-').reverse().join('/') : '--'}</td><td class="p-6 md:p-8 text-center"><span class="status-pill status-${(p.status||'').toLowerCase().replace(/\s/g,'')} text-white" style="color:white; background: ${p.status==='Backlog'?'#333':(p.status==='Em Andamento'?'#00A5FF':(p.status==='Finalizado'?'#32B77E':'#FF1A5C'))}">${p.status}</span></td><td class="p-6 md:p-8 text-right flex items-center justify-end gap-3 md:gap-5"><button onclick="window.editProjectByID('${p.id}')" class="text-cyan-500 hover:scale-110 transition uppercase text-[10px] font-black">Editar</button><button onclick="window.openDeleteModal('${p.id}')" class="text-red-300 hover:text-red-500 transition-all text-red-500"><svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" /></svg></button></td></tr>`; }); }
+            if(tbody) { tbody.innerHTML = ''; filtered.forEach(p => { const env = Array.isArray(p.responsavel) ? p.responsavel.join(', ') : (p.responsavel || '--'); tbody.innerHTML += `<tr><td class="p-6 md:p-8 uppercase text-slate-900 font-bold">${p.iniciativa}</td><td class="p-6 md:p-8 text-slate-500">${p.time}</td><td class="p-6 md:p-8 text-center text-slate-500">${env}</td><td class="p-6 md:p-8 text-center text-slate-900 font-bold">${p.prazo ? p.prazo.split('-').reverse().join('/') : '--'}</td><td class="p-6 md:p-8 text-center"><span class="status-pill" style="background: ${p.status==='Backlog'?'#333':(p.status==='Em Andamento'?'#fabd23':(p.status==='Finalizado'?'#32B77E':'#FF1A5C'))}; color: ${p.status==='Em Andamento'?'#000a28':'#fff'}">${p.status}</span></td><td class="p-6 md:p-8 text-right flex items-center justify-end gap-3 md:gap-5"><button onclick="window.editProjectByID('${p.id}')" class="text-cyan-500 hover:scale-110 transition uppercase text-[10px] font-black">Editar</button><button onclick="window.openDeleteModal('${p.id}')" class="text-red-300 hover:text-red-500 transition-all text-red-500"><svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" /></svg></button></td></tr>`; }); }
         }
 
         window.renderHistoryLists = function() { 
@@ -758,7 +837,7 @@
             isFormDirty = false; 
         };
 
-        const initAuth = async () => { try { if (typeof __initial_auth_token !== 'undefined' && __initial_auth_token) { try { await signInWithCustomToken(auth, __initial_auth_token); } catch(e) { await signInAnonymously(auth); } } else { await signInAnonymously(auth); } } catch (e) { window.hideOverlay(); } };
+        const initAuth = async () => { try { if (typeof __initial_auth_token !== 'undefined' && __initial_auth_token) { try { await signInWithCustomToken(auth, __initial_auth_token); } catch(e) { await signInAnonymously(auth); } } else { await signInAnonymously(auth); } } catch(e) { window.hideOverlay(); } };
 
         document.getElementById('project-form').onsubmit = async (e) => { 
             e.preventDefault(); if (!user) return; 
@@ -781,9 +860,11 @@
                 if(dfAn) dfAn.add(new Option(n, n));
                 const lfAn = document.getElementById('list-filter-analista');
                 if(lfAn) lfAn.add(new Option(n, n));
+                const afAn = document.getElementById('archive-filter-analista');
+                if(afAn) afAn.add(new Option(n, n));
             });
-            const aIs = ['time', 'dash-filter-area']; defaultAreas.sort().forEach(a => aIs.forEach(id => { const el = document.getElementById(id); if(el) el.innerHTML += `<option value="${a}">${a}</option>`; }));
-            const fIs = ['frente', 'dash-filter-frente', 'list-filter-frente']; defaultFrentes.sort().forEach(f => fIs.forEach(id => { const el = document.getElementById(id); if(el) el.innerHTML += `<option value="${f}">${f}</option>`; }));
+            const aIs = ['time', 'dash-filter-area', 'archive-filter-area']; defaultAreas.sort().forEach(a => aIs.forEach(id => { const el = document.getElementById(id); if(el) el.innerHTML += `<option value="${a}">${a}</option>`; }));
+            const fIs = ['frente', 'dash-filter-frente', 'list-filter-frente', 'archive-filter-frente']; defaultFrentes.sort().forEach(f => fIs.forEach(id => { const el = document.getElementById(id); if(el) el.innerHTML += `<option value="${f}">${f}</option>`; }));
         };
 
         onAuthStateChanged(auth, u => { 

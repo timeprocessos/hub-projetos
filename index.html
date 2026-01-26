@@ -403,7 +403,7 @@
         <div id="view-form" class="hidden max-w-6xl mx-auto">
             <div class="mb-6 md:mb-10 flex flex-col sm:flex-row justify-between items-start sm:items-end gap-4 text-slate-900">
                 <h2 id="form-title" class="text-2xl md:text-3xl font-black uppercase tracking-tighter">Ficha Técnica</h2>
-                <div class="flex gap-2 md:gap-4 no-print w-full sm:w-auto">
+                <div class="flex gap-2 md:gap-4 no-print w-full sm:w-auto text-slate-900">
                     <button id="btn-concluir-quick" onclick="window.showFinishAction()" class="bg-emerald-500 text-white px-4 md:px-8 py-3 md:py-3.5 rounded-xl md:rounded-2xl font-black text-[9px] md:text-[10px] uppercase tracking-widest shadow-lg shadow-emerald-100 hover:scale-105 transition-all">Finalizar Projeto</button>
                     <button onclick="window.exportPDF()" class="bg-slate-900 text-white px-4 md:px-8 py-3 rounded-xl md:rounded-2xl font-black text-[9px] md:text-[10px] uppercase tracking-widest shadow-lg flex-1 sm:flex-none">Exportar PDF</button>
                 </div>
@@ -466,7 +466,7 @@
                     </div>
                     <div class="form-section-box shadow-sm">
                         <label class="label-forte text-slate-400 mb-6 pb-2 border-b border-slate-50 uppercase">4. KPIs Estratégicos</label>
-                        <div id="metricas-container" class="space-y-3 mb-4"></div>
+                        <div id="metricas-container" class="space-y-3 mb-4 text-slate-800"></div>
                         <button type="button" onclick="window.addMetricaRow()" class="text-[9px] font-black text-cyan-500 uppercase flex items-center gap-2 hover:opacity-70 transition-all">+ ADICIONAR INDICADOR</button>
                     </div>
                 </div>
@@ -491,7 +491,7 @@
                                 <span id="progress-percent" class="text-[10px] font-black text-emerald-600">PROGRESSO: 0%</span>
                             </div>
                             <div class="progress-container"><div id="task-progress-bar" class="progress-bar-fill"></div></div>
-                            <div id="tasks-list-container" class="space-y-2 mb-4 max-h-48 overflow-y-auto"></div>
+                            <div id="tasks-list-container" class="space-y-2 mb-4 max-h-48 overflow-y-auto text-slate-800"></div>
                             <div class="flex gap-2">
                                 <input type="text" id="new-task-input" class="input-premium !text-xs" placeholder="Nova tarefa...">
                                 <button type="button" onclick="window.addTaskToProject()" class="bg-slate-900 text-white px-4 py-2 rounded-xl font-bold text-[10px] uppercase hover:bg-slate-800 transition-all">Incluir</button>
@@ -499,7 +499,7 @@
                         </div>
                         <div class="pt-6 border-t border-slate-50">
                             <label class="label-forte text-slate-800">Log de Updates</label>
-                            <div id="notes-history-list" class="space-y-3 max-h-56 overflow-y-auto mb-4 pr-3 text-[11px]"></div>
+                            <div id="notes-history-list" class="space-y-3 max-h-56 overflow-y-auto mb-4 pr-3 text-[11px] text-slate-800"></div>
                             <div class="flex flex-col sm:flex-row gap-2">
                                 <textarea id="new-milestone-note" rows="4" class="input-premium !text-xs" placeholder="Evolução de hoje..."></textarea>
                                 <button type="button" onclick="window.addItemToHistory('note')" class="bg-slate-900 text-white px-6 py-2.5 rounded-xl font-bold text-[10px] uppercase hover:bg-slate-800 transition-all self-end">Incluir</button>
@@ -516,7 +516,7 @@
                                     <button type="button" id="toggle-list-problema" onclick="window.setAttentionType('Problema')" class="toggle-btn inactive text-slate-800">Problema ?</button>
                                 </div>
                             </div>
-                            <div id="attention-history-list" class="space-y-3 max-h-48 overflow-y-auto mb-4 pr-3 text-[11px]"></div>
+                            <div id="attention-history-list" class="space-y-3 max-h-48 overflow-y-auto mb-4 pr-3 text-[11px] text-slate-800"></div>
                             <div class="flex flex-col sm:flex-row gap-2">
                                 <textarea id="new-attention-note" rows="3" class="input-premium !bg-white text-xs" placeholder="Novo alerta..."></textarea>
                                 <button type="button" onclick="window.addItemToHistory('attention')" class="bg-slate-900 text-white px-6 py-2.5 rounded-xl font-bold text-[10px] uppercase hover:bg-slate-800 transition-all self-end">Incluir</button>
@@ -538,6 +538,11 @@
         import { getAuth, signInAnonymously, onAuthStateChanged, signInWithCustomToken } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";
         import { getFirestore, collection, doc, addDoc, updateDoc, deleteDoc, onSnapshot } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
 
+        // --- DEFINIÇÕES GLOBAIS ---
+        const defaultTeam = ["Cauan Pereira Da Silva", "Diego Francisco Rocha", "Hudson Nestor Pereira Cortes", "Lucas Henrique Jantsch", "Luiz Gustavo Ribeiro", "Michael Gabriel Moraes Faria", "Otávio Augusto Oliveira", "Rodrigo Prinz De Paiva", "Simone Thomé de Andrade"];
+        const defaultAreas = ["Análise", "CX", "Comunicação", "Mesa", "Onboarding"];
+        const defaultFrentes = ["Automação", "Performance", "Reestruturação", "Simplificação"];
+
         const firebaseConfig = JSON.parse(__firebase_config);
         const app = initializeApp(firebaseConfig); 
         const auth = getAuth(app); 
@@ -548,13 +553,25 @@
         let charts = {}; let isFormDirty = false; let pendingTab = null;
         let redirectTargetAfterSave = 'dashboard';
 
-        const defaultTeam = ["Cauan Pereira Da Silva", "Diego Francisco Rocha", "Hudson Nestor Pereira Cortes", "Lucas Henrique Jantsch", "Luiz Gustavo Ribeiro", "Michael Gabriel Moraes Faria", "Otávio Augusto Oliveira", "Rodrigo Prinz De Paiva", "Simone Thomé de Andrade"];
-        const defaultAreas = ["Análise", "CX", "Comunicação", "Mesa", "Onboarding"];
-        const defaultFrentes = ["Automação", "Performance", "Reestruturação", "Simplificação"];
-
         // --- DECLARAÇÕES DE FUNÇÕES ---
 
-        function hideOverlay() { const o = document.getElementById('loading-overlay'); if (o) { o.style.opacity = '0'; setTimeout(() => { o.style.display = 'none'; }, 500); } }
+        function hideOverlay() { 
+            const o = document.getElementById('loading-overlay'); 
+            if (o) { 
+                o.style.opacity = '0'; 
+                setTimeout(() => { o.style.display = 'none'; }, 500); 
+            } 
+        }
+
+        // Safety timeout to hide overlay if something fails
+        setTimeout(() => {
+            const o = document.getElementById('loading-overlay');
+            if (o && o.style.display !== 'none') {
+                console.warn("Safety timeout triggered to hide loading overlay.");
+                hideOverlay();
+            }
+        }, 8000);
+
         function getBusinessDays(start, end) { let count = 0; let cur = new Date(start); const target = new Date(end); while (cur <= target) { if (cur.getDay() !== 0 && cur.getDay() !== 6) count++; cur.setDate(cur.getDate() + 1); } return count; }
         function setDirty() { isFormDirty = true; }
 
@@ -677,7 +694,7 @@
                                 </span>
                               </p>`;
             } else if (p.status === 'Despriorizado') {
-                statsHtml += `<div class="mt-2 p-2 bg-red-50 rounded-lg border border-red-100 text-red-700"><span class="text-[8px] font-black text-red-400">MOTIVO:</span><p class="text-[10px] italic leading-tight">${p.justificativa_despriorizacao || '--'}</p></div>`;
+                statsHtml += `<div class="mt-2 p-2 bg-red-50 rounded-lg border border-red-100 text-red-700"><span class="text-[8px] font-black text-red-400">MOTIVO:</span><p class="text-[10px] italic leading-tight text-red-700">${p.justificativa_despriorizacao || '--'}</p></div>`;
             }
 
             const hasProb = p.attention?.some(att => att.type === 'Problema');
@@ -704,9 +721,32 @@
         window.updateTaskProgress = function() { const total = (tempTasks || []).length; const completed = (tempTasks || []).filter(t => t.completed).length; const percent = total > 0 ? Math.round((completed / total) * 100) : 0; const bar = document.getElementById('task-progress-bar'); const txt = document.getElementById('progress-percent'); if(bar) bar.style.width = percent + '%'; if(txt) txt.innerText = `PROGRESSO: ${percent}%`; };
 
         window.refreshUI = refreshUI; window.updateKPIs = updateKPIs; window.updateCharts = updateCharts; window.createProjectCard = createProjectCard; window.hideOverlay = hideOverlay; window.renderAnalistaCheckbox = renderAnalistaCheckbox; window.setDirty = setDirty;
-        window.saveAndExit = () => { const form = document.getElementById('project-form'); if (form) { redirectTargetAfterSave = pendingTab || 'dashboard'; form.dispatchEvent(new Event('submit', { cancelable: true })); document.getElementById('confirm-exit-modal').style.display = 'none'; isFormDirty = false; } };
-        window.discardAndExit = () => { isFormDirty = false; document.getElementById('confirm-exit-modal').style.display = 'none'; if(pendingTab) window.switchTab(pendingTab); };
-        window.trySwitchTab = (tab) => { if (isFormDirty) { pendingTab = tab; document.getElementById('confirm-exit-modal').style.display = 'flex'; } else { window.switchTab(tab); } };
+        
+        window.saveAndExit = () => { 
+            const form = document.getElementById('project-form'); 
+            if (form) { 
+                redirectTargetAfterSave = pendingTab || 'dashboard'; 
+                form.dispatchEvent(new Event('submit', { cancelable: true })); 
+                document.getElementById('confirm-exit-modal').style.display = 'none'; 
+                isFormDirty = false; 
+            } 
+        };
+
+        window.discardAndExit = () => { 
+            isFormDirty = false; 
+            document.getElementById('confirm-exit-modal').style.display = 'none'; 
+            if(pendingTab) window.switchTab(pendingTab); 
+        };
+
+        window.trySwitchTab = (tab) => { 
+            if (isFormDirty) { 
+                pendingTab = tab; 
+                document.getElementById('confirm-exit-modal').style.display = 'flex'; 
+            } else { 
+                window.switchTab(tab); 
+            } 
+        };
+
         window.switchTab = (t) => {
             ['dashboard', 'form', 'list', 'archive'].forEach(v => {
                 const el = document.getElementById('view-' + v);
@@ -716,17 +756,32 @@
             if (target) target.classList.remove('hidden');
 
             document.querySelectorAll('nav button').forEach(btn => {
-                btn.classList.remove('active-tab');
-                if (btn.id === `tab-${t}`) btn.classList.add('active-tab');
+                if (btn) {
+                    btn.classList.remove('active-tab');
+                    if (btn.id === `tab-${t}`) btn.classList.add('active-tab');
+                }
             });
 
             if (t !== 'form') window.resetForm();
             refreshUI();
         };
 
-        window.updateStatusUI = (v) => { const clo = document.getElementById('closure-dates'), dep = document.getElementById('deprioritize-box'); if(clo) clo.classList.toggle('hidden', v !== 'Finalizado'); if(dep) dep.classList.toggle('hidden', v !== 'Despriorizado'); };
-        window.showFinishAction = () => { if(document.getElementById('finish-confirm-modal')) document.getElementById('finish-confirm-modal').style.display = 'flex'; };
-        window.closeFinishModal = () => { if(document.getElementById('finish-confirm-modal')) document.getElementById('finish-confirm-modal').style.display = 'none'; };
+        window.updateStatusUI = (v) => { 
+            const clo = document.getElementById('closure-dates');
+            const dep = document.getElementById('deprioritize-box');
+            if(clo) clo.classList.toggle('hidden', v !== 'Finalizado'); 
+            if(dep) dep.classList.toggle('hidden', v !== 'Despriorizado'); 
+        };
+
+        window.showFinishAction = () => { 
+            const modal = document.getElementById('finish-confirm-modal');
+            if(modal) modal.style.display = 'flex'; 
+        };
+
+        window.closeFinishModal = () => { 
+            const modal = document.getElementById('finish-confirm-modal');
+            if(modal) modal.style.display = 'none'; 
+        };
         
         window.confirmFinalization = async () => { 
             const statusEl = document.getElementById('status'), dateEl = document.getElementById('data_conclusao'); 
@@ -735,28 +790,146 @@
             window.updateStatusUI('Finalizado'); 
             window.closeFinishModal(); 
             
-            // Gravação automática para a página de Arquivo
+            // Auto save and move to archive
             redirectTargetAfterSave = 'archive';
-            document.getElementById('project-form').dispatchEvent(new Event('submit', { cancelable: true }));
+            const form = document.getElementById('project-form');
+            if (form) form.dispatchEvent(new Event('submit', { cancelable: true }));
         };
 
         window.exportToXLS = () => { let csv = "\uFEFFIniciativa;Área;Classificação;Responsáveis;Estimado;Status\n"; projects.forEach(p => { const resps = Array.isArray(p.responsavel) ? p.responsavel.join(', ') : p.responsavel; csv += `${p.iniciativa};${p.time};${p.classificacao};${resps};${p.prazo};${p.status}\n`; }); const blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' }); const link = document.createElement("a"); link.href = URL.createObjectURL(blob); link.setAttribute("download", `Projetos_Unico_${new Date().toLocaleDateString()}.csv`); document.body.appendChild(link); link.click(); document.body.removeChild(link); };
         window.exportPDF = () => { window.print(); };
-        window.openDeleteModal = (id) => { projectToDeleteId = id; document.getElementById('delete-modal').style.display = 'flex'; };
-        window.closeDeleteModal = () => { projectToDeleteId = null; document.getElementById('delete-modal').style.display = 'none'; };
+        
+        window.openDeleteModal = (id) => { 
+            projectToDeleteId = id; 
+            const modal = document.getElementById('delete-modal');
+            if (modal) modal.style.display = 'flex'; 
+        };
+
+        window.closeDeleteModal = () => { 
+            projectToDeleteId = null; 
+            const modal = document.getElementById('delete-modal');
+            if (modal) modal.style.display = 'none'; 
+        };
+
         window.confirmDelete = async () => { if(projectToDeleteId && user) { await deleteDoc(doc(db, 'artifacts', appId, 'public', 'data', 'projects', projectToDeleteId)); window.closeDeleteModal(); refreshUI(); } };
-        window.openAddModal = (target) => { currentTargetField = target; if(document.getElementById('add-item-title')) document.getElementById('add-item-title').innerText = "Adicionar: " + target; document.getElementById('add-item-modal').style.display = 'flex'; };
-        window.closeAddModal = () => { document.getElementById('add-item-modal').style.display = 'none'; if(document.getElementById('new-item-input')) document.getElementById('new-item-input').value = ''; };
+        
+        window.openAddModal = (target) => { 
+            currentTargetField = target; 
+            const title = document.getElementById('add-item-title');
+            if(title) title.innerText = "Adicionar: " + target; 
+            const modal = document.getElementById('add-item-modal');
+            if(modal) modal.style.display = 'flex'; 
+        };
+
+        window.closeAddModal = () => { 
+            const modal = document.getElementById('add-item-modal');
+            if(modal) modal.style.display = 'none'; 
+            const input = document.getElementById('new-item-input');
+            if(input) input.value = ''; 
+        };
+
         window.processAddItem = () => { const val = document.getElementById('new-item-input')?.value.trim(); if(!val) return; if(currentTargetField === 'analista') { renderAnalistaCheckbox(val, true); } else { const el = document.getElementById(currentTargetField); if(el) el.add(new Option(val, val, true, true)); } window.closeAddModal(); };
         window.addTaskToProject = () => { const input = document.getElementById('new-task-input'); const val = input?.value.trim(); if(!val) return; if(!tempTasks) tempTasks = []; tempTasks.push({ id: Date.now(), text: val, completed: false }); if(input) input.value = ''; window.renderTasksList(); window.setDirty(); };
         window.toggleTaskStatus = (id) => { tempTasks = tempTasks.map(t => t.id === id ? {...t, completed: !t.completed} : t); window.renderTasksList(); window.setDirty(); };
         window.removeTaskFromProject = (id) => { tempTasks = tempTasks.filter(t => t.id !== id); window.renderTasksList(); window.setDirty(); };
-        window.addItemToHistory = function(type) { const dateStr = new Date().toLocaleDateString('pt-BR'); if(type === 'note') { const input = document.getElementById('new-milestone-note'), val = input?.value.trim(); if(!val) return; if(!tempNotes) tempNotes = []; tempNotes.unshift({ date: dateStr, text: val }); if(input) input.value = ''; window.renderHistoryLists(); window.setDirty(); } else if (type === 'attention') { const input = document.getElementById('new-attention-note'), val = input?.value.trim(); if(!val) return; if(!tempAttention) tempAttention = []; tempAttention.unshift({ date: dateStr, text: val, type: document.getElementById('impedimento_tipo_list')?.value || 'Risco' }); if(input) input.value = ''; window.renderAttentionList(); window.setDirty(); } };
-        window.editHistoryItem = function(type, index) { if(type === 'note') { const item = tempNotes[index]; const el = document.getElementById('new-milestone-note'); if(el) el.value = item.text; tempNotes.splice(index, 1); window.renderHistoryLists(); window.setDirty(); } else if(type === 'attention') { const item = tempAttention[index]; const el = document.getElementById('new-attention-note'); if(el) el.value = item.text; window.setAttentionType(item.type); tempAttention.splice(index, 1); window.renderAttentionList(); window.setDirty(); } };
-        window.setAttentionType = function(t) { const listType = document.getElementById('impedimento_tipo_list'); if (listType) listType.value = t; const tr = document.getElementById('toggle-list-risco'), tp = document.getElementById('toggle-list-problema'); if (tr) tr.className = `toggle-btn ${t === 'Risco' ? 'active-risco' : 'inactive'}`; if (tp) tp.className = `toggle-btn ${t === 'Problema' ? 'active-problema' : 'inactive'}`; };
-        window.editProjectByID = function(id) { const p = projects.find(x => x.id === id); if (!p) return; window.switchTab('form'); const elId = document.getElementById('edit-id'); if(elId) elId.value = p.id; document.getElementById('iniciativa').value = p.iniciativa || ''; document.getElementById('prioridade').value = p.prioridade || 'Média'; document.getElementById('tipo_atividade').value = p.tipo_atividade || 'Melhoria'; document.getElementById('time').value = p.time || ''; document.getElementById('frente').value = p.frente || ''; document.getElementById('classificacao').value = p.classificacao || 'Eficiência Operacional'; document.getElementById('esforco').value = p.esforco || 'Intermediário'; document.getElementById('status').value = p.status || 'Backlog'; document.getElementById('data_criacao').value = p.data_criacao || ''; document.getElementById('prazo').value = p.prazo || ''; document.getElementById('nota_inicial').value = p.nota_inicial || ''; document.getElementById('data_conclusao').value = p.data_conclusao || ''; tempNotes = p.notes || []; tempTasks = p.tasks || []; tempAttention = p.attention || []; window.renderHistoryLists(); window.renderTasksList(); window.renderAttentionList(); window.updateStatusUI(p.status); document.querySelectorAll('input[name="responsavel_check"]').forEach(cb => { cb.checked = p.responsavel?.includes(cb.value); }); const btnC = document.getElementById('btn-concluir-quick'); if(btnC) btnC.classList.remove('hidden'); const mC = document.getElementById('metricas-container'); if(mC) { mC.innerHTML = ''; if (p.metricas?.length) p.metricas.forEach(m => window.addMetricaRow(m.label, m.meta, m.real)); else window.addMetricaRow(); } isFormDirty = false; };
-        window.validatePrazo = (i) => { const s = i.value, t = new Date().toISOString().split('T')[0]; if (s && s < t) { i.value = t; } };
-        window.resetForm = () => { document.getElementById('project-form').reset(); document.getElementById('edit-id').value = ''; tempNotes = []; tempTasks = []; tempAttention = []; isFormDirty = false; window.renderHistoryLists(); window.renderTasksList(); window.renderAttentionList(); window.addMetricaRow(); window.updateStatusUI('Backlog'); redirectTargetAfterSave = 'dashboard'; };
+        
+        window.addItemToHistory = function(type) { 
+            const dateStr = new Date().toLocaleDateString('pt-BR'); 
+            if(type === 'note') { 
+                const input = document.getElementById('new-milestone-note'), val = input?.value.trim(); 
+                if(!val) return; 
+                if(!tempNotes) tempNotes = []; 
+                tempNotes.unshift({ date: dateStr, text: val }); 
+                if(input) input.value = ''; 
+                window.renderHistoryLists(); 
+                window.setDirty(); 
+            } else if (type === 'attention') { 
+                const input = document.getElementById('new-attention-note'), val = input?.value.trim(); 
+                if(!val) return; 
+                if(!tempAttention) tempAttention = []; 
+                tempAttention.unshift({ date: dateStr, text: val, type: document.getElementById('impedimento_tipo_list')?.value || 'Risco' }); 
+                if(input) input.value = ''; 
+                window.renderAttentionList(); 
+                window.setDirty(); 
+            } 
+        };
+
+        window.editHistoryItem = function(type, index) { 
+            if(type === 'note') { 
+                const item = tempNotes[index]; 
+                const el = document.getElementById('new-milestone-note'); 
+                if(el) el.value = item.text; 
+                tempNotes.splice(index, 1); 
+                window.renderHistoryLists(); 
+                window.setDirty(); 
+            } else if(type === 'attention') { 
+                const item = tempAttention[index]; 
+                const el = document.getElementById('new-attention-note'); 
+                if(el) el.value = item.text; 
+                window.setAttentionType(item.type); 
+                tempAttention.splice(index, 1); 
+                window.renderAttentionList(); 
+                window.setDirty(); 
+            } 
+        };
+
+        window.setAttentionType = function(t) { 
+            const listType = document.getElementById('impedimento_tipo_list'); 
+            if (listType) listType.value = t; 
+            const tr = document.getElementById('toggle-list-risco'), tp = document.getElementById('toggle-list-problema'); 
+            if (tr) tr.className = `toggle-btn ${t === 'Risco' ? 'active-risco' : 'inactive'}`; 
+            if (tp) tp.className = `toggle-btn ${t === 'Problema' ? 'active-problema' : 'inactive'}`; 
+        };
+
+        window.editProjectByID = function(id) { 
+            const p = projects.find(x => x.id === id); 
+            if (!p) return; 
+            window.switchTab('form'); 
+            const elId = document.getElementById('edit-id'); 
+            if(elId) elId.value = p.id; 
+            document.getElementById('iniciativa').value = p.iniciativa || ''; 
+            document.getElementById('prioridade').value = p.prioridade || 'Média'; 
+            document.getElementById('tipo_atividade').value = p.tipo_atividade || 'Melhoria'; 
+            document.getElementById('time').value = p.time || ''; 
+            document.getElementById('frente').value = p.frente || ''; 
+            document.getElementById('classificacao').value = p.classificacao || 'Eficiência Operacional'; 
+            document.getElementById('esforco').value = p.esforco || 'Intermediário'; 
+            document.getElementById('status').value = p.status || 'Backlog'; 
+            document.getElementById('data_criacao').value = p.data_criacao || ''; 
+            document.getElementById('prazo').value = p.prazo || ''; 
+            document.getElementById('nota_inicial').value = p.nota_inicial || ''; 
+            document.getElementById('data_conclusao').value = p.data_conclusao || ''; 
+            tempNotes = p.notes || []; tempTasks = p.tasks || []; tempAttention = p.attention || []; 
+            window.renderHistoryLists(); window.renderTasksList(); window.renderAttentionList(); 
+            window.updateStatusUI(p.status); 
+            document.querySelectorAll('input[name="responsavel_check"]').forEach(cb => { cb.checked = p.responsavel?.includes(cb.value); }); 
+            const btnC = document.getElementById('btn-concluir-quick'); if(btnC) btnC.classList.remove('hidden'); 
+            const mC = document.getElementById('metricas-container'); 
+            if(mC) { 
+                mC.innerHTML = ''; 
+                if (p.metricas?.length) p.metricas.forEach(m => window.addMetricaRow(m.label, m.meta, m.real)); 
+                else window.addMetricaRow(); 
+            } 
+            isFormDirty = false; 
+        };
+
+        window.validatePrazo = (i) => { 
+            const s = i.value, t = new Date().toISOString().split('T')[0]; 
+            if (s && s < t) { i.value = t; } 
+        };
+
+        window.resetForm = () => { 
+            const form = document.getElementById('project-form');
+            if (form) form.reset(); 
+            const editId = document.getElementById('edit-id');
+            if (editId) editId.value = ''; 
+            tempNotes = []; tempTasks = []; tempAttention = []; 
+            isFormDirty = false; 
+            window.renderHistoryLists(); window.renderTasksList(); window.renderAttentionList(); 
+            window.addMetricaRow(); 
+            window.updateStatusUI('Backlog'); 
+            redirectTargetAfterSave = 'dashboard'; 
+        };
 
         const initAuth = async () => { 
             try { 
@@ -781,20 +954,44 @@
             const metrics = Array.from(document.querySelectorAll('#metricas-container > div')).map(row => ({ label: row.querySelector('.kpi-label').value, meta: row.querySelector('.kpi-meta').value, real: row.querySelector('.kpi-real').value }));
             const id = document.getElementById('edit-id').value, status = document.getElementById('status').value; 
             const data = { iniciativa: document.getElementById('iniciativa').value, tipo_atividade: document.getElementById('tipo_atividade').value, prioridade: document.getElementById('prioridade').value, time: document.getElementById('time').value, frente: document.getElementById('frente').value, classificacao: document.getElementById('classificacao').value, esforco: document.getElementById('esforco').value, status: status, data_criacao: document.getElementById('data_criacao').value, prazo: document.getElementById('prazo').value, nota_inicial: document.getElementById('nota_inicial').value, data_conclusao: status === 'Finalizado' ? document.getElementById('data_conclusao').value : "", justificativa_despriorizacao: status === 'Despriorizado' ? document.getElementById('justificativa_despriorizacao').value : "", notes: tempNotes, tasks: tempTasks, attention: tempAttention, responsavel: responsaveis, metricas: metrics }; 
-            try { if (id) await updateDoc(doc(db, 'artifacts', appId, 'public', 'data', 'projects', id), data); else await addDoc(collection(db, 'artifacts', appId, 'public', 'data', 'projects'), data); isFormDirty = false; window.switchTab(redirectTargetAfterSave); } catch (err) { console.error(err); } 
+            try { 
+                if (id) await updateDoc(doc(db, 'artifacts', appId, 'public', 'data', 'projects', id), data); 
+                else await addDoc(collection(db, 'artifacts', appId, 'public', 'data', 'projects'), data); 
+                isFormDirty = false; 
+                window.switchTab(redirectTargetAfterSave); 
+            } catch (err) { 
+                console.error(err); 
+            } 
         };
 
         const setup = () => {
             const grid = document.getElementById('responsaveis-grid'); if(grid) grid.innerHTML = '';
-            defaultTeam.sort().forEach(n => { window.renderAnalistaCheckbox(n); ['dash', 'list', 'archive'].forEach(p => { const el = document.getElementById(`${p}-filter-analista`); if(el) el.add(new Option(n, n)); }); });
-            defaultAreas.sort().forEach(a => { ['time', 'dash-filter-area', 'list-filter-area', 'archive-filter-area'].forEach(id => { const el = document.getElementById(id); if(el) el.add(new Option(a, a)); }); });
-            defaultFrentes.sort().forEach(f => { ['frente', 'dash-filter-frente', 'list-filter-frente', 'archive-filter-frente'].forEach(id => { const el = document.getElementById(id); if(el) el.add(new Option(f, f)); }); });
+            defaultTeam.sort().forEach(n => { 
+                window.renderAnalistaCheckbox(n); 
+                ['dash', 'list', 'archive'].forEach(p => { 
+                    const el = document.getElementById(`${p}-filter-analista`); 
+                    if(el) el.add(new Option(n, n)); 
+                }); 
+            });
+            defaultAreas.sort().forEach(a => { 
+                ['time', 'dash-filter-area', 'list-filter-area', 'archive-filter-area'].forEach(id => { 
+                    const el = document.getElementById(id); 
+                    if(el) el.add(new Option(a, a)); 
+                }); 
+            });
+            defaultFrentes.sort().forEach(f => { 
+                ['frente', 'dash-filter-frente', 'list-filter-frente', 'archive-filter-frente'].forEach(id => { 
+                    const el = document.getElementById(id); 
+                    if(el) el.add(new Option(f, f)); 
+                }); 
+            });
             window.addMetricaRow();
         };
 
         onAuthStateChanged(auth, u => { 
             user = u; if (user) { 
-                document.getElementById('sync-indicator')?.classList.remove('hidden'); 
+                const indicator = document.getElementById('sync-indicator');
+                if (indicator) indicator.classList.remove('hidden'); 
                 onSnapshot(collection(db, 'artifacts', appId, 'public', 'data', 'projects'), snap => { 
                     projects = snap.docs.map(doc => ({ id: doc.id, ...doc.data() })); 
                     window.refreshUI(); 

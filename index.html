@@ -653,7 +653,7 @@
             
             if(activeTab === 'dashboard') {
                 const bG = document.getElementById('grid-backlog'), aG = document.getElementById('grid-andamento');
-                if(bG && aG) { bG.innerHTML = ''; aG.innerHTML = ''; filtered.filter(p => p.status === 'Backlog').forEach(p => bG.innerHTML += createProjectCard(p, today)); filtered.filter(p => p.status === 'Em Andamento').forEach(p => aG.innerHTML += createProjectCard(p, today)); if(document.getElementById('count-backlog')) document.getElementById('count-backlog').innerText = filtered.filter(p => p.status === 'Backlog').length; if(document.getElementById('count-andamento')) document.getElementById('count-andamento').innerText = filtered.filter(p => p.status === 'Em Andamento').length; }
+                if(bG && aG) { bG.innerHTML = ''; aG.innerHTML = ''; filtered.filter(p => p.status === 'Backlog').forEach(p => bG.innerHTML += createProjectCard(p, today)); filtered.filter(p => p.status === 'Em Andamento').forEach(p => aG.innerHTML += createProjectCard(p, today)); document.getElementById('count-backlog').innerText = filtered.filter(p => p.status === 'Backlog').length; document.getElementById('count-andamento').innerText = filtered.filter(p => p.status === 'Em Andamento').length; }
             }
             if(activeTab === 'archive') {
                 const fG = document.getElementById('grid-finalizado'), dG = document.getElementById('grid-despriorizado');
@@ -762,9 +762,8 @@
             document.querySelectorAll('nav button').forEach(btn => {
                 if (btn) {
                     btn.classList.remove('active-tab');
-                    // Check button text as safety since IDs might be different
-                    const btnId = btn.id || '';
-                    if (btnId === `tab-${t}`) btn.classList.add('active-tab');
+                    const tabId = btn.id || '';
+                    if (tabId === `tab-${t}`) btn.classList.add('active-tab');
                 }
             });
 
@@ -884,7 +883,8 @@
         };
 
         onAuthStateChanged(auth, u => { 
-            user = u; if (user) { 
+            user = u; 
+            if (user) { 
                 const indicator = document.getElementById('sync-indicator');
                 if (indicator) indicator.classList.remove('hidden'); 
                 onSnapshot(collection(db, 'artifacts', appId, 'public', 'data', 'projects'), snap => { 
@@ -895,7 +895,10 @@
                     console.error("Snapshot Error:", error); 
                     window.hideOverlay(); 
                 }); 
-            } 
+            } else {
+                // If not logged in, we still need to hide overlay eventually
+                hideOverlay();
+            }
         });
 
         initAuth(); setup();

@@ -570,7 +570,7 @@
                 console.warn("Safety timeout triggered to hide loading overlay.");
                 hideOverlay();
             }
-        }, 8000);
+        }, 5000);
 
         function getBusinessDays(start, end) { let count = 0; let cur = new Date(start); const target = new Date(end); while (cur <= target) { if (cur.getDay() !== 0 && cur.getDay() !== 6) count++; cur.setDate(cur.getDate() + 1); } return count; }
         function setDirty() { isFormDirty = true; }
@@ -624,7 +624,7 @@
             const activeTabElement = Array.from(document.querySelectorAll('nav button')).find(b => b.classList.contains('active-tab'));
             if (!activeTabElement) return;
             
-            const activeTab = activeTabElement.id.split('-')[1];
+            const activeTab = activeTabElement.innerText.toLowerCase() === 'dash' ? 'dashboard' : activeTabElement.innerText.toLowerCase() === 'novo' ? 'form' : activeTabElement.innerText.toLowerCase() === 'projetos' ? 'list' : 'archive';
             const prefix = activeTab === 'dashboard' ? 'dash' : activeTab === 'list' ? 'list' : 'archive';
             
             const fAnalista = document.getElementById(`${prefix}-filter-analista`)?.value || '';
@@ -748,7 +748,8 @@
         };
 
         window.switchTab = (t) => {
-            ['dashboard', 'form', 'list', 'archive'].forEach(v => {
+            const views = ['dashboard', 'form', 'list', 'archive'];
+            views.forEach(v => {
                 const el = document.getElementById('view-' + v);
                 if (el) el.classList.add('hidden');
             });
@@ -756,10 +757,8 @@
             if (target) target.classList.remove('hidden');
 
             document.querySelectorAll('nav button').forEach(btn => {
-                if (btn) {
-                    btn.classList.remove('active-tab');
-                    if (btn.id === `tab-${t}`) btn.classList.add('active-tab');
-                }
+                btn.classList.remove('active-tab');
+                if (btn.id === `tab-${t}`) btn.classList.add('active-tab');
             });
 
             if (t !== 'form') window.resetForm();
@@ -790,7 +789,6 @@
             window.updateStatusUI('Finalizado'); 
             window.closeFinishModal(); 
             
-            // Auto save and move to archive
             redirectTargetAfterSave = 'archive';
             const form = document.getElementById('project-form');
             if (form) form.dispatchEvent(new Event('submit', { cancelable: true }));
@@ -798,138 +796,21 @@
 
         window.exportToXLS = () => { let csv = "\uFEFFIniciativa;Área;Classificação;Responsáveis;Estimado;Status\n"; projects.forEach(p => { const resps = Array.isArray(p.responsavel) ? p.responsavel.join(', ') : p.responsavel; csv += `${p.iniciativa};${p.time};${p.classificacao};${resps};${p.prazo};${p.status}\n`; }); const blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' }); const link = document.createElement("a"); link.href = URL.createObjectURL(blob); link.setAttribute("download", `Projetos_Unico_${new Date().toLocaleDateString()}.csv`); document.body.appendChild(link); link.click(); document.body.removeChild(link); };
         window.exportPDF = () => { window.print(); };
-        
-        window.openDeleteModal = (id) => { 
-            projectToDeleteId = id; 
-            const modal = document.getElementById('delete-modal');
-            if (modal) modal.style.display = 'flex'; 
-        };
-
-        window.closeDeleteModal = () => { 
-            projectToDeleteId = null; 
-            const modal = document.getElementById('delete-modal');
-            if (modal) modal.style.display = 'none'; 
-        };
-
+        window.openDeleteModal = (id) => { projectToDeleteId = id; const modal = document.getElementById('delete-modal'); if (modal) modal.style.display = 'flex'; };
+        window.closeDeleteModal = () => { projectToDeleteId = null; const modal = document.getElementById('delete-modal'); if (modal) modal.style.display = 'none'; };
         window.confirmDelete = async () => { if(projectToDeleteId && user) { await deleteDoc(doc(db, 'artifacts', appId, 'public', 'data', 'projects', projectToDeleteId)); window.closeDeleteModal(); refreshUI(); } };
-        
-        window.openAddModal = (target) => { 
-            currentTargetField = target; 
-            const title = document.getElementById('add-item-title');
-            if(title) title.innerText = "Adicionar: " + target; 
-            const modal = document.getElementById('add-item-modal');
-            if(modal) modal.style.display = 'flex'; 
-        };
-
-        window.closeAddModal = () => { 
-            const modal = document.getElementById('add-item-modal');
-            if(modal) modal.style.display = 'none'; 
-            const input = document.getElementById('new-item-input');
-            if(input) input.value = ''; 
-        };
-
+        window.openAddModal = (target) => { currentTargetField = target; const title = document.getElementById('add-item-title'); if(title) title.innerText = "Adicionar: " + target; const modal = document.getElementById('add-item-modal'); if(modal) modal.style.display = 'flex'; };
+        window.closeAddModal = () => { const modal = document.getElementById('add-item-modal'); if(modal) modal.style.display = 'none'; const input = document.getElementById('new-item-input'); if(input) input.value = ''; };
         window.processAddItem = () => { const val = document.getElementById('new-item-input')?.value.trim(); if(!val) return; if(currentTargetField === 'analista') { renderAnalistaCheckbox(val, true); } else { const el = document.getElementById(currentTargetField); if(el) el.add(new Option(val, val, true, true)); } window.closeAddModal(); };
         window.addTaskToProject = () => { const input = document.getElementById('new-task-input'); const val = input?.value.trim(); if(!val) return; if(!tempTasks) tempTasks = []; tempTasks.push({ id: Date.now(), text: val, completed: false }); if(input) input.value = ''; window.renderTasksList(); window.setDirty(); };
         window.toggleTaskStatus = (id) => { tempTasks = tempTasks.map(t => t.id === id ? {...t, completed: !t.completed} : t); window.renderTasksList(); window.setDirty(); };
         window.removeTaskFromProject = (id) => { tempTasks = tempTasks.filter(t => t.id !== id); window.renderTasksList(); window.setDirty(); };
-        
-        window.addItemToHistory = function(type) { 
-            const dateStr = new Date().toLocaleDateString('pt-BR'); 
-            if(type === 'note') { 
-                const input = document.getElementById('new-milestone-note'), val = input?.value.trim(); 
-                if(!val) return; 
-                if(!tempNotes) tempNotes = []; 
-                tempNotes.unshift({ date: dateStr, text: val }); 
-                if(input) input.value = ''; 
-                window.renderHistoryLists(); 
-                window.setDirty(); 
-            } else if (type === 'attention') { 
-                const input = document.getElementById('new-attention-note'), val = input?.value.trim(); 
-                if(!val) return; 
-                if(!tempAttention) tempAttention = []; 
-                tempAttention.unshift({ date: dateStr, text: val, type: document.getElementById('impedimento_tipo_list')?.value || 'Risco' }); 
-                if(input) input.value = ''; 
-                window.renderAttentionList(); 
-                window.setDirty(); 
-            } 
-        };
-
-        window.editHistoryItem = function(type, index) { 
-            if(type === 'note') { 
-                const item = tempNotes[index]; 
-                const el = document.getElementById('new-milestone-note'); 
-                if(el) el.value = item.text; 
-                tempNotes.splice(index, 1); 
-                window.renderHistoryLists(); 
-                window.setDirty(); 
-            } else if(type === 'attention') { 
-                const item = tempAttention[index]; 
-                const el = document.getElementById('new-attention-note'); 
-                if(el) el.value = item.text; 
-                window.setAttentionType(item.type); 
-                tempAttention.splice(index, 1); 
-                window.renderAttentionList(); 
-                window.setDirty(); 
-            } 
-        };
-
-        window.setAttentionType = function(t) { 
-            const listType = document.getElementById('impedimento_tipo_list'); 
-            if (listType) listType.value = t; 
-            const tr = document.getElementById('toggle-list-risco'), tp = document.getElementById('toggle-list-problema'); 
-            if (tr) tr.className = `toggle-btn ${t === 'Risco' ? 'active-risco' : 'inactive'}`; 
-            if (tp) tp.className = `toggle-btn ${t === 'Problema' ? 'active-problema' : 'inactive'}`; 
-        };
-
-        window.editProjectByID = function(id) { 
-            const p = projects.find(x => x.id === id); 
-            if (!p) return; 
-            window.switchTab('form'); 
-            const elId = document.getElementById('edit-id'); 
-            if(elId) elId.value = p.id; 
-            document.getElementById('iniciativa').value = p.iniciativa || ''; 
-            document.getElementById('prioridade').value = p.prioridade || 'Média'; 
-            document.getElementById('tipo_atividade').value = p.tipo_atividade || 'Melhoria'; 
-            document.getElementById('time').value = p.time || ''; 
-            document.getElementById('frente').value = p.frente || ''; 
-            document.getElementById('classificacao').value = p.classificacao || 'Eficiência Operacional'; 
-            document.getElementById('esforco').value = p.esforco || 'Intermediário'; 
-            document.getElementById('status').value = p.status || 'Backlog'; 
-            document.getElementById('data_criacao').value = p.data_criacao || ''; 
-            document.getElementById('prazo').value = p.prazo || ''; 
-            document.getElementById('nota_inicial').value = p.nota_inicial || ''; 
-            document.getElementById('data_conclusao').value = p.data_conclusao || ''; 
-            tempNotes = p.notes || []; tempTasks = p.tasks || []; tempAttention = p.attention || []; 
-            window.renderHistoryLists(); window.renderTasksList(); window.renderAttentionList(); 
-            window.updateStatusUI(p.status); 
-            document.querySelectorAll('input[name="responsavel_check"]').forEach(cb => { cb.checked = p.responsavel?.includes(cb.value); }); 
-            const btnC = document.getElementById('btn-concluir-quick'); if(btnC) btnC.classList.remove('hidden'); 
-            const mC = document.getElementById('metricas-container'); 
-            if(mC) { 
-                mC.innerHTML = ''; 
-                if (p.metricas?.length) p.metricas.forEach(m => window.addMetricaRow(m.label, m.meta, m.real)); 
-                else window.addMetricaRow(); 
-            } 
-            isFormDirty = false; 
-        };
-
-        window.validatePrazo = (i) => { 
-            const s = i.value, t = new Date().toISOString().split('T')[0]; 
-            if (s && s < t) { i.value = t; } 
-        };
-
-        window.resetForm = () => { 
-            const form = document.getElementById('project-form');
-            if (form) form.reset(); 
-            const editId = document.getElementById('edit-id');
-            if (editId) editId.value = ''; 
-            tempNotes = []; tempTasks = []; tempAttention = []; 
-            isFormDirty = false; 
-            window.renderHistoryLists(); window.renderTasksList(); window.renderAttentionList(); 
-            window.addMetricaRow(); 
-            window.updateStatusUI('Backlog'); 
-            redirectTargetAfterSave = 'dashboard'; 
-        };
+        window.addItemToHistory = function(type) { const dateStr = new Date().toLocaleDateString('pt-BR'); if(type === 'note') { const input = document.getElementById('new-milestone-note'), val = input?.value.trim(); if(!val) return; if(!tempNotes) tempNotes = []; tempNotes.unshift({ date: dateStr, text: val }); if(input) input.value = ''; window.renderHistoryLists(); window.setDirty(); } else if (type === 'attention') { const input = document.getElementById('new-attention-note'), val = input?.value.trim(); if(!val) return; if(!tempAttention) tempAttention = []; tempAttention.unshift({ date: dateStr, text: val, type: document.getElementById('impedimento_tipo_list')?.value || 'Risco' }); if(input) input.value = ''; window.renderAttentionList(); window.setDirty(); } };
+        window.editHistoryItem = function(type, index) { if(type === 'note') { const item = tempNotes[index]; const el = document.getElementById('new-milestone-note'); if(el) el.value = item.text; tempNotes.splice(index, 1); window.renderHistoryLists(); window.setDirty(); } else if(type === 'attention') { const item = tempAttention[index]; const el = document.getElementById('new-attention-note'); if(el) el.value = item.text; window.setAttentionType(item.type); tempAttention.splice(index, 1); window.renderAttentionList(); window.setDirty(); } };
+        window.setAttentionType = function(t) { const listType = document.getElementById('impedimento_tipo_list'); if (listType) listType.value = t; const tr = document.getElementById('toggle-list-risco'), tp = document.getElementById('toggle-list-problema'); if (tr) tr.className = `toggle-btn ${t === 'Risco' ? 'active-risco' : 'inactive'}`; if (tp) tp.className = `toggle-btn ${t === 'Problema' ? 'active-problema' : 'inactive'}`; };
+        window.editProjectByID = function(id) { const p = projects.find(x => x.id === id); if (!p) return; window.switchTab('form'); const elId = document.getElementById('edit-id'); if(elId) elId.value = p.id; document.getElementById('iniciativa').value = p.iniciativa || ''; document.getElementById('prioridade').value = p.prioridade || 'Média'; document.getElementById('tipo_atividade').value = p.tipo_atividade || 'Melhoria'; document.getElementById('time').value = p.time || ''; document.getElementById('frente').value = p.frente || ''; document.getElementById('classificacao').value = p.classificacao || 'Eficiência Operacional'; document.getElementById('esforco').value = p.esforco || 'Intermediário'; document.getElementById('status').value = p.status || 'Backlog'; document.getElementById('data_criacao').value = p.data_criacao || ''; document.getElementById('prazo').value = p.prazo || ''; document.getElementById('nota_inicial').value = p.nota_inicial || ''; document.getElementById('data_conclusao').value = p.data_conclusao || ''; tempNotes = p.notes || []; tempTasks = p.tasks || []; tempAttention = p.attention || []; window.renderHistoryLists(); window.renderTasksList(); window.renderAttentionList(); window.updateStatusUI(p.status); document.querySelectorAll('input[name="responsavel_check"]').forEach(cb => { cb.checked = p.responsavel?.includes(cb.value); }); const btnC = document.getElementById('btn-concluir-quick'); if(btnC) btnC.classList.remove('hidden'); const mC = document.getElementById('metricas-container'); if(mC) { mC.innerHTML = ''; if (p.metricas?.length) p.metricas.forEach(m => window.addMetricaRow(m.label, m.meta, m.real)); else window.addMetricaRow(); } isFormDirty = false; };
+        window.validatePrazo = (i) => { const s = i.value, t = new Date().toISOString().split('T')[0]; if (s && s < t) { i.value = t; } };
+        window.resetForm = () => { const form = document.getElementById('project-form'); if (form) form.reset(); const editId = document.getElementById('edit-id'); if (editId) editId.value = ''; tempNotes = []; tempTasks = []; tempAttention = []; isFormDirty = false; window.renderHistoryLists(); window.renderTasksList(); window.renderAttentionList(); window.addMetricaRow(); window.updateStatusUI('Backlog'); redirectTargetAfterSave = 'dashboard'; };
 
         const initAuth = async () => { 
             try { 
@@ -939,6 +820,7 @@
                     await signInAnonymously(auth); 
                 } 
             } catch (e) { 
+                console.error("Auth Error:", e);
                 window.hideOverlay(); 
             } 
         };
@@ -961,6 +843,7 @@
                 window.switchTab(redirectTargetAfterSave); 
             } catch (err) { 
                 console.error(err); 
+                window.hideOverlay();
             } 
         };
 
@@ -997,7 +880,7 @@
                     window.refreshUI(); 
                     window.hideOverlay(); 
                 }, error => { 
-                    console.error(error); 
+                    console.error("Snapshot Error:", error); 
                     window.hideOverlay(); 
                 }); 
             } 

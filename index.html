@@ -1,880 +1,1760 @@
 <!DOCTYPE html>
+
 <html lang="pt-pt">
+
 <head>
+
     <meta charset="UTF-8">
+
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
     <title>Gestão de Eficiência Pro - Unico</title>
+
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Nunito+Sans:wght@300;400;600;700;800;900&display=swap" rel="stylesheet">
+
     <script src="https://cdn.tailwindcss.com"></script>
+
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
     <script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-datalabels@2.0.0"></script>
+
     <style>
+
         :root {
+
             --primary-color: #000a28;
+
             --accent-color: #00e5ff;
+
             --success-color: #10b981;
+
             --bg-body: #f8fafc;
+
             --color-backlog: #94a3b8;
+
             --color-andamento: #fabd23;
+
             --color-finalizado: #10b981;
+
             --color-despriorizado: #ef4444;
+
             --u-azul: #00A5FF;
+
             --u-rosa: #FF1A5C;
+
             --u-purpura: #A35F9D;
+
             --u-roxo: #8D7AD2;
+
             --u-verde: #32B77E;
+
             --u-azul-pay: #5C86C4;
+
             --u-azul-escuro: #070047;
+
             --u-cinza: #333333;
+
         }
+
         body {
+
             font-family: 'Nunito Sans', sans-serif;
+
             background-color: var(--bg-body);
+
             color: var(--primary-color);
+
             -webkit-font-smoothing: antialiased;
+
         }
+
         .input-premium {
+
             background-color: #ffffff;
+
             border: 1px solid #e2e8f0;
+
             border-radius: 12px;
+
             padding: 0.65rem 1rem;
+
             transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+
             outline: none;
+
             font-weight: 600;
+
             font-size: 0.85rem;
+
             width: 100%;
+
         }
+
         .input-premium:focus {
+
             border-color: var(--accent-color);
+
             box-shadow: 0 0 0 4px rgba(0, 229, 255, 0.08);
+
         }
+
         .label-forte {
+
             font-size: 0.7rem;
+
             font-weight: 800;
+
             text-transform: uppercase;
+
             letter-spacing: 0.1em;
+
             color: #64748b;
+
             margin-bottom: 0.6rem;
+
             display: block;
+
         }
+
         .active-tab {
+
             color: var(--primary-color);
+
             border-bottom: 3px solid var(--accent-color);
+
             font-weight: 900;
+
         }
+
         .kpi-card {
+
             background: white;
+
             padding: 1.5rem 1rem;
+
             border-radius: 1.5rem;
+
             border: 1px solid #e2e8f0;
+
             display: flex;
+
             flex-direction: column;
+
             justify-content: center;
+
             text-align: center;
+
             gap: 0.4rem;
+
             box-shadow: 0 4px 6px -1px rgba(0,0,0,0.02);
+
         }
+
         .form-section-box {
+
             background: #ffffff;
+
             border: 1px solid #e2e8f0;
+
             border-radius: 24px;
+
             padding: 1.5rem;
+
             margin-bottom: 1.5rem;
+
             box-shadow: 0 1px 3px rgba(0,0,0,0.02);
+
         }
+
         @media (min-width: 768px) { .form-section-box { padding: 2.5rem; } }
+
         .checkbox-item {
+
             display: flex;
+
             align-items: center;
+
             gap: 1.25rem;
+
             padding: 0.85rem 1rem;
+
             border-radius: 12px;
+
             cursor: pointer;
+
             transition: all 0.2s;
+
             background: #fff;
+
             border: 1px solid #f1f5f9;
+
         }
+
         .checkbox-item:hover { background: #f8fafc; border-color: #e2e8f0; }
+
         .checkbox-item input[type="checkbox"] {
+
             appearance: none;
+
             width: 20px;
+
             height: 20px;
+
             border: 2px solid #cbd5e1;
+
             border-radius: 6px;
+
             cursor: pointer;
+
             position: relative;
+
             background: white;
+
             flex-shrink: 0;
+
             transition: all 0.2s;
+
         }
+
         .checkbox-item input[type="checkbox"]:checked {
+
             background-color: var(--accent-color);
+
             border-color: var(--accent-color);
+
         }
+
         .checkbox-item input[type="checkbox"]:checked::after {
+
             content: '✓';
+
             position: absolute;
+
             color: #000a28;
+
             font-size: 14px;
+
             font-weight: 900;
+
             left: 50%; top: 45%; transform: translate(-50%, -50%);
+
         }
+
         .checkbox-item span { font-size: 0.85rem; font-weight: 700; color: #334155; }
+
         .toggle-btn {
+
             padding: 8px 16px;
+
             border-radius: 12px;
+
             font-size: 10px;
+
             font-weight: 800;
+
             text-transform: uppercase;
+
             border: 2px solid transparent;
+
             transition: all 0.2s;
+
             cursor: pointer;
+
         }
+
         .toggle-btn.active-risco { background: #fef3c7; border-color: #fbbf24; color: #92400e; }
+
         .toggle-btn.active-problema { background: #fee2e2; border-color: #ef4444; color: #991b1b; }
+
         .toggle-btn.inactive { background: #f8fafc; color: #94a3b8; border-color: #e2e8f0; }
+
         .card-project { background: white; border-radius: 24px; border: 1px solid #e2e8f0; transition: all 0.3s ease; border-top-width: 12px; }
+
         .status-pill { 
+
             font-size: 0.6rem; 
+
             font-weight: 900; 
+
             padding: 4px 12px; 
+
             border-radius: 100px; 
+
             text-transform: uppercase; 
+
             white-space: nowrap; 
+
             display: inline-flex; 
+
             align-items: center; 
+
             justify-content: center;
+
             min-width: 110px;
+
             height: 24px;
+
         }
+
         .btn-add-item { display: inline-flex; align-items: center; justify-content: center; width: 22px; height: 22px; background: #f1f5f9; color: #64748b; border-radius: 6px; font-size: 14px; font-weight: bold; cursor: pointer; transition: all 0.2s; margin-left: 8px; }
+
         .progress-container { width: 100%; background-color: #e2e8f0; border-radius: 999px; height: 8px; overflow: hidden; margin-top: 10px; }
+
         .progress-bar-fill { height: 100%; background-color: var(--success-color); transition: width 0.4s cubic-bezier(0.4, 0, 0.2, 1); }
+
         .history-entry p { white-space: pre-wrap; word-wrap: break-word; }
+
         .history-entry { padding: 0.75rem; background-color: #f8fafc; border-radius: 1rem; border: 1px solid #f1f5f9; margin-bottom: 0.5rem; }
+
         .task-item { display: flex; align-items: center; gap: 0.75rem; padding: 0.5rem 0.75rem; background: #fff; border: 1px solid #f1f5f9; border-radius: 10px; margin-bottom: 0.5rem; }
+
         .task-item input[type="checkbox"] { width: 1.1rem; height: 1.1rem; accent-color: var(--success-color); cursor: pointer; }
+
         .column-board { background: rgba(226, 232, 240, 0.3); border-radius: 1.5rem; padding: 1.25rem; min-height: 400px; height: fit-content; }
+
         .modal-overlay { position: fixed; inset: 0; background: rgba(0, 10, 40, 0.5); backdrop-filter: blur(8px); display: none; align-items: center; justify-content: center; z-index: 10000; }
+
         .modal-content { background: white; padding: 2rem; border-radius: 2rem; width: 90%; max-width: 450px; box-shadow: 0 25px 50px -12px rgba(0,0,0,0.25); }
+
         
+
         /* Badge de Contagem - Design System */
+
         .count-badge {
+
             padding: 2px 8px;
+
             border-radius: 999px;
+
             font-size: 10px;
+
             font-weight: 900;
+
             min-width: 24px;
+
             text-align: center;
+
         }
+
+
 
         .drop-zone {
+
             border: 2px dashed #cbd5e1;
+
             border-radius: 20px;
+
             padding: 2.5rem;
+
             text-align: center;
+
             cursor: pointer;
+
             transition: all 0.2s;
+
             background: #fcfdfe;
+
         }
+
         .drop-zone:hover, .drop-zone.drag-over { border-color: var(--accent-color); background: rgba(0, 229, 255, 0.05); }
+
         @media print {
+
             .no-print { display: none !important; }
+
             body { background: white; padding: 0; }
+
             .form-section-box { border: 1px solid #eee; break-inside: avoid; }
+
         }
+
     </style>
+
 </head>
+
 <body class="min-h-screen">
+
     <div id="loading-overlay" style="position: fixed; inset: 0; background: var(--primary-color); display: flex; flex-direction: column; align-items: center; justify-content: center; z-index: 10000; color: white; transition: opacity 0.5s;">
+
         <img src="https://cloudfilesdm.com/postcards/unico-color__1-878cebbc.png" class="w-24 md:w-32 mb-8 invert" alt="Unico">
+
         <div class="w-10 h-10 border-4 border-slate-700 border-t-cyan-400 rounded-full animate-spin"></div>
+
         <p class="text-[10px] uppercase font-black tracking-widest mt-4 opacity-50">Sincronizando ambiente...</p>
+
     </div>
+
+
 
     <!-- MODAL CONFIRMAÇÃO SAÍDA -->
+
     <div id="confirm-exit-modal" class="modal-overlay">
+
         <div class="modal-content text-center text-slate-800">
+
             <div class="w-16 h-16 bg-amber-50 text-amber-500 rounded-full flex items-center justify-center mx-auto mb-6">
+
                 <svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8 text-amber-500" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" /></svg>
+
             </div>
+
             <h3 class="text-xl md:text-2xl font-black mb-2 uppercase tracking-tighter text-slate-800">Alterações não salvas</h3>
+
             <p class="text-slate-500 mb-8 font-medium text-sm">Tens alterações pendentes na Ficha Técnica. Deseja salvar o progresso antes de sair?</p>
+
             <div class="flex flex-col sm:flex-row gap-3">
+
                 <button onclick="window.saveAndExit()" class="flex-1 bg-slate-900 text-white py-3.5 rounded-2xl font-black uppercase text-[11px] tracking-widest hover:bg-slate-800 transition-all">Salvar e Sair</button>
+
                 <button onclick="window.discardAndExit()" class="flex-1 bg-slate-100 text-slate-500 py-3.5 rounded-2xl font-black uppercase text-[11px] tracking-widest hover:bg-slate-200 transition-all">Descartar</button>
+
             </div>
+
         </div>
+
     </div>
+
+
 
     <div id="finish-confirm-modal" class="modal-overlay">
+
         <div class="modal-content text-center text-slate-800">
+
             <div class="w-16 h-16 bg-emerald-50 text-emerald-500 rounded-full flex items-center justify-center mx-auto mb-6">
+
                 <svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8 text-emerald-500" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" /></svg>
+
             </div>
+
             <h3 class="text-xl md:text-2xl font-black mb-2 uppercase tracking-tighter text-slate-800">Finalizar Projeto?</h3>
+
             <p class="text-slate-500 mb-8 font-medium text-sm">Deseja concluir esta iniciativa agora? O status será alterado para Finalizado.</p>
+
             <div class="flex flex-col sm:flex-row gap-3">
+
                 <button onclick="window.confirmFinalization()" class="flex-1 bg-emerald-500 text-white py-3.5 rounded-2xl font-black uppercase text-[11px] tracking-widest hover:bg-emerald-600 transition-all">Sim, Concluir</button>
+
                 <button onclick="window.closeFinishModal()" class="flex-1 bg-slate-100 text-slate-500 py-3.5 rounded-2xl font-black uppercase text-[11px] tracking-widest hover:bg-slate-200 transition-all">Cancelar</button>
+
             </div>
+
         </div>
+
     </div>
+
+
 
     <div id="delete-modal" class="modal-overlay">
+
         <div class="modal-content text-center text-slate-800">
+
             <h3 class="text-xl md:text-2xl font-black mb-2 uppercase tracking-tighter text-slate-800">Excluir Iniciativa?</h3>
+
             <p class="text-slate-500 mb-8 font-medium text-sm">A remoção será permanente.</p>
+
             <div class="flex flex-col sm:flex-row gap-3">
+
                 <button onclick="window.confirmDelete()" class="flex-1 bg-red-500 text-white py-3.5 rounded-2xl font-black uppercase text-[11px] tracking-widest hover:bg-red-600 transition-all">Confirmar</button>
+
                 <button onclick="window.closeDeleteModal()" class="flex-1 bg-slate-100 text-slate-500 py-3.5 rounded-2xl font-black uppercase text-[11px] tracking-widest hover:bg-slate-200 transition-all">Cancelar</button>
+
             </div>
+
         </div>
+
     </div>
+
+
 
     <div id="add-item-modal" class="modal-overlay">
+
         <div class="modal-content">
+
             <h3 id="add-item-title" class="text-xl font-black mb-6 uppercase tracking-tighter text-slate-800">Adicionar Opção</h3>
+
             <input type="text" id="new-item-input" class="input-premium mb-8 text-slate-800" placeholder="Digite o nome...">
+
             <div class="flex gap-3">
+
                 <button onclick="window.processAddItem()" class="flex-1 bg-slate-900 text-white py-3.5 rounded-2xl font-black uppercase text-[11px] tracking-widest shadow-xl hover:bg-slate-800 transition-all">Adicionar</button>
+
                 <button onclick="window.closeAddModal()" class="flex-1 bg-slate-100 text-slate-500 py-3.5 rounded-2xl font-black uppercase text-[11px] tracking-widest transition-all">Sair</button>
+
             </div>
+
         </div>
+
     </div>
 
+
+
     <header class="bg-white border-b border-slate-100 sticky top-0 z-50 no-print">
+
         <div class="max-w-7xl mx-auto px-4 md:px-8 h-16 md:h-20 flex justify-between items-center">
+
             <div class="flex items-center gap-4 md:gap-8">
+
                 <img src="https://cloudfilesdm.com/postcards/unico-color__1-878cebbc.png" class="h-6" alt="Unico Logo">
+
                 <div id="sync-indicator" class="hidden sm:flex items-center gap-2 px-3 md:px-4 py-1.5 bg-green-50 rounded-full border border-green-100">
+
                     <span class="w-1.5 h-1.5 rounded-full bg-green-500 animate-pulse"></span>
+
                     <span class="text-[8px] md:text-[10px] font-black text-green-600 uppercase tracking-widest">Tempo Real</span>
+
                 </div>
+
             </div>
+
             <nav class="flex gap-4 md:gap-10 h-full items-center text-[9px] md:text-[11px] font-bold uppercase tracking-widest text-slate-400">
+
                 <button onclick="window.trySwitchTab('dashboard')" id="tab-dashboard" class="h-full px-1 md:px-2 active-tab transition-all">Dash</button>
+
                 <button onclick="window.trySwitchTab('form')" id="tab-form" class="h-full px-1 md:px-2 hover:text-slate-900 transition-all">Novo</button>
+
                 <button onclick="window.trySwitchTab('list')" id="tab-list" class="h-full px-1 md:px-2 hover:text-slate-900 transition-all">Projetos</button>
+
                 <button onclick="window.trySwitchTab('archive')" id="tab-archive" class="h-full px-1 md:px-2 hover:text-slate-900 transition-all">Arquivo</button>
+
             </nav>
+
         </div>
+
     </header>
 
+
+
     <main class="max-w-7xl mx-auto p-4 md:p-8 mt-2 md:mt-4">
+
         <!-- VIEW DASHBOARD -->
+
         <div id="view-dashboard" class="block no-print">
+
             <div class="mb-8 md:mb-12 flex flex-col xl:flex-row xl:items-end justify-between gap-6">
+
                 <div>
+
                     <h1 class="text-2xl md:text-4xl font-black tracking-tighter uppercase leading-none text-slate-900">Estratégia & Operação</h1>
+
                     <p class="text-slate-400 text-[10px] md:text-xs font-bold uppercase mt-2 md:mt-3 tracking-widest">Painel de Decisões e Eficiência</p>
+
                 </div>
+
                 <div class="flex flex-wrap gap-2 md:gap-3 items-center">
+
                     <input type="text" id="search-dash" class="input-premium !py-1.5 !px-3 !text-[10px] !w-40 shadow-sm" placeholder="Buscar projeto..." oninput="window.refreshUI()">
+
                     <select id="dash-filter-period" class="input-premium !py-1.5 !px-3 !text-[10px] !w-auto shadow-sm" onchange="window.refreshUI()">
+
                         <option value="all">Todo o Período</option><option value="mes">Mensal</option><option value="trimestre">Trimestral</option><option value="ano">Anual</option>
+
                     </select>
+
                     <select id="dash-filter-analista" class="input-premium !py-1.5 !px-3 !text-[10px] !w-auto shadow-sm" onchange="window.refreshUI()">
+
                         <option value="">Analistas (Todos)</option>
+
                     </select>
+
                     <select id="dash-filter-area" class="input-premium !py-1.5 !px-3 !text-[10px] !w-auto shadow-sm" onchange="window.refreshUI()">
+
                         <option value="">Áreas (Todas)</option>
+
                     </select>
+
                     <select id="dash-filter-frente" class="input-premium !py-1.5 !px-3 !text-[10px] !w-auto shadow-sm" onchange="window.refreshUI()">
+
                         <option value="">Frentes (Todas)</option>
+
                     </select>
+
                     <select id="dash-filter-classificacao" class="input-premium !py-1.5 !px-3 !text-[10px] !w-auto shadow-sm" onchange="window.refreshUI()">
+
                         <option value="">Classificação (Todas)</option>
+
                         <option value="Eficiência Operacional">Eficiência Operacional</option>
+
                         <option value="Rotina">Rotina</option>
+
                     </select>
+
                 </div>
+
             </div>
+
             <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-4 md:gap-6 mb-8 md:mb-12">
+
                 <div class="kpi-card"><p class="label-forte !mb-0 text-[9px] md:text-[11px] text-slate-400">Total</p><h2 id="kpi-total" class="text-2xl md:text-3xl font-black text-slate-900">0</h2></div>
+
                 <div class="kpi-card"><p class="label-forte !mb-0 text-cyan-500 text-[9px] md:text-[11px]">SLA Geral</p><h2 id="kpi-sla" class="text-2xl md:text-3xl font-black text-cyan-500">0%</h2></div>
+
                 <div class="kpi-card"><p class="label-forte !mb-0 text-green-500 text-[9px] md:text-[11px]">Aderência</p><h2 id="kpi-performance" class="text-2xl md:text-3xl font-black text-green-500">0%</h2></div>
+
                 <div class="kpi-card"><p class="label-forte !mb-0 text-blue-500 text-[9px] md:text-[11px]">Riscos</p><h2 id="kpi-riscos" class="text-xl md:text-2xl font-black text-blue-500">0</h2></div>
+
                 <div class="kpi-card"><p class="label-forte !mb-0 text-red-500 text-[9px] md:text-[11px]">Problemas</p><h2 id="kpi-problemas" class="text-xl md:text-2xl font-black text-red-500">0</h2></div>
+
                 <div class="kpi-card"><p class="label-forte !mb-0 text-indigo-500 text-[9px] md:text-[11px]">Saúde</p><h2 id="kpi-saude" class="text-2xl md:text-3xl font-black text-indigo-500">100%</h2></div>
+
             </div>
+
             <div class="h-px bg-slate-200 w-full mb-8 md:mb-12 opacity-30 shadow-sm"></div>
+
             <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 md:gap-8 mb-8 md:mb-12">
+
                 <div class="bg-white p-4 md:p-8 rounded-[1.5rem] md:rounded-[2rem] border border-slate-100 shadow-sm flex flex-col items-center"><span class="label-forte mb-2 md:mb-4">Status</span><div class="w-full h-40 md:h-44"><canvas id="chartStatus"></canvas></div></div>
+
                 <div class="bg-white p-4 md:p-8 rounded-[1.5rem] md:rounded-[2rem] border border-slate-100 shadow-sm flex flex-col items-center"><span class="label-forte mb-2 md:mb-4">Área</span><div class="w-full h-40 md:h-44"><canvas id="chartTime"></canvas></div></div>
+
                 <div class="bg-white p-4 md:p-8 rounded-[1.5rem] md:rounded-[2rem] border border-slate-100 shadow-sm flex flex-col items-center"><span class="label-forte mb-2 md:mb-4">Frentes Ativas</span><div class="w-full h-40 md:h-44"><canvas id="chartFrente"></canvas></div></div>
+
                 <div class="bg-white p-4 md:p-8 rounded-[1.5rem] md:rounded-[2rem] border border-slate-100 shadow-sm flex flex-col items-center"><span class="label-forte mb-2 md:mb-4">Lead Time Médio</span><div class="w-full h-40 md:h-44"><canvas id="chartLeadTime"></canvas></div></div>
+
             </div>
+
             <div class="grid grid-cols-1 md:grid-cols-2 gap-8 mb-12">
+
                 <div class="column-board">
+
                     <label class="label-forte text-slate-400 mb-6 flex justify-between items-center">
+
                         <span>Backlog</span>
+
                         <span id="count-backlog" class="bg-[#94a3b8] text-white px-3 py-1 rounded-full text-[10px] font-black">0</span>
+
                     </label>
+
                     <div id="grid-backlog" class="space-y-6"></div>
+
                 </div>
+
                 <div class="column-board">
+
                     <label class="label-forte text-slate-400 mb-6 flex justify-between items-center">
+
                         <span>Em Andamento</span>
+
                         <span id="count-andamento" class="bg-[#fef3c7] text-[#92400e] px-3 py-1 rounded-full text-[10px] font-black">0</span>
+
                     </label>
+
                     <div id="grid-andamento" class="space-y-6"></div>
+
                 </div>
+
             </div>
+
         </div>
+
+
 
         <div id="view-list" class="hidden no-print">
+
             <div class="mb-8 flex flex-col md:flex-row justify-between items-start md:items-end gap-6">
+
                 <div>
+
                     <h1 class="text-2xl md:text-4xl font-black tracking-tighter uppercase leading-none text-slate-900">Projetos</h1>
+
                     <p class="text-slate-400 text-[10px] md:text-xs font-bold uppercase mt-2 md:mt-3 tracking-widest">Controle e Listagem Geral</p>
+
                 </div>
+
                 <div class="flex flex-wrap gap-2 md:gap-3">
+
                     <button onclick="window.exportToXLS()" class="bg-white border border-slate-200 px-5 py-2.5 rounded-xl font-black text-[9px] uppercase tracking-widest hover:bg-slate-50 shadow-sm">Exportar XLS</button>
+
                     <button onclick="window.exportPDF()" class="bg-slate-900 text-white px-5 py-2.5 rounded-xl font-black text-[9px] uppercase tracking-widest hover:bg-slate-800 shadow-sm">Exportar PDF</button>
+
                     <input type="text" id="search-list" class="input-premium !py-1.5 !px-3 !text-[10px] !w-40 shadow-sm" placeholder="Buscar projeto..." oninput="window.refreshUI()">
+
                 </div>
+
             </div>
+
+
 
             <!-- BARRA DE FILTROS LISTAGEM -->
+
             <div class="mb-6 flex flex-wrap items-center gap-4 bg-white p-4 rounded-2xl border border-slate-100 shadow-sm">
+
                 <div class="flex flex-col w-full sm:w-auto min-w-[200px]">
+
                     <label class="label-forte !mb-1 text-[8px]">Analista Responsável</label>
+
                     <select id="list-filter-analista" class="input-premium !py-2 !px-3 !text-[10px] shadow-sm" onchange="window.refreshUI()">
+
                         <option value="">Todos Analistas</option>
+
                     </select>
+
                 </div>
+
                 <div class="flex flex-col w-full sm:w-auto min-w-[150px]">
+
                     <label class="label-forte !mb-1 text-[8px]">Status</label>
+
                     <select id="list-filter-status" class="input-premium !py-2 !px-3 !text-[10px] shadow-sm" onchange="window.refreshUI()">
+
                         <option value="">Todos Status</option>
+
                         <option value="Backlog">Backlog</option>
+
                         <option value="Em Andamento">Em Andamento</option>
+
                         <option value="Finalizado">Finalizado</option>
+
                         <option value="Despriorizado">Despriorizado</option>
+
                     </select>
+
                 </div>
+
                 <div class="flex flex-col w-full sm:w-auto min-w-[150px]">
+
                     <label class="label-forte !mb-1 text-[8px]">Frente</label>
+
                     <select id="list-filter-frente" class="input-premium !py-2 !px-3 !text-[10px] shadow-sm" onchange="window.refreshUI()">
+
                         <option value="">Todas Frentes</option>
+
                     </select>
+
                 </div>
+
             </div>
+
+
 
             <div class="bg-white rounded-[1.5rem] md:rounded-[2.25rem] border border-slate-100 shadow-sm overflow-hidden">
+
                 <div class="overflow-x-auto">
+
                     <table class="w-full text-left min-w-[1000px]">
+
                         <thead class="bg-slate-50 border-b border-slate-100 text-[10px] font-black uppercase tracking-widest text-slate-400">
+
                             <tr><th class="p-6 md:p-8">Iniciativa</th><th class="p-6 md:p-8">Área</th><th class="p-6 md:p-8 text-center">Responsáveis</th><th class="p-6 md:p-8 text-center">Estimado</th><th class="p-6 md:p-8 text-center">Status</th><th class="p-6 md:p-8 text-right">Ações</th></tr>
+
                         </thead>
+
                         <tbody id="detailed-table-body" class="divide-y divide-slate-100 text-[11px] md:text-[13px] font-bold text-slate-700"></tbody>
+
                     </table>
+
                 </div>
+
             </div>
+
         </div>
+
+
 
         <!-- VIEW ARQUIVO -->
+
         <div id="view-archive" class="hidden no-print">
+
             <div class="mb-8 flex flex-col md:flex-row justify-between items-start md:items-end gap-6">
+
                 <div>
+
                     <h1 class="text-2xl md:text-4xl font-black tracking-tighter uppercase leading-none text-slate-900">Arquivo</h1>
+
                     <p class="text-slate-400 text-[10px] md:text-xs font-bold uppercase mt-2 md:mt-3 tracking-widest">Controle de Projetos Concluídos</p>
+
                 </div>
+
                 <div class="flex flex-wrap gap-2 md:gap-3">
+
                     <input type="text" id="search-archive" class="input-premium !py-1.5 !px-3 !text-[10px] !w-40 shadow-sm" placeholder="Pesquisar arquivo..." oninput="window.refreshUI()">
+
                 </div>
+
             </div>
+
+
 
             <!-- BARRA DE FILTROS ARQUIVO -->
+
             <div class="mb-6 flex flex-wrap items-center gap-4 bg-white p-4 rounded-2xl border border-slate-100 shadow-sm">
+
                 <div class="flex flex-col w-full sm:w-auto min-w-[200px]">
+
                     <label class="label-forte !mb-1 text-[8px]">Analista Responsável</label>
+
                     <select id="archive-filter-analista" class="input-premium !py-2 !px-3 !text-[10px] shadow-sm" onchange="window.refreshUI()">
+
                         <option value="">Todos Analistas</option>
+
                     </select>
+
                 </div>
+
                 <div class="flex flex-col w-full sm:w-auto min-w-[150px]">
+
                     <label class="label-forte !mb-1 text-[8px]">Frente</label>
+
                     <select id="archive-filter-frente" class="input-premium !py-2 !px-3 !text-[10px] shadow-sm" onchange="window.refreshUI()">
+
                         <option value="">Todas Frentes</option>
+
                     </select>
+
                 </div>
+
                 <div class="flex flex-col w-full sm:w-auto min-w-[150px]">
+
                     <label class="label-forte !mb-1 text-[8px]">Área</label>
+
                     <select id="archive-filter-area" class="input-premium !py-2 !px-3 !text-[10px] shadow-sm" onchange="window.refreshUI()">
+
                         <option value="">Todas Áreas</option>
+
                     </select>
+
                 </div>
+
             </div>
+
+
 
             <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+
                 <div class="column-board">
+
                     <label class="label-forte text-emerald-600 mb-6 flex justify-between items-center uppercase">
+
                         <span>Finalizados</span>
+
                         <span id="count-finalizado-archive" class="count-badge bg-emerald-50 text-emerald-700">0</span>
+
                     </label>
+
                     <div id="grid-finalizado" class="space-y-6"></div>
+
                 </div>
+
                 <div class="column-board">
+
                     <label class="label-forte text-red-600 mb-6 flex justify-between items-center uppercase">
+
                         <span>Despriorizados</span>
+
                         <span id="count-despriorizado-archive" class="count-badge bg-red-50 text-red-700">0</span>
+
                     </label>
+
                     <div id="grid-despriorizado" class="space-y-6"></div>
+
                 </div>
+
             </div>
+
         </div>
+
+
 
         <!-- VIEW FORM -->
+
         <div id="view-form" class="hidden max-w-6xl mx-auto">
+
             <div class="mb-6 md:mb-10 flex flex-col sm:flex-row justify-between items-start sm:items-end gap-4">
+
                 <h2 id="form-title" class="text-2xl md:text-3xl font-black uppercase tracking-tighter text-slate-900">Ficha Técnica</h2>
+
                 <div class="flex gap-2 md:gap-4 no-print w-full sm:w-auto">
+
                     <button id="btn-concluir-quick" onclick="window.showFinishAction()" class="hidden bg-emerald-500 text-white px-4 md:px-8 py-3 md:py-3.5 rounded-xl md:rounded-2xl font-black text-[9px] md:text-[10px] uppercase tracking-widest shadow-lg shadow-emerald-100 hover:scale-105 transition-all">Finalizar Projeto</button>
+
                     <button onclick="window.exportPDF()" class="bg-slate-900 text-white px-4 md:px-8 py-3 rounded-xl md:rounded-2xl font-black text-[9px] md:text-[10px] uppercase tracking-widest shadow-lg flex-1 sm:flex-none">Exportar PDF</button>
+
                 </div>
+
             </div>
+
             <form id="project-form" oninput="window.setDirty()">
+
                 <input type="hidden" id="edit-id" value=""><input type="hidden" id="impedimento_tipo_list" value="Risco">
+
                 <div class="form-section-box shadow-sm">
+
                     <label class="label-forte text-slate-300 mb-6 pb-2 border-b border-slate-50 uppercase">1. Identificação Geral</label>
+
                     <div class="grid grid-cols-1 md:grid-cols-12 gap-6 md:gap-10">
+
                         <div class="md:col-span-8">
+
                             <label class="label-forte">Nome da Iniciativa <span class="text-red-500 font-black">*</span></label>
+
                             <input type="text" id="iniciativa" required class="input-premium uppercase">
+
                         </div>
+
                         <div class="md:col-span-4"><label class="label-forte">Prioridade</label><select id="prioridade" class="input-premium font-bold"><option value="Baixa">Baixa</option><option value="Média">Média</option><option value="Alta">Alta</option></select></div>
+
                     </div>
+
                 </div>
+
                 <div class="form-section-box shadow-sm">
+
                     <label class="label-forte text-slate-400 mb-6 pb-2 border-b border-slate-50 uppercase">2. Definição Operacional</label>
+
                     <div class="flex flex-wrap items-end gap-4">
+
                         <div class="flex-1 min-w-[120px]">
+
                             <div class="flex justify-between items-center mb-1"><label class="label-forte !mb-0">Tipo</label><span class="btn-add-item" onclick="window.openAddModal('tipo_atividade')">+</span></div>
+
                             <select id="tipo_atividade" required class="input-premium font-bold"><option value="Melhoria" selected>Melhoria</option><option value="Projeto">Projeto</option><option value="Incidente">Incidente</option><option value="Manutenção">Manutenção</option></select>
+
                         </div>
+
                         <div class="flex-1 min-w-[140px]">
+
                             <div class="flex justify-between items-center mb-1"><label class="label-forte !mb-0">Área</label><span class="btn-add-item" onclick="window.openAddModal('time')">+</span></div>
+
                             <select id="time" required class="input-premium"></select>
+
                         </div>
+
                         <div class="flex-1 min-w-[140px]">
+
                             <div class="flex justify-between items-center mb-1"><label class="label-forte !mb-0">Frente</label><span class="btn-add-item" onclick="window.openAddModal('frente')">+</span></div>
+
                             <select id="frente" required class="input-premium"></select>
+
                         </div>
+
                         <div class="flex-[1.5] min-w-[200px]">
+
                             <label class="label-forte text-cyan-600">Classificação</label>
+
                             <select id="classificacao" required class="input-premium font-black text-cyan-600"><option value="Eficiência Operacional">Eficiência Operacional</option><option value="Rotina">Rotina</option></select>
+
                         </div>
+
                         <div class="flex-1 min-w-[100px]">
+
                             <label class="label-forte">Esforço</label>
+
                             <select id="esforco" required class="input-premium"><option value="Rápido">Rápido</option><option value="Intermediário">Intermediário</option><option value="Estruturante">Estruturante</option></select>
+
                         </div>
+
                         <div class="flex-1 min-w-[130px]"><label class="label-forte">Status</label><select id="status" class="input-premium font-black text-slate-900" onchange="window.updateStatusUI(this.value)"><option value="Backlog">Backlog</option><option value="Em Andamento">Em Andamento</option><option value="Finalizado">Finalizado</option><option value="Despriorizado">Despriorizado</option></select></div>
+
                     </div>
+
                 </div>
+
                 <div class="grid grid-cols-1 md:grid-cols-2 gap-6 md:gap-8">
+
                     <div class="form-section-box shadow-sm">
+
                         <label class="label-forte text-slate-400 mb-6 pb-2 border-b border-slate-50 uppercase">3. Cronograma</label>
+
                         <div class="grid grid-cols-2 gap-6">
+
                             <div><label class="label-forte">Início <span class="text-red-500 font-black">*</span></label><input type="date" id="data_criacao" required class="input-premium text-xs"></div>
+
                             <div><label class="label-forte">Prazo Estimado <span class="text-red-500 font-black">*</span></label><input type="date" id="prazo" required onchange="window.validatePrazo(this)" class="input-premium text-xs"></div>
+
                         </div>
+
                         <div id="closure-dates" class="mt-8 pt-8 border-t border-slate-100 hidden">
+
                             <label class="label-forte !text-emerald-600">Conclusão Realizada</label><input type="date" id="data_conclusao" class="input-premium text-xs border-emerald-100 bg-emerald-50/20 text-slate-900">
+
                         </div>
+
                         <div id="deprioritize-box" class="mt-8 pt-8 border-t border-slate-100 hidden">
+
                             <label class="label-forte !text-red-600">Motivo da Despriorização</label>
+
                             <textarea id="justificativa_despriorizacao" rows="3" class="input-premium !bg-red-50/10 text-xs" placeholder="Descreva o motivo..."></textarea>
+
                         </div>
+
                     </div>
+
                     <div class="form-section-box shadow-sm">
+
                         <label class="label-forte text-slate-400 mb-6 pb-2 border-b border-slate-50 uppercase">4. Atividades / Tasks</label>
+
                         <div class="flex justify-between items-center mb-2">
+
                             <span id="progress-percent" class="text-[10px] font-black text-emerald-600">PROGRESSO: 0%</span>
+
                         </div>
+
                         <div class="progress-container"><div id="task-progress-bar" class="progress-bar-fill"></div></div>
+
                         <div id="tasks-list-container" class="space-y-2 mb-4 max-h-48 overflow-y-auto"></div>
+
                         <div class="flex gap-2">
+
                             <input type="text" id="new-task-input" class="input-premium !text-xs" placeholder="Nova tarefa...">
+
                             <button type="button" onclick="window.addTaskToProject()" class="bg-slate-900 text-white px-4 py-2 rounded-xl font-bold text-[10px] uppercase hover:bg-slate-800 transition-all">Incluir</button>
+
                         </div>
+
                     </div>
+
                 </div>
+
                 <div class="form-section-box shadow-sm">
+
                     <div class="flex justify-between items-center mb-8 pb-3 border-b border-slate-50">
+
                         <label class="label-forte text-slate-400 !mb-0">5. Analistas Responsáveis <span class="text-red-500 font-black">*</span></label>
+
                         <span class="btn-add-item" onclick="window.openAddModal('analista')">+ Novo</span>
+
                     </div>
+
                     <div id="responsaveis-grid" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-y-3 gap-x-12 max-h-56 overflow-y-auto pr-2"></div>
+
                 </div>
+
                 <div class="grid grid-cols-1 md:grid-cols-2 gap-6 md:gap-10">
+
                     <div class="form-section-box shadow-sm space-y-6">
+
                         <div>
+
                             <label class="label-forte">Descrição detalhada <span class="text-red-500 font-black">*</span></label>
+
                             <textarea id="nota_inicial" required rows="4" class="input-premium text-xs leading-relaxed"></textarea>
+
                         </div>
+
                         <div class="pt-6 border-t border-slate-50">
+
                             <label class="label-forte">Log de Updates</label>
+
                             <div id="notes-history-list" class="space-y-3 max-h-56 overflow-y-auto mb-4 pr-3 text-[11px]"></div>
+
                             <div class="flex flex-col sm:flex-row gap-2">
+
                                 <textarea id="new-milestone-note" rows="4" class="input-premium !text-xs" placeholder="Evolução de hoje..."></textarea>
+
                                 <button type="button" onclick="window.addItemToHistory('note')" class="bg-slate-900 text-white px-6 py-2.5 rounded-xl font-bold text-[10px] uppercase hover:bg-slate-800 transition-all self-end">Incluir</button>
+
                             </div>
+
                         </div>
+
                     </div>
+
                     <div class="space-y-6">
+
                         <div id="attention-box" class="form-section-box !bg-slate-50 !border-slate-200 transition-colors duration-500">
+
                             <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center mb-4 gap-3">
+
                                 <label class="label-forte !mb-0">Atenção Executiva</label>
+
                                 <div class="flex gap-4">
+
                                     <button type="button" id="toggle-list-risco" onclick="window.setAttentionType('Risco')" class="toggle-btn active-risco">Risco ?</button>
+
                                     <button type="button" id="toggle-list-problema" onclick="window.setAttentionType('Problema')" class="toggle-btn inactive">Problema ?</button>
+
                                 </div>
+
                             </div>
+
                             <div id="attention-history-list" class="space-y-3 max-h-48 overflow-y-auto mb-4 pr-3 text-[11px]"></div>
+
                             <div class="flex flex-col sm:flex-row gap-2">
+
                                 <textarea id="new-attention-note" rows="3" class="input-premium !bg-white text-xs" placeholder="Novo alerta..."></textarea>
+
                                 <button type="button" onclick="window.addItemToHistory('attention')" class="bg-slate-900 text-white px-6 py-2.5 rounded-xl font-bold text-[10px] uppercase hover:bg-slate-800 transition-all self-end">Incluir</button>
+
                             </div>
+
                         </div>
+
                     </div>
+
                 </div>
+
                 <div class="pt-10 flex flex-col sm:flex-row gap-4 border-t border-slate-100 no-print pb-10">
+
                     <button type="submit" class="bg-slate-900 text-white px-12 py-5 rounded-[1.5rem] font-black shadow-2xl flex-1 uppercase text-xs tracking-widest hover:bg-slate-800 transition-all hover:scale-[1.01]">Salvar Projeto</button>
+
                     <button type="button" onclick="window.trySwitchTab('dashboard');" class="bg-white text-slate-400 border border-slate-200 px-10 py-5 rounded-[1.5rem] font-bold text-xs uppercase hover:bg-slate-50 transition-all">Sair</button>
+
                 </div>
+
             </form>
+
         </div>
+
     </main>
 
+
+
     <script type="module">
+
         import { initializeApp } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-app.js";
+
         import { getAuth, signInAnonymously, onAuthStateChanged, signInWithCustomToken } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";
+
         import { getFirestore, collection, doc, addDoc, updateDoc, deleteDoc, onSnapshot } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
 
+
+
         const firebaseConfig = { apiKey: "AIzaSyAU8nHiRzTwOkrfd8LY7N-YkJG_S7CE0Xs", authDomain: "painel-de-projeto.firebaseapp.com", projectId: "painel-de-projeto", storageBucket: "painel-de-projeto.firebasestorage.app", messagingSenderId: "768185401154", appId: "1:768185401154:web:d89782c16620a1bf2852db", measurementId: "G-CKMHJJ5C37" };
+
         const app = initializeApp(firebaseConfig); const auth = getAuth(app); const db = getFirestore(app);
+
         const appId = typeof __app_id !== 'undefined' ? __app_id : 'unico-eficiencia-2026';
+
         
+
         let projects = [], tempNotes = [], tempTasks = [], tempAttention = [], tempFiles = [], projectToDeleteId = null, currentTargetField = null, user = null;
+
         let charts = {}; let isFormDirty = false; let pendingTab = null;
 
+
+
         const defaultTeam = ["Cauan Pereira Da Silva", "Diego Francisco Rocha", "Hudson Nestor Pereira Cortes", "Lucas Henrique Jantsch", "Luiz Gustavo Ribeiro", "Michael Gabriel Moraes Faria", "Otávio Augusto Oliveira", "Rodrigo Prinz De Paiva", "Simone Thomé de Andrade"];
+
         const defaultAreas = ["Análise", "CX", "Comunicação", "Mesa", "Onboarding"];
+
         const defaultFrentes = ["Automação", "Performance", "Reestruturação", "Simplificação"];
 
+
+
         function hideOverlay() { const o = document.getElementById('loading-overlay'); if (o) { o.style.opacity = '0'; setTimeout(() => { o.style.display = 'none'; }, 500); } }
+
         function getBusinessDays(start, end) { let count = 0; let cur = new Date(start); const target = new Date(end); while (cur <= target) { if (cur.getDay() !== 0 && cur.getDay() !== 6) count++; cur.setDate(cur.getDate() + 1); } return count; }
+
         function setDirty() { isFormDirty = true; }
 
+
+
         function renderChart(id, type, data, colors) { 
+
             if(charts[id]) charts[id].destroy(); 
+
             const canvas = document.getElementById(id); if(!canvas) return; 
+
             charts[id] = new Chart(canvas.getContext('2d'), { 
+
                 type: type, 
+
                 data: { labels: Object.keys(data), datasets: [{ data: Object.values(data), backgroundColor: colors, borderWidth: 0, borderRadius: type === 'pie' ? 0 : 8 }] }, 
+
                 plugins: [ChartDataLabels],
+
                 options: { 
+
                     responsive: true, maintainAspectRatio: false, 
+
                     scales: type === 'pie' ? {} : { x: { grid: { display: false } }, y: { grid: { display: false }, ticks: { display: false } } },
+
                     plugins: { 
+
                         legend: { display: type === 'pie', position: 'bottom', labels: { boxWidth: 10, font: { size: 9 } } },
+
                         datalabels: { display: true, anchor: type === 'pie' ? 'center' : 'end', align: type === 'pie' ? 'center' : 'top', color: type === 'pie' ? '#fff' : '#070047', font: { weight: 'bold', size: 10 } }
+
                     } 
+
                 } 
+
             }); 
+
         }
+
+
 
         function updateKPIs(data) {
+
             const f = data.filter(p => p.status === 'Finalizado'); const a = data.filter(p => p.status !== 'Finalizado' && p.status !== 'Despriorizado');
+
             let ris = 0, prob = 0; a.forEach(p => { if(p.attention?.some(att => att.type === 'Problema')) prob++; else if(p.attention?.some(att => att.type === 'Risco')) ris++; });
+
             let adherence = 0; if (f.length) adherence = Math.round((f.filter(p => p.data_conclusao && p.prazo && new Date(p.data_conclusao) <= new Date(p.prazo)).length / f.length) * 100);
+
             
+
             const tEl = document.getElementById('kpi-total'); if(tEl) tEl.innerText = data.length;
+
             const sEl = document.getElementById('kpi-sla'); if(sEl) sEl.innerText = (f.length ? Math.round((f.filter(p => p.data_conclusao <= p.prazo).length/f.length)*100) : 0) + '%';
+
             const pEl = document.getElementById('kpi-performance'); if(pEl) pEl.innerText = adherence + '%';
+
             const rEl = document.getElementById('kpi-riscos'); if(rEl) rEl.innerText = ris;
+
             const prEl = document.getElementById('kpi-problemas'); if(prEl) prEl.innerText = prob;
+
             
+
             const sa = prob === 0 ? 100 : (prob === 1 ? 50 : 0); const saEl = document.getElementById('kpi-saude');
+
             if(saEl) { saEl.innerText = sa + '%'; saEl.className = `text-2xl md:text-3xl font-black ${sa === 100 ? 'text-green-500' : (sa === 50 ? 'text-amber-500' : 'text-red-500')}`; }
+
         }
+
+
 
         function updateCharts(data) {
+
             const paleta = ['#FF1A5C', '#00A5FF', '#A35F9D', '#8D7AD2', '#32B77E', '#5C86C4', '#070047', '#333333'];
+
             const sCounts = data.reduce((acc,v) => { acc[v.status] = (acc[v.status]||0)+1; return acc; }, {});
+
             renderChart('chartStatus', 'pie', sCounts, paleta);
+
             const areasSet = Array.from(new Set(data.map(p => p.time))).sort();
+
             renderChart('chartTime', 'bar', areasSet.reduce((a,v) => { a[v] = data.filter(p => p.time === v).length; return a; }, {}), paleta);
+
             const fCounts = data.reduce((acc,v) => { acc[v.frente||'N/A'] = (acc[v.frente||'N/A']||0)+1; return acc; }, {});
+
             renderChart('chartFrente', 'bar', fCounts, paleta);
+
             const concl = data.filter(p => p.status === 'Finalizado' && p.data_criacao && p.data_conclusao);
+
             let cor = 0, ute = 0; if(concl.length) { cor = concl.reduce((acc, p) => acc + (new Date(p.data_conclusao) - new Date(p.data_criacao)) / 86400000, 0) / concl.length; ute = concl.reduce((acc, p) => acc + getBusinessDays(p.data_criacao, p.data_conclusao), 0) / concl.length; }
+
             renderChart('chartLeadTime', 'bar', { 'Corridos': cor.toFixed(1), 'Úteis': ute.toFixed(1) }, ['#FF1A5C', '#00A5FF']);
+
         }
+
+
 
         function renderAnalistaCheckbox(name, checked = false) { 
+
             const grid = document.getElementById('responsaveis-grid'); if(!grid) return; 
+
             const label = document.createElement('label'); label.className = "checkbox-item"; 
+
             label.innerHTML = `<input type="checkbox" name="responsavel_check" value="${name}" ${checked ? 'checked':''} class="w-4 h-4 rounded border-slate-300 accent-cyan-500"><span>${name}</span>`; 
+
             grid.appendChild(label); 
+
         }
+
+
 
         function createProjectCard(p, today) {
+
             const start = p.data_criacao ? new Date(p.data_criacao) : today; const end = p.prazo ? new Date(p.prazo) : today;
+
             const openDays = Math.floor((today - start) / 86400000); const isOverdue = today > end && p.status !== 'Finalizado';
+
             let topColor = 'var(--color-backlog)'; if(p.status === 'Em Andamento') topColor = 'var(--color-andamento)'; if(p.status === 'Finalizado') topColor = 'var(--color-finalizado)'; if(p.status === 'Despriorizado') topColor = 'var(--color-despriorizado)';
+
             const totalT = p.tasks ? p.tasks.length : 0; const completedT = p.tasks ? p.tasks.filter(t => t.completed).length : 0;
+
             const pCent = p.status === 'Finalizado' ? 100 : (totalT > 0 ? Math.round((completedT / totalT) * 100) : 0);
+
             
+
             let statsHtml = `<p class="flex justify-between"><span>ESTIMADO:</span> <span class="font-black text-slate-900">${p.prazo ? p.prazo.split('-').reverse().join('/') : '--'}</span></p><p class="flex justify-between"><span>ABERTO HÁ:</span> <span class="font-black text-slate-900">${Math.max(0, openDays)} dias</span></p><p class="flex justify-between text-cyan-600"><span>CLASSIFICAÇÃO:</span> <span class="font-black text-cyan-600">${p.classificacao || '--'}</span></p>`;
+
             statsHtml += `<div class="mt-3"><div class="flex justify-between items-center mb-1"><span class="text-[8px] font-black opacity-40">PROGRESSO</span><span class="text-[8px] font-black text-emerald-600">${pCent}%</span></div><div class="progress-container"><div class="progress-bar-fill" style="width: ${pCent}%"></div></div></div>`;
 
+
+
             if(p.status === 'Finalizado') { const conc = p.data_conclusao ? new Date(p.data_conclusao) : null; const est = p.prazo ? new Date(p.prazo) : null; let pTxt = (conc && est && conc > est) ? "COM ATRASO" : "NO PRAZO"; let pCls = pTxt === "NO PRAZO" ? "text-emerald-600" : "text-red-600"; statsHtml += `<p class="text-center font-black mt-3 ${pCls} text-[9px] border border-current rounded-lg p-1 uppercase tracking-widest text-white" style="color: white; background: ${pCls === 'text-emerald-600' ? '#32B77E' : '#FF1A5C'}">${pTxt}</p>`; }
+
             else if(p.status === 'Despriorizado') statsHtml += `<div class="mt-2 p-2 bg-red-50 rounded-lg border border-red-100 text-red-700"><span class="text-[8px] font-black text-red-400">MOTIVO:</span><p class="text-[10px] italic leading-tight text-red-700">${p.justificativa_despriorizacao || '--'}</p></div>`;
+
             else statsHtml += `<p class="flex justify-between mt-2 text-slate-800"><span>STATUS:</span> <span class="${isOverdue ? 'text-red-600 animate-pulse' : 'text-slate-900'} font-black uppercase text-[10px]">${isOverdue ? 'EM ATRASO' : 'NO PRAZO'}</span></p>`;
+
             
+
             const hasProb = p.attention?.some(att => att.type === 'Problema');
+
             return `<div class="card-project p-6 flex flex-col h-full ${hasProb ? 'border-2 border-red-500' : ''}" style="border-top-color: ${topColor}"><div class="flex justify-between items-start mb-4 text-slate-800"><span class="text-[8px] font-black text-slate-400 uppercase tracking-widest">${p.tipo_atividade} | ${p.time}</span><span class="status-pill" style="background: ${topColor}; color: ${p.status === 'Em Andamento' ? '#000a28' : '#fff'}">${p.status}</span></div><h3 class="text-lg font-black mb-4 uppercase leading-tight text-slate-900">${p.iniciativa}</h3><div class="text-[10px] space-y-2 mb-6 text-slate-500">${statsHtml}</div><button onclick="window.editProjectByID('${p.id}')" class="bg-slate-900 text-white py-4 rounded-2xl font-black uppercase text-[10px] hover:bg-slate-800 transition-all mt-auto shadow-lg shadow-slate-200">Gerenciar</button></div>`;
+
         }
+
+
 
         function refreshUI() {
+
             const today = new Date(); today.setHours(0,0,0,0);
+
             const activeTab = Array.from(document.querySelectorAll('nav button')).find(b => b.classList.contains('active-tab'))?.id.split('-')[1];
+
             
+
             // Filtros Dashboard
+
             const dashAnalista = document.getElementById('dash-filter-analista')?.value || '';
+
             const dashArea = document.getElementById('dash-filter-area')?.value || '';
+
             const dashFrente = document.getElementById('dash-filter-frente')?.value || '';
+
             const dashClass = document.getElementById('dash-filter-classificacao')?.value || '';
+
             const dashPeriod = document.getElementById('dash-filter-period')?.value || 'all';
+
             const dashSearch = document.getElementById('search-dash')?.value.toLowerCase() || '';
 
+
+
             // Filtros Listagem
+
             const listAnalista = document.getElementById('list-filter-analista')?.value || '';
+
             const listStatus = document.getElementById('list-filter-status')?.value || '';
+
             const listFrente = document.getElementById('list-filter-frente')?.value || '';
+
             const searchList = document.getElementById('search-list')?.value.toLowerCase() || '';
+
             
+
             // Filtros Arquivo
+
             const archiveAnalista = document.getElementById('archive-filter-analista')?.value || '';
+
             const archiveFrente = document.getElementById('archive-filter-frente')?.value || '';
+
             const archiveArea = document.getElementById('archive-filter-area')?.value || '';
+
             const searchArchive = document.getElementById('search-archive')?.value.toLowerCase() || '';
 
+
+
             const filtered = projects.filter(p => { 
+
                 let match = true;
+
                 if(activeTab === 'dashboard') {
+
                     match = (p.iniciativa || '').toLowerCase().includes(dashSearch);
+
                     if(dashAnalista) match = match && (p.responsavel && p.responsavel.includes(dashAnalista));
+
                     if(dashArea) match = match && p.time === dashArea;
+
                     if(dashFrente) match = match && p.frente === dashFrente;
+
                     if(dashClass) match = match && p.classificacao === dashClass;
+
                     const d = new Date(p.data_criacao); const n = new Date();
+
                     if(dashPeriod === 'mes') match = match && d.getMonth() === n.getMonth() && d.getFullYear() === n.getFullYear();
+
                     if(dashPeriod === 'trimestre') match = match && Math.floor(n.getMonth() / 3) === Math.floor(d.getMonth() / 3);
+
                     if(dashPeriod === 'ano') match = match && d.getFullYear() === n.getFullYear();
+
                 } else if (activeTab === 'list') {
+
                     match = (p.iniciativa || '').toLowerCase().includes(searchList);
+
                     if(listAnalista) match = match && p.responsavel?.includes(listAnalista);
+
                     if(listStatus) match = match && p.status === listStatus;
+
                     if(listFrente) match = match && p.frente === listFrente;
+
                 } else if (activeTab === 'archive') {
+
                     match = (p.iniciativa || '').toLowerCase().includes(searchArchive);
+
                     if(archiveAnalista) match = match && p.responsavel?.includes(archiveAnalista);
+
                     if(archiveFrente) match = match && p.frente === archiveFrente;
+
                     if(archiveArea) match = match && p.time === archiveArea;
+
                 }
+
                 return match;
+
             });
 
+
+
             updateKPIs(filtered); updateCharts(filtered);
+
             if(activeTab === 'dashboard') {
+
                 const bG = document.getElementById('grid-backlog'), aG = document.getElementById('grid-andamento');
+
                 if(bG && aG) { 
+
                     bG.innerHTML = ''; aG.innerHTML = ''; 
+
                     const backlogs = filtered.filter(p => p.status === 'Backlog');
+
                     const andamentos = filtered.filter(p => p.status === 'Em Andamento');
+
                     backlogs.forEach(p => bG.innerHTML += createProjectCard(p, today)); 
+
                     andamentos.forEach(p => aG.innerHTML += createProjectCard(p, today)); 
+
                     if(document.getElementById('count-backlog')) document.getElementById('count-backlog').innerText = backlogs.length; 
+
                     if(document.getElementById('count-andamento')) document.getElementById('count-andamento').innerText = andamentos.length; 
+
                 }
+
             }
+
             if(activeTab === 'archive') {
+
                 const fG = document.getElementById('grid-finalizado'), dG = document.getElementById('grid-despriorizado');
+
                 if(fG && dG) { 
+
                     fG.innerHTML = ''; dG.innerHTML = ''; 
+
                     const finals = filtered.filter(p => p.status === 'Finalizado');
+
                     const desprs = filtered.filter(p => p.status === 'Despriorizado');
+
                     finals.forEach(p => fG.innerHTML += createProjectCard(p, today)); 
+
                     desprs.forEach(p => dG.innerHTML += createProjectCard(p, today)); 
+
                     if(document.getElementById('count-finalizado-archive')) document.getElementById('count-finalizado-archive').innerText = finals.length;
+
                     if(document.getElementById('count-despriorizado-archive')) document.getElementById('count-despriorizado-archive').innerText = desprs.length;
+
                 }
+
             }
+
             const tbody = document.getElementById('detailed-table-body');
+
             if(tbody) { tbody.innerHTML = ''; filtered.forEach(p => { const env = Array.isArray(p.responsavel) ? p.responsavel.join(', ') : (p.responsavel || '--'); tbody.innerHTML += `<tr><td class="p-6 md:p-8 uppercase text-slate-900 font-bold">${p.iniciativa}</td><td class="p-6 md:p-8 text-slate-500">${p.time}</td><td class="p-6 md:p-8 text-center text-slate-500">${env}</td><td class="p-6 md:p-8 text-center text-slate-900 font-bold">${p.prazo ? p.prazo.split('-').reverse().join('/') : '--'}</td><td class="p-6 md:p-8 text-center"><span class="status-pill" style="background: ${p.status==='Backlog'?'#333':(p.status==='Em Andamento'?'#fabd23':(p.status==='Finalizado'?'#32B77E':'#FF1A5C'))}; color: ${p.status==='Em Andamento'?'#000a28':'#fff'}">${p.status}</span></td><td class="p-6 md:p-8 text-right flex items-center justify-end gap-3 md:gap-5"><button onclick="window.editProjectByID('${p.id}')" class="text-cyan-500 hover:scale-110 transition uppercase text-[10px] font-black">Editar</button><button onclick="window.openDeleteModal('${p.id}')" class="text-red-300 hover:text-red-500 transition-all text-red-500"><svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" /></svg></button></td></tr>`; }); }
+
         }
+
+
 
         window.renderHistoryLists = function() { 
+
             const nList = document.getElementById('notes-history-list'); if(nList) { nList.innerHTML = ''; tempNotes.forEach((n, i) => { nList.innerHTML += `<div class="history-entry group relative text-slate-800"><span class="text-cyan-500 font-black text-[9px] uppercase tracking-widest text-cyan-500">${n.date}</span><p class="mt-1 font-semibold text-xs pr-8 text-slate-800">${n.text}</p><button type="button" onclick="window.editHistoryItem('note', ${i})" class="absolute right-2 top-2 text-slate-400 hover:text-cyan-500"><svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" /></svg></button></div>`; }); } 
+
         }
+
+
 
         window.renderAttentionList = function() { 
+
             const aL = document.getElementById('attention-history-list'); if(!aL) return; aL.innerHTML = ''; 
+
             tempAttention.forEach((a, i) => { const c = a.type === 'Problema' ? 'text-red-500' : 'text-amber-500'; aL.innerHTML += `<div class="history-entry relative border-l-4 ${a.type === 'Problema' ? 'border-red-500' : 'border-amber-500'} text-slate-800"><div class="flex justify-between items-start"><span class="${c} font-black text-[9px] uppercase tracking-widest">${a.type} | ${a.date}</span><div class="flex gap-2 text-slate-800"><button type="button" onclick="window.editHistoryItem('attention', ${i})" class="text-slate-400 hover:text-cyan-500"><svg xmlns="http://www.w3.org/2000/svg" class="h-3 w-3" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" /></svg></button><button type="button" onclick="window.removeAttention(${i})" class="text-slate-400 hover:text-red-500 text-red-500"><svg xmlns="http://www.w3.org/2000/svg" class="h-3 w-3" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" /></svg></button></div></div><p class="mt-1 font-semibold text-xs text-slate-800">${a.text}</p></div>`; }); 
+
         }
+
+
 
         window.resetForm = function() { 
+
             const f = document.getElementById('project-form'); if(f) f.reset(); 
+
             const eId = document.getElementById('edit-id'); if(eId) eId.value = ''; 
+
             const nH = document.getElementById('notes-history-list'); if(nH) nH.innerHTML = ''; 
+
             const aH = document.getElementById('attention-history-list'); if(aH) aH.innerHTML = '';
+
             const tC = document.getElementById('tasks-list-container'); if(tC) tC.innerHTML = '';
+
             const btnConc = document.getElementById('btn-concluir-quick'); if(btnConc) btnConc.classList.add('hidden'); 
+
             tempNotes = []; tempTasks = []; tempAttention = []; isFormDirty = false;
+
             window.renderHistoryLists(); window.renderTasksList(); window.renderAttentionList(); window.updateTaskProgress();
+
             window.updateStatusUI('Backlog'); 
+
         }
+
+
 
         window.renderTasksList = function() { 
+
             const container = document.getElementById('tasks-list-container'); if(!container) return; container.innerHTML = ''; 
+
             tempTasks.forEach(t => { container.innerHTML += `<div class="task-item text-slate-800"><input type="checkbox" ${t.completed ? 'checked' : ''} onchange="window.toggleTaskStatus(${t.id})"><span class="flex-1 text-xs font-bold ${t.completed ? 'line-through text-slate-300' : 'text-slate-700'}">${t.text}</span><button type="button" onclick="window.removeTaskFromProject(${t.id})" class="text-red-500"><svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" /></svg></button></div>`; }); 
+
             window.updateTaskProgress(); 
+
         }
+
+
 
         window.updateTaskProgress = function() {
+
             const total = tempTasks.length;
+
             const completed = tempTasks.filter(t => t.completed).length;
+
             const percent = total > 0 ? Math.round((completed / total) * 100) : 0;
+
             const bar = document.getElementById('task-progress-bar');
+
             const txt = document.getElementById('progress-percent');
+
             if(bar) bar.style.width = percent + '%';
+
             if(txt) txt.innerText = `PROGRESSO: ${percent}%`;
+
         }
+
+
 
         window.validatePrazo = function(input) {
+
             const selectedDate = input.value;
+
             const today = new Date().toISOString().split('T')[0];
+
             if (selectedDate && selectedDate < today) {
+
                 const mod = document.createElement('div'); mod.className = "fixed inset-0 flex items-center justify-center bg-black/50 z-[20000]";
+
                 mod.innerHTML = `<div class="bg-white p-8 rounded-3xl max-w-sm text-center text-slate-800"><h3 class="font-black uppercase text-red-500 mb-4">Data Inválida</h3><p class="text-sm font-medium mb-6">O Prazo Estimado não pode ser uma data retroativa.</p><button onclick="this.parentElement.parentElement.remove()" class="bg-slate-900 text-white px-8 py-3 rounded-2xl font-black uppercase text-[10px]">Entendido</button></div>`;
+
                 document.body.appendChild(mod);
+
                 input.value = today;
+
             }
+
         }
 
+
+
         window.refreshUI = refreshUI; window.updateKPIs = updateKPIs; window.updateCharts = updateCharts; window.createProjectCard = createProjectCard; window.hideOverlay = hideOverlay; window.resetForm = resetForm; window.renderAttentionList = renderAttentionList; window.renderHistoryLists = renderHistoryLists; window.renderAnalistaCheckbox = renderAnalistaCheckbox; window.setDirty = setDirty;
+
         window.saveAndExit = () => { const form = document.getElementById('project-form'); if (form) { const submitEvent = new Event('submit', { cancelable: true }); form.dispatchEvent(submitEvent); document.getElementById('confirm-exit-modal').style.display = 'none'; isFormDirty = false; if(pendingTab) window.switchTab(pendingTab); } };
+
         window.discardAndExit = () => { isFormDirty = false; document.getElementById('confirm-exit-modal').style.display = 'none'; if(pendingTab) window.switchTab(pendingTab); };
+
         window.trySwitchTab = (tab) => { if (isFormDirty) { pendingTab = tab; document.getElementById('confirm-exit-modal').style.display = 'flex'; } else { window.switchTab(tab); } };
+
         window.switchTab = (t) => { ['view-dashboard', 'view-form', 'view-list', 'view-archive'].forEach(v => { const el = document.getElementById(v); if(el) el.classList.add('hidden'); }); const target = document.getElementById('view-'+t); if(target) target.classList.remove('hidden'); document.querySelectorAll('nav button').forEach(b => b.classList.toggle('active-tab', b.id === `tab-${t}`)); if (t !== 'form') resetForm(); else if (!document.getElementById('edit-id').value) resetForm(); refreshUI(); };
+
         window.updateStatusUI = (v) => { const clo = document.getElementById('closure-dates'), dep = document.getElementById('deprioritize-box'); if(clo) clo.classList.toggle('hidden', v !== 'Finalizado'); if(dep) dep.classList.toggle('hidden', v !== 'Despriorizado'); };
+
         window.showFinishAction = () => { if(document.getElementById('finish-confirm-modal')) document.getElementById('finish-confirm-modal').style.display = 'flex'; };
+
         window.closeFinishModal = () => { if(document.getElementById('finish-confirm-modal')) document.getElementById('finish-confirm-modal').style.display = 'none'; };
+
         window.confirmFinalization = () => {
+
             const statusEl = document.getElementById('status'), dateEl = document.getElementById('data_conclusao');
+
             if(statusEl) statusEl.value = 'Finalizado';
+
             if(dateEl) dateEl.value = new Date().toISOString().split('T')[0];
+
             window.updateStatusUI('Finalizado');
+
             window.closeFinishModal(); window.setDirty();
+
             document.getElementById('project-form')?.scrollIntoView({ behavior: 'smooth' });
+
         };
+
+
 
         window.exportToXLS = () => { let csv = "\uFEFFIniciativa;Área;Classificação;Responsáveis;Estimado;Status\n"; projects.forEach(p => { const resps = Array.isArray(p.responsavel) ? p.responsavel.join(', ') : p.responsavel; csv += `${p.iniciativa};${p.time};${p.classificacao};${resps};${p.prazo};${p.status}\n`; }); const blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' }); const link = document.createElement("a"); link.href = URL.createObjectURL(blob); link.setAttribute("download", `Projetos_Unico_${new Date().toLocaleDateString()}.csv`); document.body.appendChild(link); link.click(); document.body.removeChild(link); };
+
         window.exportPDF = () => { window.print(); };
+
         window.openDeleteModal = (id) => { projectToDeleteId = id; if(document.getElementById('delete-modal')) document.getElementById('delete-modal').style.display = 'flex'; };
+
         window.closeDeleteModal = () => { projectToDeleteId = null; if(document.getElementById('delete-modal')) document.getElementById('delete-modal').style.display = 'none'; };
+
         window.confirmDelete = async () => { if(projectToDeleteId && user) { await deleteDoc(doc(db, 'artifacts', appId, 'public', 'data', 'projects', projectToDeleteId)); window.closeDeleteModal(); refreshUI(); } };
+
         window.openAddModal = (target) => { currentTargetField = target; if(document.getElementById('add-item-title')) document.getElementById('add-item-title').innerText = "Adicionar: " + target; if(document.getElementById('add-item-modal')) document.getElementById('add-item-modal').style.display = 'flex'; };
+
         window.closeAddModal = () => { if(document.getElementById('add-item-modal')) document.getElementById('add-item-modal').style.display = 'none'; if(document.getElementById('new-item-input')) document.getElementById('new-item-input').value = ''; };
+
         window.processAddItem = () => { const val = document.getElementById('new-item-input')?.value.trim(); if(!val) return; if(currentTargetField === 'analista') { renderAnalistaCheckbox(val, true); } else { const el = document.getElementById(currentTargetField); if(el) el.add(new Option(val, val, true, true)); } window.closeAddModal(); };
+
         window.addTaskToProject = () => { const input = document.getElementById('new-task-input'); const val = input?.value.trim(); if(!val) return; tempTasks.push({ id: Date.now(), text: val, completed: false }); if(input) input.value = ''; window.renderTasksList(); window.setDirty(); };
+
         window.toggleTaskStatus = (id) => { tempTasks = tempTasks.map(t => t.id === id ? {...t, completed: !t.completed} : t); window.renderTasksList(); window.setDirty(); };
+
         window.removeTaskFromProject = (id) => { tempTasks = tempTasks.filter(t => t.id !== id); window.renderTasksList(); window.setDirty(); };
 
+
+
         window.addItemToHistory = function(type) {
+
             const dateStr = new Date().toLocaleDateString('pt-BR');
+
             if(type === 'note') { const input = document.getElementById('new-milestone-note'), val = input?.value.trim(); if(!val) return; tempNotes.unshift({ date: dateStr, text: val }); if(input) input.value = ''; window.renderHistoryLists(); window.setDirty(); }
+
             else if (type === 'attention') { const input = document.getElementById('new-attention-note'), val = input?.value.trim(); if(!val) return; tempAttention.unshift({ date: dateStr, text: val, type: document.getElementById('impedimento_tipo_list')?.value || 'Risco' }); if(input) input.value = ''; window.renderAttentionList(); window.setDirty(); }
+
         };
+
+
 
         window.editHistoryItem = function(type, index) {
+
             if(type === 'note') { const item = tempNotes[index]; const el = document.getElementById('new-milestone-note'); if(el) el.value = item.text; tempNotes.splice(index, 1); window.renderHistoryLists(); window.setDirty(); }
+
             else if(type === 'attention') { const item = tempAttention[index]; const el = document.getElementById('new-attention-note'); if(el) el.value = item.text; window.setAttentionType(item.type); tempAttention.splice(index, 1); window.renderAttentionList(); window.setDirty(); }
+
         };
+
+
 
         window.setAttentionType = function(t) {
+
             const listType = document.getElementById('impedimento_tipo_list'); if (listType) listType.value = t;
+
             const tr = document.getElementById('toggle-list-risco'), tp = document.getElementById('toggle-list-problema');
+
             if (tr) tr.className = `toggle-btn ${t === 'Risco' ? 'active-risco' : 'inactive'}`;
+
             if (tp) tp.className = `toggle-btn ${t === 'Problema' ? 'active-problema' : 'inactive'}`;
+
         };
 
+
+
         window.editProjectByID = function(id) { 
+
             const p = projects.find(x => x.id === id); if (!p) return; 
+
             window.switchTab('form'); 
+
             const elId = document.getElementById('edit-id'); if(elId) elId.value = p.id; 
+
             if(document.getElementById('iniciativa')) document.getElementById('iniciativa').value = p.iniciativa || ''; 
+
             if(document.getElementById('prioridade')) document.getElementById('prioridade').value = p.prioridade || 'Média'; 
+
             if(document.getElementById('tipo_atividade')) document.getElementById('tipo_atividade').value = p.tipo_atividade || 'Melhoria'; 
+
             if(document.getElementById('time')) document.getElementById('time').value = p.time || ''; 
+
             if(document.getElementById('frente')) document.getElementById('frente').value = p.frente || ''; 
+
             if(document.getElementById('classificacao')) document.getElementById('classificacao').value = p.classificacao || 'Eficiência Operacional'; 
+
             if(document.getElementById('esforco')) document.getElementById('esforco').value = p.esforco || 'Intermediário'; 
+
             if(document.getElementById('status')) document.getElementById('status').value = p.status || 'Backlog'; 
+
             if(document.getElementById('data_criacao')) document.getElementById('data_criacao').value = p.data_criacao || ''; 
+
             if(document.getElementById('prazo')) document.getElementById('prazo').value = p.prazo || ''; 
+
             if(document.getElementById('nota_inicial')) document.getElementById('nota_inicial').value = p.nota_inicial || ''; 
+
             if(document.getElementById('data_conclusao')) document.getElementById('data_conclusao').value = p.data_conclusao || ''; 
+
             tempNotes = p.notes || []; tempTasks = p.tasks || []; tempAttention = p.attention || [];
+
             window.renderHistoryLists(); window.renderTasksList(); window.renderAttentionList();
+
             window.updateStatusUI(p.status); 
+
             document.querySelectorAll('input[name="responsavel_check"]').forEach(cb => { cb.checked = p.responsavel?.includes(cb.value); }); 
+
             const btnC = document.getElementById('btn-concluir-quick'); if(btnC) btnC.classList.remove('hidden'); 
+
             isFormDirty = false; 
+
         };
+
+
 
         const initAuth = async () => { try { if (typeof __initial_auth_token !== 'undefined' && __initial_auth_token) { try { await signInWithCustomToken(auth, __initial_auth_token); } catch(e) { await signInAnonymously(auth); } } else { await signInAnonymously(auth); } } catch (e) { window.hideOverlay(); } };
 
+
+
         document.getElementById('project-form').onsubmit = async (e) => { 
+
             e.preventDefault(); if (!user) return; 
+
             const responsaveis = Array.from(document.querySelectorAll('input[name="responsavel_check"]:checked')).map(cb => cb.value);
+
             if(responsaveis.length === 0) {
+
                 const mod = document.createElement('div'); mod.className = "fixed inset-0 flex items-center justify-center bg-black/50 z-[20000]";
+
                 mod.innerHTML = `<div class="bg-white p-8 rounded-3xl max-w-sm text-center text-slate-800"><h3 class="font-black uppercase text-red-500 mb-4">Ação Necessária</h3><p class="text-sm font-medium mb-6">Por favor, selecione pelo menos um Analista Responsável.</p><button onclick="this.parentElement.parentElement.remove()" class="bg-slate-900 text-white px-8 py-3 rounded-2xl font-black uppercase text-[10px]">Entendido</button></div>`;
+
                 document.body.appendChild(mod); return;
+
             }
+
             const id = document.getElementById('edit-id').value, status = document.getElementById('status').value; 
+
             const data = { iniciativa: document.getElementById('iniciativa').value, tipo_atividade: document.getElementById('tipo_atividade').value, prioridade: document.getElementById('prioridade').value, time: document.getElementById('time').value, frente: document.getElementById('frente').value, classificacao: document.getElementById('classificacao').value, esforco: document.getElementById('esforco').value, status: status, data_criacao: document.getElementById('data_criacao').value, prazo: document.getElementById('prazo').value, nota_inicial: document.getElementById('nota_inicial').value, data_conclusao: status === 'Finalizado' ? document.getElementById('data_conclusao').value : "", justificativa_despriorizacao: status === 'Despriorizado' ? (document.getElementById('justificativa_despriorizacao')?.value || "") : "", notes: tempNotes, tasks: tempTasks, attention: tempAttention, responsavel: responsaveis }; 
+
             try { if (id) await updateDoc(doc(db, 'artifacts', appId, 'public', 'data', 'projects', id), data); else await addDoc(collection(db, 'artifacts', appId, 'public', 'data', 'projects'), data); isFormDirty = false; window.switchTab('dashboard'); } catch (err) { console.error(err); } 
+
         };
+
+
 
         const setup = () => {
+
             const grid = document.getElementById('responsaveis-grid'); if(grid) grid.innerHTML = '';
+
             defaultTeam.sort().forEach(n => {
+
                 window.renderAnalistaCheckbox(n);
+
                 const dfAn = document.getElementById('dash-filter-analista');
+
                 if(dfAn) dfAn.add(new Option(n, n));
+
                 const lfAn = document.getElementById('list-filter-analista');
+
                 if(lfAn) lfAn.add(new Option(n, n));
+
                 const afAn = document.getElementById('archive-filter-analista');
+
                 if(afAn) afAn.add(new Option(n, n));
+
             });
+
             const aIs = ['time', 'dash-filter-area', 'archive-filter-area']; defaultAreas.sort().forEach(a => aIs.forEach(id => { const el = document.getElementById(id); if(el) el.innerHTML += `<option value="${a}">${a}</option>`; }));
+
             const fIs = ['frente', 'dash-filter-frente', 'list-filter-frente', 'archive-filter-frente']; defaultFrentes.sort().forEach(f => fIs.forEach(id => { const el = document.getElementById(id); if(el) el.innerHTML += `<option value="${f}">${f}</option>`; }));
+
         };
 
+
+
         onAuthStateChanged(auth, u => { 
+
             user = u; if (user) { 
+
                 document.getElementById('sync-indicator')?.classList.remove('hidden'); 
+
                 onSnapshot(collection(db, 'artifacts', appId, 'public', 'data', 'projects'), snap => { projects = snap.docs.map(doc => ({ id: doc.id, ...doc.data() })); window.refreshUI(); window.hideOverlay(); }, error => { console.error(error); window.hideOverlay(); }); 
+
             } 
+
         });
 
+
+
         initAuth(); setup();
+
     </script>
+
 </body>
+
 </html>
+
